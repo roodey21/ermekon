@@ -49,7 +49,7 @@
                 </div>
             </div>
             <footer class="footer footer-transparent d-print-none">
-                <div class="container-xl">
+                <div class="container-fluid">
                     <div class="row text-center align-items-center flex-row-reverse">
                         <div class="col-lg-auto ms-lg-auto">
                             <ul class="list-inline list-inline-dots mb-0">
@@ -100,6 +100,7 @@
     <script src="{{ asset('libs/jsvectormap/dist/js/jsvectormap.min.js?1684106062') }}" defer></script>
     <script src="{{ asset('libs/jsvectormap/dist/maps/world.js?1684106062') }}" defer></script>
     <script src="{{ asset('libs/jsvectormap/dist/maps/world-merc.js?1684106062') }}" defer></script>
+    <script src="{{ asset('libs/jquery/jquery.min.js?1684106062') }}" defer></script>
     <!-- Tabler Core -->
     <script src="{{ asset('js/tabler.min.js?1684106062') }}" defer></script>
     <script src="{{ asset('js/demo.min.js?1684106062') }}" defer></script>

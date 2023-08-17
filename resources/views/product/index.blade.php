@@ -42,7 +42,7 @@
     </x-slot:header>
     <div class="card">
         <div class="card-body">
-            <div id="table-default" class="table-responsive" style="zoom: 80%">
+            <div id="table-default" class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>

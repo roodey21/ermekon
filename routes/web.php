@@ -28,3 +28,4 @@ Route::get('/product/unit', [UnitController::class, 'index'])->name('unit.index'
 Route::get('/product/unit/create', [UnitController::class, 'create'])->name('unit.create');
 Route::post('/product/unit/create', [UnitController::class, 'store'])->name('unit.store');
 Route::get('/product/unit/getData', [UnitController::class, 'getData'])->name('unit.getData');
+Route::get('/product/unit/{unit}/edit', [UnitController::class, 'edit'])->name('unit.edit');
