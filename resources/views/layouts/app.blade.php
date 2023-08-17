@@ -100,7 +100,7 @@
     <script src="{{ asset('libs/jsvectormap/dist/js/jsvectormap.min.js?1684106062') }}" defer></script>
     <script src="{{ asset('libs/jsvectormap/dist/maps/world.js?1684106062') }}" defer></script>
     <script src="{{ asset('libs/jsvectormap/dist/maps/world-merc.js?1684106062') }}" defer></script>
-    <script src="{{ asset('libs/jquery/jquery.min.js?1684106062') }}" defer></script>
+    <script src="{{ asset('libs/jquery/jquery.min.js?1684106062') }}"></script>
     <!-- Tabler Core -->
     <script src="{{ asset('js/tabler.min.js?1684106062') }}" defer></script>
     <script src="{{ asset('js/demo.min.js?1684106062') }}" defer></script>
