@@ -22,7 +22,7 @@
                                     </svg>
                                 </span>
                                 <span class="nav-link-title">
-                                    Overview
+                                    Dashboard
                                 </span>
                             </a>
                         </li>
