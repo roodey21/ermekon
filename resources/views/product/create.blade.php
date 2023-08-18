@@ -10,7 +10,9 @@
                             </h2>
                         </div>
                         <div class="ms-auto col-auto">
-                            <button class="btn btn-primary">Simpan</button>
+                            <div class="btn-list">
+                                <a href="{{ route('product.index') }}" class="btn btn-outline-primary">Kembali</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -24,7 +26,7 @@
         <div class="col-md-8 col-xl-6">
             <div class="card">
                 <div class="card-body">
-                    {{-- {{ $errors }} --}}
+                    {{ $errors }}
                     <form action="{{ route('product.store') }}" method="POST" class="row g-4"
                         enctype="multipart/form-data">
                         @csrf
@@ -67,7 +69,7 @@
                                                 plugins: ['remove_button'],
                                                 persist: false,
                                                 maxItems: 1,
-                                                valueField: 'name',
+                                                valueField: 'id',
                                                 labelField: 'name',
                                                 searchField: 'name',
                                                 load: function(query, callback) {
@@ -87,16 +89,14 @@
                                                 },
                                             }));
                                             // jika mainSelect sudah ada isinya generate inputan baru lagi dibawahnya
-                                            mainSelect.on('change', function(){
+                                            mainSelect.on('change', function(value){
                                                 this.blur()
                                                 this.disabled = true
                                                 if(conversionCount != 0){
                                                     conversionCount++
                                                 }
-                                                var selected = mainSelect.getValue();
+                                                var selected = this.options[value].name;
                                                 if (selected) {
-                                                    console.log('ada isinya')
-                                                    // jalankan fungsi untuk generate form baru dibawah form utama
                                                     deleteOtherForm()
                                                     mainUnit = selected
                                                     generateForm()
@@ -113,13 +113,13 @@
                                                 var newInput = `
                                                 <div class="form-group row align-items-center input-row mb-3" id="unit-conversion-${conversionCount}">
                                                     <div class="col-6">
-                                                        <select name="" id="form-unit-${conversionCount}" class="form-select"></select>
+                                                        <select name="conversion_id[]" id="form-unit-${conversionCount}" class="form-select"></select>
                                                     </div>
                                                     <span class="col-1">
                                                         =
                                                     </span>
                                                     <div class="col-3">
-                                                        <input type="text" class="form-control">
+                                                        <input type="text" name="conversion_factor[]" class="form-control">
                                                     </div>
                                                     <span class="col-2">
                                                         ${mainUnit}
@@ -133,7 +133,7 @@
                                                     persist: false,
                                                     create: true,
                                                     maxItems: 1,
-                                                    valueField: 'name',
+                                                    valueField: 'id',
                                                     labelField: 'name',
                                                     searchField: 'name',
                                                     load: function(query, callback) {
@@ -154,9 +154,11 @@
                                                     },
                                                     onChange: function(selected) {
                                                         this.blur()
-                                                        conversionCount++
-                                                        selectedUnits.push(selected)
-                                                        generateForm()
+                                                        if (selected) {
+                                                            conversionCount++
+                                                            selectedUnits.push(selected)
+                                                            generateForm()
+                                                        }
                                                     },
                                                     onDelete: function() {
                                                         console.log($("#unit-conversion-" + conversionCount))
@@ -178,11 +180,11 @@
                                 <label for="" class="col-2 col-form-label">KODE</label>
                                 <div class="col-1">
                                     <label class="form-check form-switch mb-0">
-                                        <input class="form-check-input" type="checkbox" value="on" data-bs-toggle="tooltip" aria-label="Kode Generate Otomatis" data-bs-original-title="Kode Generate Otomatis" name="manage_code">
+                                        <input class="form-check-input" type="checkbox" value="1" {{ old('manage_code' ? 'checked':'') }} data-bs-toggle="tooltip" aria-label="Kode Generate Otomatis dari Sistem" data-bs-original-title="Kode Generate Otomatis dari Sistem" name="manage_code">
                                     </label>
                                 </div>
                                 <div class="col my-auto">
-                                    <input type="text" class="form-control" name="code">
+                                    <input type="text" class="form-control" name="code" value="{{ old('code') }}">
                                 </div>
                                 @push('scripts')
                                     <script>

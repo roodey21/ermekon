@@ -1,16 +1,19 @@
 <x-app-layouts>
     <x-slot:header>
-        <div class="page-header d-print-none">
-            <div class="container-fluid">
-                <div class="row g-2 align-items-center">
-                    <div class="col row g-2">
-                        <h2 class="page-title">
-                            Satuan Produk
-                        </h2>
-                    </div>
-                    <!-- Page title actions -->
-                    <div class="col-auto ms-auto d-print-none">
-
+        <div class="navbar">
+            <div class="container-fluid row align-items-center">
+                <div class="col-md-8 col-xl-6">
+                    <div class="row">
+                        <div class="col-6">
+                            <h2 class="page-title">
+                                Satuan / Baru
+                            </h2>
+                        </div>
+                        <div class="ms-auto col-auto">
+                            <div class="btn-list">
+                                <a href="{{ route('unit.index') }}" class="btn btn-outline-primary">Kembali</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

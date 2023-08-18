@@ -9,7 +9,7 @@
                         </h2>
                         <div class="btn-list">
                             <span class="d-none d-sm-inline">
-                                <a href="{{ route('product.create') }}" class="btn text-uppercase">
+                                <a href="{{ route('unit.create') }}" class="btn text-uppercase">
                                     Baru
                                 </a>
                             </span>

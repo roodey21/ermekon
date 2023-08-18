@@ -50,8 +50,6 @@
                         <th><button class="table-sort" data-sort="sort-city">Kode Barang</button></th>
                         <th><button class="table-sort" data-sort="sort-type">Kategori</button></th>
                         <th><button class="table-sort" data-sort="sort-score">Satuan</button></th>
-                        {{-- <th><button class="table-sort" data-sort="sort-date">Pemasok</button></th> --}}
-                        {{-- <th><button class="table-sort" data-sort="sort-quantity">Created At</button></th> --}}
                         </tr>
                     </thead>
                     <tbody class="table-tbody">
@@ -59,9 +57,8 @@
                         <tr>
                             <td class="sort-name"> <a href="{{ route('product.edit', $product->id) }}">{{ $product->name }}</a></td>
                             <td class="sort-code">{{ $product->code }}</td>
-                            <td class="sort-quantity">{{ $product->quantity }}</td>
-                            <td class="sort-unit">{{ $product->unit }}</td>
-                            <td class="sort-supplier">{{ $product->supplier }}</td>
+                            <td class="sort-quantity">{{ $product->categories->first()->name }}</td>
+                            <td class="sort-unit">{{ $product->main_unit->name }}</td>
                             {{-- <td class="sort-quantity">74</td> --}}
                         </tr>
                         @empty
