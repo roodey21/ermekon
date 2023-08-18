@@ -27,6 +27,26 @@ class UnitController extends Controller
         return redirect()->route('unit.index');
     }
 
+    public function edit(Unit $unit)
+    {
+        return view('product.unit.edit', compact('unit'));
+    }
+
+    public function update(Request $request, Unit $unit)
+    {
+        $validated = $request->validate([
+            'name' => 'required|max:100|unique:units,name,' . $unit->id
+        ]);
+        $unit->update($validated);
+        return redirect()->route('unit.index');
+    }
+
+    public function destroy(Unit $unit)
+    {
+        $unit->delete();
+        return redirect()->route('unit.index');
+    }
+
     public function getData()
     {
         $units = Unit::latest()->get();

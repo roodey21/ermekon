@@ -26,7 +26,6 @@
         <div class="col-md-8 col-xl-6">
             <div class="card">
                 <div class="card-body">
-                    {{ $errors }}
                     <form action="{{ route('product.store') }}" method="POST" class="row g-4"
                         enctype="multipart/form-data">
                         @csrf

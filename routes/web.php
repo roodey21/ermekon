@@ -31,3 +31,5 @@ Route::get('/product/unit/create', [UnitController::class, 'create'])->name('uni
 Route::post('/product/unit/create', [UnitController::class, 'store'])->name('unit.store');
 Route::get('/product/unit/getData', [UnitController::class, 'getData'])->name('unit.getData');
 Route::get('/product/unit/{unit}/edit', [UnitController::class, 'edit'])->name('unit.edit');
+Route::put('/product/unit/{unit}/edit', [UnitController::class, 'update'])->name('unit.update');
+Route::delete('/product/unit/{unit}/delete', [UnitController::class, 'destroy'])->name('unit.destroy');
