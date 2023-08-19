@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\UnitController;
+use App\Http\Controllers\ProfileController;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -10,26 +11,28 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
 |
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
 });
 
-Route::get('/product', [ProductController::class, 'index'])->name('product.index');
-Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
-Route::post('/product/create', [ProductController::class, 'store'])->name('product.store');
-Route::get('/product/{product}/edit', [ProductController::class, 'edit'])->name('product.edit');
-Route::put('/product/{product}/edit', [ProductController::class, 'update'])->name('product.update');
-Route::delete('/product/{product}/delete', [ProductController::class, 'destroy'])->name('product.destroy');
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/product/unit', [UnitController::class, 'index'])->name('unit.index');
-Route::get('/product/unit/create', [UnitController::class, 'create'])->name('unit.create');
-Route::post('/product/unit/create', [UnitController::class, 'store'])->name('unit.store');
-Route::get('/product/unit/getData', [UnitController::class, 'getData'])->name('unit.getData');
-Route::get('/product/unit/{unit}/edit', [UnitController::class, 'edit'])->name('unit.edit');
-Route::put('/product/unit/{unit}/edit', [UnitController::class, 'update'])->name('unit.update');
-Route::delete('/product/unit/{unit}/delete', [UnitController::class, 'destroy'])->name('unit.destroy');
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
