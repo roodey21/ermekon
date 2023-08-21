@@ -4,25 +4,33 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Http\Resources\ProductResource;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class ProductController extends Controller
 {
     public function index()
     {
         $products = Product::latest()->paginate(10);
-        return view('product.index', compact('products'));
+        return Inertia::render('Product/Index', [
+            'products' => ProductResource::collection($products)
+        ]);
     }
 
     public function create()
     {
         $categories = Category::isProduct()->get();
         $units = Unit::latest()->get();
-        return view('product.create', compact('categories', 'units'));
+        return Inertia::render('Product/Create', [
+            'categories' => $categories,
+            'units' => $units
+        ]);
+        // return view('product.create', compact('categories', 'units'));
     }
 
     public function store(StoreProductRequest $request)
@@ -62,7 +70,11 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = Category::isProduct()->get();
-        return view('product.edit', compact('product', 'categories'));
+        return Inertia::render('Product/Edit', [
+            'product' => new ProductResource($product),
+            'categories' => $categories
+        ]);
+        // return view('product.edit', compact('product', 'categories'));
     }
 
     public function update(UpdateProductRequest $request, Product $product)
