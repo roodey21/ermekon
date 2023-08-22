@@ -20,12 +20,12 @@ defineProps({
         <div class="flex flex-row border-y">
             <div class="basis-2/3">
                 <div class="px-4 py-3 bg-white border-r-2 basis-2/3">
-                    <flex class="flex flex-row items-center justify-between">
+                    <div class="flex flex-row items-center justify-between">
                         <span>Produk / Baru</span>
                         <Link :href="route('product.create')" class="py-1.5 px-2 text-sm bg-white border hover:text-white border-green-600 text-green-700 font-medium hover:bg-green-700">
                             Baru
                         </Link>
-                    </flex>
+                    </div>
 
                 </div>
                 <div class="p-4">
@@ -33,7 +33,7 @@ defineProps({
                     <div class="px-8 py-6 bg-white border">
                         <form>
                             <div class="mb-6">
-                                <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Produk</label>
+                                <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Nama Produk</label>
                                 <input type="email" id="email" class="border-x-0 border-t-0 border-transparent hover:border-gray-300 focus:border-gray-600 text-gray-900 text-3xl block w-full p-2.5 focus:ring-0" placeholder="Nama Produk, contoh: batu akik kaki lima" required>
                             </div>
                             <div class="grid grid-cols-2 gap-4 py-4">
@@ -69,7 +69,6 @@ defineProps({
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
                         </form>
                     </div>
                 </div>

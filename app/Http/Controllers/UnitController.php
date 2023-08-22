@@ -49,7 +49,12 @@ class UnitController extends Controller
 
     public function getData()
     {
-        $units = Unit::latest()->get();
-        return response()->json(['items' => $units]);
+        // check id there is query string named 'query' and it's not empty
+        if (request()->has('query') && request('query') != '') {
+            $units = Unit::where('name', 'like', '%' . request('query') . '%')->get();
+        } else {
+            $units = Unit::latest()->get();
+        }
+        return response()->json($units);
     }
 }

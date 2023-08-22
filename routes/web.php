@@ -39,7 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
     Route::get('/product/{product}', [ProductController::class, 'edit'])->name('product.edit');
 
-    Route::get('/category', [UnitController::class, 'getData'])->name('unit.getData');
+    Route::get('/units/get-data', [UnitController::class, 'getData'])->name('unit.getData');
 });
 
 require __DIR__.'/auth.php';
