@@ -1,6 +1,7 @@
 <script setup>
-import { Head, router } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 defineProps({
     products: {
@@ -14,9 +15,11 @@ defineProps({
 
     <AuthenticatedLayout>
         <template #header>
-            <div class="flex">
+            <div class="flex gap-4">
                 <h2 class="text-xl font-semibold leading-tight text-gray-800">Product</h2>
-                <button class="px-4 py-1 bg-gray-100">Simpan</button>
+                <PrimaryButton @click="router.get(route('product.create'))">
+                    Baru
+                </PrimaryButton>
             </div>
         </template>
 

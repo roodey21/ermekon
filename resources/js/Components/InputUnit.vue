@@ -42,12 +42,15 @@ const handleSearch = (search, loading) => {
 
 <style>
 .style-chooser .vs__dropdown-toggle {
-    @apply text-sm text-gray-900 border-t-0 border-transparent border-x-0 hover:border-gray-300 focus:border-gray-600 focus:ring-0
+    @apply text-sm text-gray-900 border-t-0 border-x-0 border-gray-300 hover:border-gray-600 focus:border-gray-600 focus:ring-0
 }
 .style-chooser .vs__actions{
     @apply pr-3
 }
 .style-chooser .vs__open-indicator {
     @apply scale-75
+}
+.style-chooser .vs__dropdown-menu {
+    @apply mt-1
 }
 </style>

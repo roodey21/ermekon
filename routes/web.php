@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/product', [ProductController::class, 'index'])->name('product.index');
     Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
+    Route::post('/product/create', [ProductController::class, 'store'])->name('product.store');
     Route::get('/product/{product}', [ProductController::class, 'edit'])->name('product.edit');
 
     Route::get('/units/get-data', [UnitController::class, 'getData'])->name('unit.getData');

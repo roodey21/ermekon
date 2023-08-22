@@ -34,7 +34,7 @@ defineProps({
                         <form>
                             <div class="mb-6">
                                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Nama Produk</label>
-                                <input type="email" id="email" class="border-x-0 border-t-0 border-transparent hover:border-gray-300 focus:border-gray-600 text-gray-900 text-3xl block w-full p-2.5 focus:ring-0" placeholder="Nama Produk, contoh: batu akik kaki lima" required>
+                                <input type="email" id="email" v-model="product.data.name" class="border-x-0 border-t-0 border-transparent hover:border-gray-300 focus:border-gray-600 text-gray-900 text-3xl block w-full p-2.5 focus:ring-0" placeholder="Nama Produk, contoh: batu akik kaki lima" required>
                             </div>
                             <div class="grid grid-cols-2 gap-4 py-4">
                                 <div class="flex flex-col gap-4">
@@ -43,8 +43,8 @@ defineProps({
                                             <label for="" class="text-sm font-medium">Tipe Produk</label>
                                         </div>
                                         <div class="col-span-4">
-                                            <select name="" id="" class="block w-full p-1 px-2 text-sm text-gray-900 border-t-0 border-transparent border-x-0 hover:border-gray-300 focus:border-gray-600 focus:ring-0">
-                                                <option value="" v-for="category in categories" :key="category.id">{{ category.name }}</option>
+                                            <select v-model="product.data.category.id" class="block w-full p-1 px-2 text-sm text-gray-900 border-t-0 border-transparent border-x-0 hover:border-gray-300 focus:border-gray-600 focus:ring-0">
+                                                <option value="category.id" v-for="category in categories" :selected="product.data.category.id == category.id" :key="category.id">{{ category.name }}</option>
                                             </select>
                                         </div>
                                     </div>
