@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('product_variants', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
-            $table->foreignId('variant_option_id')->constrained('variant_options')->cascadeOnDelete();
+            $table->foreignId('variant_id')->constrained('variants')->cascadeOnDelete();
+            $table->json('values');
             $table->timestamps();
         });
     }

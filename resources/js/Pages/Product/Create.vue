@@ -2,7 +2,7 @@
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, router, useForm } from '@inertiajs/vue3';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
 import axios from "axios";
 
@@ -35,7 +35,8 @@ const form = useForm({
     unit_id: '',
     code: '',
     conversion: [],
-    manage_code: false
+    manage_code: false,
+    variants: []
 })
 const addConversion = () => {
     form.conversion.push({
@@ -43,8 +44,17 @@ const addConversion = () => {
         value: ''
     })
 }
+const addVariant = () => {
+    form.variants.push({
+        name: '',
+        value: ''
+    })
+}
 const clearRow = (index) => {
     form.conversion.splice(index, 1)
+}
+const deleteVariant = (index) => {
+    form.variants.splice(index, 1)
 }
 defineProps({
     categories: {
@@ -76,11 +86,11 @@ watch(mainUnit, (value) => {
     <Head title="Tambah Produk Baru" />
 
     <AuthenticatedLayout>
-        <div class="flex flex-row min-h-screen border-y">
-            <div class="border-r-2 basis-2/3">
+        <div class="flex flex-col min-h-screen md:flex-row border-y">
+            <div class="md:border-r-2 basis-full md:basis-2/3">
                 <div class="sticky px-4 py-3 bg-white top-14 basis-2/3">
                     <div class="flex flex-row items-center justify-between">
-                        <span>Produk / Baru</span>
+                        <div><Link :href="route('product.index')" class="font-semibold hover:underline">Produk</Link> / Baru</div>
                         <!-- <Link :href="route('product.create')" class="py-1.5 px-2 text-sm bg-white border hover:text-white border-green-600 text-green-700 font-medium hover:bg-green-700">
                             Baru
                         </Link> -->
@@ -102,7 +112,7 @@ watch(mainUnit, (value) => {
                                 </div>
                             </div>
                             <div class="px-8 py-6">
-                                <div class="mb-6">
+                                <div class="mb-4 md:mb-6">
                                     <label for="name" class="block mb-2 text-sm font-medium text-gray-900">
                                         Nama Produk
                                     </label>
@@ -113,13 +123,13 @@ watch(mainUnit, (value) => {
                                         <span class="text-sm text-red-500">{{ errors.name }}</span>
                                     </template>
                                 </div>
-                                <div class="grid grid-cols-2 gap-4 py-4 mb-6">
+                                <div class="grid grid-cols-1 gap-4 py-4 mb-4 md:mb-6 md:grid-cols-2">
                                     <div class="flex flex-col gap-4">
                                         <div class="grid grid-cols-5 align-center">
-                                            <div class="">
+                                            <div class="col-span-full md:col-span-2 lg:col-span-1">
                                                 <label for="category_id" class="text-sm font-medium">Tipe Produk</label>
                                             </div>
-                                            <div class="col-span-4">
+                                            <div class="col-span-full md:col-span-3 lg:col-span-4">
                                                 <select v-model="form.category_id"
                                                     class="block w-full p-1 px-2 text-sm text-gray-900 border-t-0 border-gray-300 border-x-0 hover:border-gray-600 focus:border-gray-600 focus:ring-0">
                                                     <option :value="category.id" v-for="category in categories"
@@ -131,10 +141,10 @@ watch(mainUnit, (value) => {
                                             </div>
                                         </div>
                                         <div class="grid grid-cols-5 align-center">
-                                            <div class="">
+                                            <div class="col-span-full md:col-span-2 lg:col-span-1">
                                                 <label for="unit" class="text-sm font-medium">Satuan</label>
                                             </div>
-                                            <div class="col-span-4">
+                                            <div class="col-span-full md:col-span-3 lg:col-span-4">
                                                 <v-select
                                                     v-model="mainUnit"
                                                     :options="searchResult"
@@ -196,7 +206,7 @@ watch(mainUnit, (value) => {
                                     </div>
                                     <div class="flex flex-col gap-4">
                                         <div class="grid grid-cols-5 align-center">
-                                            <div class="col-span-1">
+                                            <div class="col-span-full md:col-span-2 lg:col-span-1">
                                                 <div class="relative">
                                                     <label class="relative inline-flex items-center cursor-pointer">
                                                         <input type="checkbox" v-model="form.manage_code"
@@ -212,7 +222,7 @@ watch(mainUnit, (value) => {
                                                         untuk generate code otomatis</span>
                                                 </div>
                                             </div>
-                                            <div class="col-span-4">
+                                            <div class="col-span-full md:col-span-3 lg:col-span-4">
                                                 <input id="code" v-model="form.code" :disabled="form.manage_code"
                                                     class="block w-full p-1 px-2 text-sm text-gray-900 border-t-0 border-gray-300 disabled:bg-gray-100 border-x-0 hover:border-gray-600 focus:border-gray-600 focus:ring-0">
                                                 <template v-if="errors.code">
@@ -226,32 +236,46 @@ watch(mainUnit, (value) => {
                                     <table class="w-full text-sm text-left text-stone-500">
                                         <thead class="text-xs uppercase text-stone-700 bg-stone-50">
                                             <tr>
-                                                <th scope="col" class="px-4 py-2">
+                                                <th scope="col" class="px-4 py-2 text-center">
                                                     Nama Variant
                                                 </th>
-                                                <th scope="col" class="px-4 py-2">
+                                                <th scope="col" class="w-2/3 px-4 py-2 ">
                                                     Value
                                                 </th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr class="bg-white border-b hover:bg-stone-50">
+                                            <tr class="bg-white border-b hover:bg-stone-50" v-for="(variant, index) in form.variants" :key="index">
                                                 <th scope="row"
-                                                    class="px-4 py-2 font-medium text-stone-900 whitespace-nowrap">
-                                                    <input type="text"
-                                                        class="block w-full p-1 text-xs text-gray-900 bg-transparent border-t-0 border-transparent border-x-0 hover:border-gray-300 focus:border-gray-600 focus:ring-0"
-                                                        placeholder="ex: Warna, Ukuran">
+                                                    class="flex gap-2 px-4 py-2 font-medium text-stone-900 whitespace-nowrap">
+                                                    <button type="button" class="px-2 fill-current text-stone-400 hover:text-stone-800" title="Clear Selected" aria-label="Clear Selected"
+                                                        @click="deleteVariant(index)"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><path d="M6.895455 5l2.842897-2.842898c.348864-.348863.348864-.914488 0-1.263636L9.106534.261648c-.348864-.348864-.914489-.348864-1.263636 0L5 3.104545 2.157102.261648c-.348863-.348864-.914488-.348864-1.263636 0L.261648.893466c-.348864.348864-.348864.914489 0 1.263636L3.104545 5 .261648 7.842898c-.348864.348863-.348864.914488 0 1.263636l.631818.631818c.348864.348864.914773.348864 1.263636 0L5 6.895455l2.842898 2.842897c.348863.348864.914772.348864 1.263636 0l.631818-.631818c.348864-.348864.348864-.914489 0-1.263636L6.895455 5z"></path></svg>
+                                                    </button>
+                                                    <v-select
+                                                        v-model="form.variants[index].name"
+                                                        class="style-chooser"
+                                                        placeholder="ex: Warna, Ukuran"
+                                                        taggable
+                                                    >
+
+                                                    </v-select>
                                                 </th>
                                                 <td class="px-4 py-2">
-                                                    <v-select class="style-chooser">
-
+                                                    <v-select
+                                                        v-model="form.variants[index].values"
+                                                        class="style-chooser"
+                                                        taggable
+                                                        multiple
+                                                        >
                                                     </v-select>
                                                 </td>
                                             </tr>
                                             <tr class="bg-white border-b hover:bg-stone-50">
                                                 <th scope="row"
                                                     class="px-4 py-3 font-medium text-stone-900 whitespace-nowrap">
-                                                    <a href="#" class="text-xs hover:underline">+ Tambah Variant</a>
+                                                    <a href="#" class="text-xs hover:underline" @click.prevent="addVariant">+ Tambah Variant</a>
                                                 </th>
                                             </tr>
                                             <tr class="bg-white border-b hover:bg-stone-50">
@@ -276,7 +300,7 @@ watch(mainUnit, (value) => {
                     </form>
                 </div>
             </div>
-            <div class="bg-white basis-1/3">
+            <div class="bg-white basis-full md:basis-1/3">
                 <div class="sticky px-4 py-3 bg-white basis-2/3 top-14">
                     <div class="flex flex-row items-center justify-between">
                         <PrimaryButton>
@@ -289,3 +313,9 @@ watch(mainUnit, (value) => {
 
     </AuthenticatedLayout>
 </template>
+
+<style>
+.v-select {
+    width: 100% !important;
+}
+</style>

@@ -37,6 +37,11 @@ class Product extends Model
         return $this->belongsToMany(Unit::class, 'product_units')->withPivot('conversion_factor');
     }
 
+    public function productVariants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
+
     public function getMainUnitAttribute()
     {
         return $this->units()->where('conversion_factor', 1)->first();

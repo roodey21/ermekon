@@ -1,5 +1,5 @@
 <script setup>
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
@@ -50,26 +50,33 @@ defineProps({
                             </tr>
                         </thead>
                         <tbody>
-                            <tr @click="router.get(route('product.edit',product.id))" v-for="product in products.data" :key="product.id" class="bg-white border-b hover:bg-gray-50 hover:cursor-pointer">
-                                <td class="w-4 px-4 py-2">
-                                    <div class="flex items-center">
-                                        <input id="checkbox-table-search-1" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
-                                        <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
-                                    </div>
-                                </td>
-                                <th scope="row" class="px-6 py-2 font-medium text-gray-900 whitespace-nowrap">
-                                    {{ product.name }}
-                                </th>
-                                <td class="px-6 py-2">
-                                    {{ product.code }}
-                                </td>
-                                <td class="px-6 py-2">
-                                    {{ product.category.name }}
-                                </td>
-                                <td class="px-6 py-2">
-                                    {{ product.main_unit_name }}
-                                </td>
-                            </tr>
+                            <template v-if="products.data.length">
+                                <tr v-for="product in products.data" :key="product.id" class="bg-white border-b hover:bg-gray-50">
+                                    <td class="w-4 px-4 py-2">
+                                        <div class="flex items-center">
+                                            <input id="checkbox-table-search-1" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
+                                            <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+                                        </div>
+                                    </td>
+                                    <th scope="row" class="px-6 py-2 font-medium text-gray-900 whitespace-nowrap hover:cursor-pointer" @click="router.get(route('product.edit',product.id))">
+                                        {{ product.name }}
+                                    </th>
+                                    <td class="px-6 py-2">
+                                        {{ product.code }}
+                                    </td>
+                                    <td class="px-6 py-2">
+                                        {{ product.category.name }}
+                                    </td>
+                                    <td class="px-6 py-2">
+                                        {{ product.main_unit.name }}
+                                    </td>
+                                </tr>
+                            </template>
+                            <template v-else>
+                                <tr>
+                                    <td colspan="4" class="px-4 py-2 font-medium capitalize">Belum ada produk yang ditambahkan</td>
+                                </tr>
+                            </template>
                         </tbody>
                     </table>
                 </div>

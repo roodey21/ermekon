@@ -27,6 +27,7 @@ class StoreProductRequest extends FormRequest
             'unit_id' => 'required|exists:units,id',
             'category_id' => 'required|exists:categories,id',
             'conversion' => 'array',
+            'variants' => 'array'
         ];
 
         if ($this->input('manage_code')) {

@@ -1,6 +1,7 @@
 <script setup>
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
+import DangerButton from '@/Components/DangerButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, router, useForm } from '@inertiajs/vue3';
 import axios from 'axios';
@@ -53,12 +54,22 @@ const form = useForm({
     code: product.data.code,
     manage_code: product.data.manage_code,
     conversion: product.data.conversion,
+    variants: product.data.variants,
 });
 const addConversion = () => {
     form.conversion.push({
         unit_id: '',
         value: ''
     })
+}
+const addVariant = () => {
+    form.variants.push({
+        name: '',
+        value: ''
+    })
+}
+const deleteVariant = (index) => {
+    form.variants.splice(index, 1)
 }
 watch(() => form.manage_code, (value) => {
     value ? form.manage_code = true : form.manage_code = false
@@ -70,6 +81,11 @@ onMounted(() => {
     mainUnit.value = product.data.main_unit
     searching('')
 })
+const deleteProduct = (id) => {
+    if (confirm('Apakah anda yakin ingin menghapus?')) {
+        router.delete(route('product.destroy', id))
+    }
+}
 </script>
 
 <template>
@@ -81,11 +97,14 @@ onMounted(() => {
                 <div class="sticky px-4 py-3 bg-white top-14 basis-2/3">
                     <div class="flex flex-row items-center justify-between">
                         <span>Produk / Edit</span>
+                        <DangerButton @click="deleteProduct(product.data.id)">
+                            Hapus
+                        </DangerButton>
                     </div>
                 </div>
                 <div class="p-4">
                     <!-- Card -->
-                    <form @submit.prevent="form.post(route('product.update'))">
+                    <form @submit.prevent="form.put(route('product.update', product.data.id))">
                         <div class="bg-white border">
                             <div class="flex flex-row justify-between px-4 py-2 border-b">
                                 <div></div>
@@ -223,32 +242,47 @@ onMounted(() => {
                                     <table class="w-full text-sm text-left text-stone-500">
                                         <thead class="text-xs uppercase text-stone-700 bg-stone-50">
                                             <tr>
-                                                <th scope="col" class="px-4 py-2">
+                                                <th scope="col" class="px-4 py-2 text-center">
                                                     Nama Variant
                                                 </th>
-                                                <th scope="col" class="px-4 py-2">
+                                                <th scope="col" class="px-4 py-2 w-2./3">
                                                     Value
                                                 </th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr class="bg-white border-b hover:bg-stone-50">
+                                            <tr class="bg-white border-b hover:bg-stone-50" v-for="(variant, index) in form.variants" :key="index">
                                                 <th scope="row"
-                                                    class="px-4 py-2 font-medium text-stone-900 whitespace-nowrap">
-                                                    <input type="text"
-                                                        class="block w-full p-1 text-xs text-gray-900 bg-transparent border-t-0 border-transparent border-x-0 hover:border-gray-300 focus:border-gray-600 focus:ring-0"
-                                                        placeholder="ex: Warna, Ukuran">
+                                                    class="flex gap-2 px-4 py-2 font-medium text-stone-900 whitespace-nowrap">
+                                                    <button type="button" class="px-2 fill-current text-stone-400 hover:text-stone-800" title="Clear Selected" aria-label="Clear Selected"
+                                                        @click="deleteVariant(index)"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><path d="M6.895455 5l2.842897-2.842898c.348864-.348863.348864-.914488 0-1.263636L9.106534.261648c-.348864-.348864-.914489-.348864-1.263636 0L5 3.104545 2.157102.261648c-.348863-.348864-.914488-.348864-1.263636 0L.261648.893466c-.348864.348864-.348864.914489 0 1.263636L3.104545 5 .261648 7.842898c-.348864.348863-.348864.914488 0 1.263636l.631818.631818c.348864.348864.914773.348864 1.263636 0L5 6.895455l2.842898 2.842897c.348863.348864.914772.348864 1.263636 0l.631818-.631818c.348864-.348864.348864-.914489 0-1.263636L6.895455 5z"></path></svg>
+                                                    </button>
+                                                    <v-select
+                                                        v-model="form.variants[index].name"
+                                                        class="style-chooser"
+                                                        label="name"
+                                                        placeholder="ex: Warna, Ukuran"
+                                                        taggable
+                                                    >
+
+                                                    </v-select>
                                                 </th>
                                                 <td class="px-4 py-2">
-                                                    <v-select class="style-chooser">
-
+                                                    <v-select
+                                                        v-model="form.variants[index].values"
+                                                        class="style-chooser"
+                                                        taggable
+                                                        multiple
+                                                        >
                                                     </v-select>
                                                 </td>
                                             </tr>
                                             <tr class="bg-white border-b hover:bg-stone-50">
                                                 <th scope="row"
                                                     class="px-4 py-3 font-medium text-stone-900 whitespace-nowrap">
-                                                    <a href="#" class="text-xs hover:underline">+ Tambah Variant</a>
+                                                    <a href="#" class="text-xs hover:underline" @click.prevent="addVariant">+ Tambah Variant</a>
                                                 </th>
                                             </tr>
                                             <tr class="bg-white border-b hover:bg-stone-50">

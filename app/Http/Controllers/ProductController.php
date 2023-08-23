@@ -7,7 +7,9 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Unit;
+use App\Models\Variant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -35,21 +37,16 @@ class ProductController extends Controller
 
     public function store(StoreProductRequest $request)
     {
-        // dd($request->all());
         $validated = $request->safe()->only(['name','code']);
-        // dd($validated);
-        // saya punya 2 input yg berupa array yaitu: conversion_name[] dan conversion_factor[], jadikan kedua input tersebut menjadi satu array jika kedua input tersebut tidak kosong, misal
-        // conversion_name = [ 0 => "cm", 1 => null, 2 => "m"] dan conversion_factor = [ 0 => 100, 1 => null, 2 => null]
-        // maka hasilnya akan menjadi [ 0 => ["name" => "cm", "factor" => 100]]
 
-        // gabungin request unit_id dengan conversion
-        // jadi unit_id = 1 dan conversion = [ 0 => ["name" => "cm", "factor" => 100]]
-        // nantinya akan menjadi [ 0 => ["id" => 1, "factor" => 1], 1 => ["id" => 2, "factor" => 100]]
-        // jadi begini caranya
-        // $conversion = [];
-        // jika unit_id tidak kosong maka tambahkan data ke array $conversion
-        // $conversion = [ 0 => ["id" => 1, "factor" => 1]]
-
+        foreach ($request->variants as $key => $variant) {
+            if ($variant['name'] && $variant['values']) {
+                $variants[] = [
+                    'name' => strtolower($variant['name']),
+                    'values' => json_encode($variant['values'])
+                ];
+            }
+        }
         $conversion[] = [
             'id' => $request->unit_id,
             'factor' => 1
@@ -63,11 +60,20 @@ class ProductController extends Controller
             }
         }
 
-        DB::transaction(function () use ($validated, $request, $conversion) {
+        DB::transaction(function () use ($validated, $request, $conversion, $variants) {
             $product = Product::create($validated);
             $product->categories()->attach($request->category_id);
             foreach ($conversion as $value) {
                 $product->units()->attach($value['id'], ['conversion_factor' => $value['factor']]);
+            }
+            foreach ($variants as $item) {
+                $variant = Variant::firstOrCreate([
+                    'name' => $item['name']
+                ]);
+                $product->productVariants()->create([
+                    'variant_id' => $variant->id,
+                    'values' => $item['values']
+                ]);
             }
         });
         return redirect()->route('product.index');
@@ -76,11 +82,12 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = Category::isProduct()->get();
+        $variants = Variant::orderBy('name')->get();
         return Inertia::render('Product/Edit', [
             'product' => new ProductResource($product),
-            'categories' => $categories
+            'categories' => $categories,
+            'variants' => $variants
         ]);
-        // return view('product.edit', compact('product', 'categories'));
     }
 
     public function update(UpdateProductRequest $request, Product $product)
@@ -90,24 +97,38 @@ class ProductController extends Controller
             'id' => $request->unit_id,
             'factor' => 1
         ];
-
-        if ($request->filled('conversion_id') && $request->filled('conversion_factor')) {
-            foreach ($request->conversion_name as $key => $value) {
-                if ($value && $request->conversion_factor[$key]) {
-                    $conversion[] = [
-                        'id' => $value,
-                        'factor' => $request->conversion_factor[$key]
-                    ];
-                }
+        foreach($request->conversion as $key => $value) {
+            if ($value['unit_id'] && $value['value']) {
+                $conversion[] = [
+                    'id' => $value['unit_id'],
+                    'factor' => $value['value']
+                ];
             }
         }
-        // dari variable $conversion kita akan mencari unit berdasarkan nama unit, kemudian dari unit yg ditemukan tersebut kita ambil id nya lalu menambahkan data ke pivot tabel beserta conversion_factor nya
-        DB::transaction(function () use ($product, $validated, $request, $conversion) {
+        foreach ($request->variants as $key => $variant) {
+            if ($variant['name'] && $variant['values']) {
+                $variants[] = [
+                    'name' => strtolower($variant['name']),
+                    'values' => json_encode($variant['values'])
+                ];
+            }
+        }
+        DB::transaction(function () use ($product, $validated, $request, $conversion, $variants) {
             $product->update($validated);
             $product->categories()->sync($request->category_id);
             $product->units()->detach();
             foreach ($conversion as $key => $value) {
                 $product->units()->attach($value['id'], ['conversion_factor' => $value['factor']]);
+            }
+            $product->productVariants()->delete();
+            foreach ($variants as $item) {
+                $variant = Variant::firstOrCreate([
+                    'name' => $item['name']
+                ]);
+                $product->productVariants()->create([
+                    'variant_id' => $variant->id,
+                    'values' => $item['values']
+                ]);
             }
         });
         return redirect()->route('product.index');

@@ -19,8 +19,6 @@ class ProductResource extends JsonResource
             'code' => $this->code,
             'name' => $this->name,
             'main_unit' => $this->main_unit,
-            // 'conversion' => ,
-            // conversion => array yang berisi id, name, conversion_value
             'conversion' => $this->conversion_units->map(function ($conversion) {
                 return [
                     'unit_id' => $conversion->id,
@@ -29,6 +27,13 @@ class ProductResource extends JsonResource
                 ];
             }),
             'category' => $this->categories->first(),
+            'variants' => $this->productVariants->map(function ($variant) {
+                return [
+                    'id' => $variant->id,
+                    'name' => $variant->variant->name,
+                    'values' => json_decode($variant->values),
+                ];
+            }),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

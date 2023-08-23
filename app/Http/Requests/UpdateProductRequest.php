@@ -26,8 +26,8 @@ class UpdateProductRequest extends FormRequest
             'manage_code' => 'boolean',
             'unit_id' => 'required',
             'category_id' => 'required|exists:categories,id',
-            'conversion_id' => 'array',
-            'conversion_factor' => 'array'
+            'conversion' => 'array',
+            'variants' => 'array'
         ];
 
         if (!$this->input('manage_code')) {

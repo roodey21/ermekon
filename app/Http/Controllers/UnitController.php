@@ -2,20 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UnitResource;
+use App\Imports\UnitsImport;
 use App\Models\Unit;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UnitController extends Controller
 {
     public function index()
     {
-        $units = Unit::latest()->paginate(10);
-        return view('product.unit.index', compact('units'));
+        $units = Unit::orderBy('name')->get();
+        return Inertia::render('Product/Unit/Index', [
+            'units' => UnitResource::collection($units)
+        ]);
+        // return view('product.unit.index', compact('units'));
     }
 
     public function create()
     {
-        return view('product.unit.create');
+        return Inertia::render('Product/Unit/Create');
     }
 
     public function store(Request $request)
@@ -29,7 +36,9 @@ class UnitController extends Controller
 
     public function edit(Unit $unit)
     {
-        return view('product.unit.edit', compact('unit'));
+        return Inertia::render('Product/Unit/Edit', [
+            'unit' => new UnitResource($unit)
+        ]);
     }
 
     public function update(Request $request, Unit $unit)
@@ -44,6 +53,12 @@ class UnitController extends Controller
     public function destroy(Unit $unit)
     {
         $unit->delete();
+        return redirect()->route('unit.index');
+    }
+
+    public function massDestroy(Request $request)
+    {
+        Unit::whereIn('id', $request->ids)->delete();
         return redirect()->route('unit.index');
     }
 
@@ -65,5 +80,18 @@ class UnitController extends Controller
         ]);
         $unit = Unit::create($validated);
         return response()->json($unit);
+    }
+
+    public function import()
+    {
+        return Inertia::render('Product/Unit/Import');
+    }
+
+    public function storeImport(Request $request)
+    {
+        // dd($request->all());
+        Excel::import(new UnitsImport, $request->file('file'));
+
+        return redirect()->route('unit.index');
     }
 }
