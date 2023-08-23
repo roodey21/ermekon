@@ -26,8 +26,7 @@ class StoreProductRequest extends FormRequest
             'manage_code' => 'boolean',
             'unit_id' => 'required|exists:units,id',
             'category_id' => 'required|exists:categories,id',
-            'conversion_id' => 'array',
-            'conversion_factor' => 'array'
+            'conversion' => 'array',
         ];
 
         if ($this->input('manage_code')) {
@@ -49,8 +48,6 @@ class StoreProductRequest extends FormRequest
             'unit_id.exists' => 'Satuan tidak ditemukan',
             'category_id.required' => 'Kategori harus diisi',
             'category_id.exists' => 'Kategori tidak ditemukan',
-            'conversion_id.array' => 'Konversi harus berupa array',
-            'conversion_factor.array' => 'Konversi harus berupa array',
             'code.required' => 'Kode harus diisi',
             'code.max' => 'Kode maksimal 100 karakter',
             'code.unique' => 'Kode sudah digunakan'

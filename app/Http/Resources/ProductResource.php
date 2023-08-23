@@ -18,8 +18,16 @@ class ProductResource extends JsonResource
             'id' => $this->id,
             'code' => $this->code,
             'name' => $this->name,
-            'main_unit_name' => $this->main_unit_name,
-            'conversion_units' => $this->conversion_units,
+            'main_unit' => $this->main_unit,
+            // 'conversion' => ,
+            // conversion => array yang berisi id, name, conversion_value
+            'conversion' => $this->conversion_units->map(function ($conversion) {
+                return [
+                    'unit_id' => $conversion->id,
+                    'name' => $conversion->name,
+                    'value' => $conversion->pivot->conversion_factor,
+                ];
+            }),
             'category' => $this->categories->first(),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

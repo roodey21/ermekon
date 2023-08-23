@@ -57,4 +57,13 @@ class UnitController extends Controller
         }
         return response()->json($units);
     }
+
+    public function storeTemporary(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|max:100|unique:units,name'
+        ]);
+        $unit = Unit::create($validated);
+        return response()->json($unit);
+    }
 }

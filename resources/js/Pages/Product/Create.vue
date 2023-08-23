@@ -3,11 +3,12 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, router, useForm } from '@inertiajs/vue3';
-import { onMounted, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import axios from "axios";
 
 const searchResult = ref([]);
 const mainUnit = ref(null)
+
 const searching = (search) => {
     axios.get(route('unit.getData', { query: search }))
         .then(response => {
@@ -27,6 +28,7 @@ const handleSearch = (search, loading) => {
     searching(search)
     loading(false)
 }
+
 const form = useForm({
     name: '',
     category_id: '',
@@ -60,8 +62,13 @@ defineProps({
 watch(() => form.manage_code, (value) => {
     value ? form.manage_code = true : form.manage_code = false
 })
-watch(() => mainUnit, (value) => {
-    form.unit_id = value.id
+watch(mainUnit, (value) => {
+    if (value == null) {
+        form.conversion = []
+        form.unit_id = ''
+    } else {
+        form.unit_id = value.id
+    }
 })
 </script>
 
@@ -135,13 +142,6 @@ watch(() => mainUnit, (value) => {
                                                     class="style-chooser"
                                                     label="name"
                                                     >
-                                                    <!-- <template #list-footer="{ search }">
-                                                        <li class="text-center">
-                                                            <a href="">
-                                                                Buat "{{ search }}"
-                                                            </a>
-                                                        </li>
-                                                    </template> -->
                                                 </v-select>
                                                 <template v-if="mainUnit">
                                                     <div class="grid items-center grid-cols-12 mt-2" v-for="(unit, index) in form.conversion" :key="unit">
@@ -157,7 +157,6 @@ watch(() => mainUnit, (value) => {
                                                                 v-model="form.conversion[index].unit_id"
                                                                 :options="searchResult"
                                                                 @search="handleSearch"
-                                                                @search:focus="handleSearch"
                                                                 :reduce="unit => unit.id"
                                                                 :clearable="false"
                                                                 class="style-chooser"
@@ -206,7 +205,7 @@ watch(() => mainUnit, (value) => {
                                                             class="w-8 h-4 bg-stone-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[3px] after:left-[1px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-blue-600">
                                                         </div>
                                                         <span
-                                                            class="ml-3 text-sm font-medium text-stone-900 dark:text-stone-300">Kode</span>
+                                                            class="ml-3 text-sm font-medium text-stone-900">Kode</span>
                                                     </label>
                                                     <span
                                                         class="absolute bottom-0 hidden p-1 text-xs translate-x-1/2 translate-y-full rounded w-36 right-1/2 text-stone-100 bg-stone-900">aktif
@@ -236,7 +235,7 @@ watch(() => mainUnit, (value) => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr class="bg-white border-b hover:bg-stone-50 dark:hover:bg-stone-600">
+                                            <tr class="bg-white border-b hover:bg-stone-50">
                                                 <th scope="row"
                                                     class="px-4 py-2 font-medium text-stone-900 whitespace-nowrap">
                                                     <input type="text"

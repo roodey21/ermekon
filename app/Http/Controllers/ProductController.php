@@ -42,18 +42,24 @@ class ProductController extends Controller
         // conversion_name = [ 0 => "cm", 1 => null, 2 => "m"] dan conversion_factor = [ 0 => 100, 1 => null, 2 => null]
         // maka hasilnya akan menjadi [ 0 => ["name" => "cm", "factor" => 100]]
 
+        // gabungin request unit_id dengan conversion
+        // jadi unit_id = 1 dan conversion = [ 0 => ["name" => "cm", "factor" => 100]]
+        // nantinya akan menjadi [ 0 => ["id" => 1, "factor" => 1], 1 => ["id" => 2, "factor" => 100]]
+        // jadi begini caranya
+        // $conversion = [];
+        // jika unit_id tidak kosong maka tambahkan data ke array $conversion
+        // $conversion = [ 0 => ["id" => 1, "factor" => 1]]
+
         $conversion[] = [
             'id' => $request->unit_id,
             'factor' => 1
         ];
-        if ($request->filled('conversion_id') && $request->filled('conversion_factor')) {
-            foreach ($request->conversion_id as $key => $value) {
-                if ($value && $request->conversion_factor[$key]) {
-                    $conversion[] = [
-                        'id' => $value,
-                        'factor' => $request->conversion_factor[$key]
-                    ];
-                }
+        foreach($request->conversion as $key => $value) {
+            if ($value['unit_id'] && $value['value']) {
+                $conversion[] = [
+                    'id' => $value['unit_id'],
+                    'factor' => $value['value']
+                ];
             }
         }
 
