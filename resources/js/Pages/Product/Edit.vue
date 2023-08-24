@@ -34,7 +34,7 @@ const { product } = defineProps({
     product: {
         type: Object,
     },
-    categories: {
+    types: {
         type: Object,
     },
     errors: {
@@ -49,7 +49,7 @@ const { product } = defineProps({
 const form = useForm({
     id: product.data.id,
     name: product.data.name,
-    category_id: product.data.category.id,
+    type_id: product.data.type.id,
     unit_id: product.data.main_unit.id,
     code: product.data.code,
     manage_code: product.data.manage_code,
@@ -65,7 +65,7 @@ const addConversion = () => {
 const addVariant = () => {
     form.variants.push({
         name: '',
-        value: ''
+        values: ''
     })
 }
 const deleteVariant = (index) => {
@@ -136,13 +136,13 @@ const deleteProduct = (id) => {
                                                 <label for="category_id" class="text-sm font-medium">Tipe Produk</label>
                                             </div>
                                             <div class="col-span-4">
-                                                <select v-model="form.category_id"
+                                                <select v-model="form.type_id"
                                                     class="block w-full p-1 px-2 text-sm text-gray-900 border-t-0 border-gray-300 border-x-0 hover:border-gray-600 focus:border-gray-600 focus:ring-0">
-                                                    <option :value="category.id" v-for="category in categories"
-                                                        :key="category.id">{{ category.name }}</option>
+                                                    <option :value="t.id" v-for="t in types"
+                                                        :key="t.id">{{ t.name }}</option>
                                                 </select>
-                                                <template v-if="errors.category_id">
-                                                    <span class="text-sm text-red-500">{{ errors.category_id }}</span>
+                                                <template v-if="errors.type_id">
+                                                    <span class="text-sm text-red-500">{{ errors.type_id }}</span>
                                                 </template>
                                             </div>
                                         </div>
@@ -245,7 +245,7 @@ const deleteProduct = (id) => {
                                                 <th scope="col" class="px-4 py-2 text-center">
                                                     Nama Variant
                                                 </th>
-                                                <th scope="col" class="px-4 py-2 w-2./3">
+                                                <th scope="col" class="px-4 py-2 w-2/3">
                                                     Value
                                                 </th>
                                             </tr>

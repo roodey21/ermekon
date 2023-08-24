@@ -50,7 +50,7 @@ watch(() => isAllSelected, (value) => {
                 <PrimaryButton @click="router.get(route('unit.create'))">
                     Baru
                 </PrimaryButton>
-                <PrimaryButton @click="router.get(route('unit.import'))">
+                <PrimaryButton @click="router.get(route('unit.show-import-form'))">
                     Import data
                 </PrimaryButton>
                 <template v-if="selectedItems.length">

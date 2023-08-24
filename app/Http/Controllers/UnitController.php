@@ -82,12 +82,12 @@ class UnitController extends Controller
         return response()->json($unit);
     }
 
-    public function import()
+    public function showImportForm()
     {
         return Inertia::render('Product/Unit/Import');
     }
 
-    public function storeImport(Request $request)
+    public function import(Request $request)
     {
         // dd($request->all());
         Excel::import(new UnitsImport, $request->file('file'));

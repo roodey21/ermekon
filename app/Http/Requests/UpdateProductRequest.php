@@ -25,7 +25,7 @@ class UpdateProductRequest extends FormRequest
             'name' => 'required|max:100',
             'manage_code' => 'boolean',
             'unit_id' => 'required',
-            'category_id' => 'required|exists:categories,id',
+            'type_id' => 'required|exists:types,id',
             'conversion' => 'array',
             'variants' => 'array'
         ];
@@ -35,5 +35,21 @@ class UpdateProductRequest extends FormRequest
         }
 
         return $rules;
+    }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'Nama produk harus diisi',
+            'name.max' => 'Nama produk maksimal 100 karakter',
+            'manage_code.boolean' => 'Manage code harus berupa boolean',
+            'unit_id.required' => 'Satuan harus diisi',
+            'unit_id.exists' => 'Satuan tidak ditemukan',
+            'type_id.required' => 'Tipe Produk harus diisi',
+            'type_id.exists' => 'Tipe Produk tidak ditemukan',
+            'code.required' => 'Kode harus diisi',
+            'code.max' => 'Kode maksimal 100 karakter',
+            'code.unique' => 'Kode sudah digunakan'
+        ];
     }
 }

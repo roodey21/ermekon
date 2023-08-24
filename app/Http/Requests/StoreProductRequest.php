@@ -22,16 +22,16 @@ class StoreProductRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name' => 'required|max:100',
+            'name' => 'required|min:3|max:100',
             'manage_code' => 'boolean',
             'unit_id' => 'required|exists:units,id',
-            'category_id' => 'required|exists:categories,id',
+            'type_id' => 'required|exists:types,id',
             'conversion' => 'array',
             'variants' => 'array'
         ];
 
         if ($this->input('manage_code')) {
-            // $rules['code'] = 'max:100|unique:products,code';
+            $rules['code'] = 'max:100|unique:products,code';
         } else {
             $rules['code'] = 'required|max:100|unique:products,code';
         }
@@ -47,8 +47,8 @@ class StoreProductRequest extends FormRequest
             'manage_code.boolean' => 'Manage code harus berupa boolean',
             'unit_id.required' => 'Satuan harus diisi',
             'unit_id.exists' => 'Satuan tidak ditemukan',
-            'category_id.required' => 'Kategori harus diisi',
-            'category_id.exists' => 'Kategori tidak ditemukan',
+            'type_id.required' => 'Tipe Produk harus diisi',
+            'type_id.exists' => 'Tipe Produk tidak ditemukan',
             'code.required' => 'Kode harus diisi',
             'code.max' => 'Kode maksimal 100 karakter',
             'code.unique' => 'Kode sudah digunakan'

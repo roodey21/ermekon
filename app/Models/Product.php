@@ -32,6 +32,11 @@ class Product extends Model
         return $this->morphToMany(Category::class, 'model', 'model_has_categories');
     }
 
+    public function type()
+    {
+        return $this->belongsTo(Type::class);
+    }
+
     public function units()
     {
         return $this->belongsToMany(Unit::class, 'product_units')->withPivot('conversion_factor');

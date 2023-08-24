@@ -44,8 +44,12 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/units/get-data', [UnitController::class, 'getData'])->name('unit.getData');
 
-    Route::get('/unit/import', [UnitController::class, 'import'])->name('unit.import');
-    Route::post('/unit/import', [UnitController::class, 'storeImport'])->name('unit.import-upload');
+    Route::get('/product/import', [ProductController::class, 'showImportForm'])->name('product.show-import-form');
+    Route::post('/product/import', [ProductController::class, 'import'])->name('product.import');
+    Route::delete('/product/mass-delete', [ProductController::class, 'massDestroy'])->name('product.mass-destroy');
+
+    Route::get('/unit/import', [UnitController::class, 'showImportForm'])->name('unit.show-import-form');
+    Route::post('/unit/import', [UnitController::class, 'import'])->name('unit.import');
     Route::delete('/unit/mass-delete', [UnitController::class, 'massDestroy'])->name('unit.mass-destroy');
     Route::resource('unit', UnitController::class);
 });

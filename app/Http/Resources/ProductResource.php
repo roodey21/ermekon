@@ -26,7 +26,7 @@ class ProductResource extends JsonResource
                     'value' => $conversion->pivot->conversion_factor,
                 ];
             }),
-            'category' => $this->categories->first(),
+            'type' => $this->type,
             'variants' => $this->productVariants->map(function ($variant) {
                 return [
                     'id' => $variant->id,

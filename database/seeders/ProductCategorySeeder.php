@@ -3,8 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class ProductCategorySeeder extends Seeder
 {
@@ -18,7 +19,7 @@ class ProductCategorySeeder extends Seeder
         foreach ($productCategories as $productCategory) {
             Category::create([
                 'name' => $productCategory,
-                'slug' => \Str::slug($productCategory),
+                'slug' => Str::slug($productCategory),
                 'type' => 'product',
             ]);
         }

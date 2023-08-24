@@ -31,7 +31,7 @@ const handleSearch = (search, loading) => {
 
 const form = useForm({
     name: '',
-    category_id: '',
+    type_id: '',
     unit_id: '',
     code: '',
     conversion: [],
@@ -47,7 +47,7 @@ const addConversion = () => {
 const addVariant = () => {
     form.variants.push({
         name: '',
-        value: ''
+        values: ''
     })
 }
 const clearRow = (index) => {
@@ -57,7 +57,7 @@ const deleteVariant = (index) => {
     form.variants.splice(index, 1)
 }
 defineProps({
-    categories: {
+    types: {
         type: Object
     },
     errors: {
@@ -127,16 +127,18 @@ watch(mainUnit, (value) => {
                                     <div class="flex flex-col gap-4">
                                         <div class="grid grid-cols-5 align-center">
                                             <div class="col-span-full md:col-span-2 lg:col-span-1">
-                                                <label for="category_id" class="text-sm font-medium">Tipe Produk</label>
+                                                <label for="type_id" class="text-sm font-medium">Tipe Produk</label>
                                             </div>
                                             <div class="col-span-full md:col-span-3 lg:col-span-4">
-                                                <select v-model="form.category_id"
-                                                    class="block w-full p-1 px-2 text-sm text-gray-900 border-t-0 border-gray-300 border-x-0 hover:border-gray-600 focus:border-gray-600 focus:ring-0">
-                                                    <option :value="category.id" v-for="category in categories"
-                                                        :key="category.id">{{ category.name }}</option>
+                                                <select v-model="form.type_id"
+                                                    class="block w-full p-1 px-2 text-sm text-gray-900 border-t-0 border-gray-300 border-x-0 hover:border-gray-600 focus:border-gray-600 focus:ring-0"
+                                                    >
+                                                    <option :key="t.id" v-for="t in types" :value="t.id">
+                                                        {{ t.name }}
+                                                    </option>
                                                 </select>
-                                                <template v-if="errors.category_id">
-                                                    <span class="text-sm text-red-500">{{ errors.category_id }}</span>
+                                                <template v-if="errors.type_id">
+                                                    <span class="text-sm text-red-500">{{ errors.type_id }}</span>
                                                 </template>
                                             </div>
                                         </div>
