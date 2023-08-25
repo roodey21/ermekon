@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
-import { router, useForm } from '@inertiajs/vue3';
+import { Head, router, useForm } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 
@@ -16,6 +16,8 @@ const submit = () => {
 </script>
 
 <template>
+    <Head title="Import produk" />
+
     <AuthenticatedLayout>
         <div class="flex flex-col min-h-screen md:flex-row border-y">
             <div class="md:border-r-2 basis-full md:basis-2/3">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ImportProductRequest;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
@@ -114,7 +115,7 @@ class ProductController extends Controller
         return Inertia::render('Product/Import');
     }
 
-    public function import(Request $request)
+    public function import(ImportProductRequest $request)
     {
         Excel::import(new ProductImport, $request->file('file'));
 

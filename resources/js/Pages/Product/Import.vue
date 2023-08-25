@@ -1,11 +1,13 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
-import { router, useForm } from '@inertiajs/vue3';
+import { Head, router, useForm } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 
 defineProps({
-    errors: Object
+    errors: {
+        type: Object
+    }
 })
 const form = useForm({
     file: null,
@@ -16,6 +18,7 @@ const submit = () => {
 </script>
 
 <template>
+    <Head title="Import produk" />
     <AuthenticatedLayout>
         <div class="flex flex-col min-h-screen md:flex-row border-y">
             <div class="md:border-r-2 basis-full md:basis-2/3">
@@ -105,12 +108,12 @@ const submit = () => {
                                                     <p class="text-xs text-stone-500">XLSX, CSV, XML (max: 1024kb)</p>
                                                 </div>
                                             </template>
-                                            <input id="dropzone-file" type="file" @input="form.file = $event.target.files[0]" class="hidden" />
+                                            <input id="dropzone-file" type="file" @input="form.file = $event.target.files[0]" class="hidden"/>
                                         </label>
                                     </div>
                                     <!-- <input type="file" @input="form.file = $event.target.files[0]"
                                         class="border-x-0 border-t-0 border-stone-300 hover:border-stone-600 focus:border-stone-600 text-stone-900 text-sm block w-full p-2.5 focus:ring-0"> -->
-                                    <template v-if="errors.name">
+                                    <template v-if="errors.file">
                                         <span class="text-sm text-red-500">{{ errors.file }}</span>
                                     </template>
                                 </div>
