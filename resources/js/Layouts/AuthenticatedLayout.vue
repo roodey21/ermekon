@@ -13,7 +13,7 @@ const showingNavigationDropdown = ref(false);
 <template>
     <div>
         <div class="min-h-screen bg-stone-100">
-            <nav class="sticky top-0 border-b bg-stone-800 border-stone-100">
+            <nav class="fixed top-0 z-50 w-full border-b bg-stone-800 border-stone-100">
                 <!-- Primary Navigation Menu -->
                 <div class="px-4 mx-auto">
                     <div class="flex justify-between h-12">
@@ -31,6 +31,9 @@ const showingNavigationDropdown = ref(false);
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
+                                </NavLink>
+                                <NavLink :href="route('project.index')" :active="route().current('project.*')">
+                                    Project
                                 </NavLink>
                                 <NavLink :href="route('product.index')" :active="route().current('product.*')">
                                     Produk
@@ -140,17 +143,17 @@ const showingNavigationDropdown = ref(false);
                         </div>
                     </div>
                 </div>
+
+                <!-- Page Heading -->
+                <header class="bg-white border-b shadow" v-if="$slots.header">
+                    <div class="px-4 py-3 mx-auto">
+                        <slot name="header" />
+                    </div>
+                </header>
             </nav>
 
-            <!-- Page Heading -->
-            <header class="bg-white border-b shadow" v-if="$slots.header">
-                <div class="px-4 py-3 mx-auto sm:px-6 lg:px-8">
-                    <slot name="header" />
-                </div>
-            </header>
-
             <!-- Page Content -->
-            <main>
+            <main class="py-12">
                 <slot />
             </main>
         </div>

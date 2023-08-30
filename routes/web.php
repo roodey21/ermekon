@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UnitController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -52,6 +53,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/unit/import', [UnitController::class, 'import'])->name('unit.import');
     Route::delete('/unit/mass-delete', [UnitController::class, 'massDestroy'])->name('unit.mass-destroy');
     Route::resource('unit', UnitController::class);
+
+    Route::resource('project', ProjectController::class);
 });
 
 require __DIR__.'/auth.php';
