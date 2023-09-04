@@ -28,12 +28,14 @@ class ProjectController extends Controller
     {
         DB::transaction(function () use ($request) {
             $project = Project::create($request->validated());
-            $customer = Customer::firstOrCreate(
-                ['name' => $request->client_name],
-                ['name' => $request->client_name, 'telephone' => $request->client_telephone]
-            );
-            $project->customer()->associate($customer);
-            $project->save();
+            if ($request->client_name) {
+                $customer = Customer::firstOrCreate(
+                    ['name' => $request->client_name],
+                    ['name' => $request->client_name, 'telephone' => $request->client_telephone]
+                );
+                $project->customer()->associate($customer);
+                $project->save();
+            }
         });
         return redirect()->back();
     }
