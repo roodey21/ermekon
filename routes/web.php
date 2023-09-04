@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UnitController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -55,6 +57,15 @@ Route::middleware('auth')->group(function () {
     Route::resource('unit', UnitController::class);
 
     Route::resource('project', ProjectController::class);
+    Route::get('/project/{project}/package/{package}', [PackageController::class, 'show'])->name('project.package.show');
+    Route::post('/project/{project}/package', [PackageController::class, 'store'])->name('project.package.store');
+    Route::post('/project/{project}/subpackage', [PackageController::class, 'storeSubPackage'])->name('project.package.store-subpackage');
+
+    Route::post('/project/{project}/task', [TaskController::class, 'store'])->name('project.package.task.store');
+    Route::get('/project/{project}/task/{task}', [TaskController::class, 'show'])->name('project.package.task.show');
 });
 
+Route::get('/layouting', function () {
+    return inertia('Layouting');
+});
 require __DIR__.'/auth.php';

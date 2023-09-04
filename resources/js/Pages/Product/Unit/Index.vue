@@ -31,11 +31,11 @@ const { units } = defineProps({
 })
 watch(() => isAllSelected, (value) => {
     if (value.length === 0) {
-        isAllSelected = false;
+        isAllSelected.value = false;
     } else if (value.length === this.users.length) {
-        isAllSelected = true;
+        isAllSelected.value = true;
     } else {
-        isAllSelected = false;
+        isAllSelected.value = false;
     }
 })
 </script>
@@ -44,22 +44,20 @@ watch(() => isAllSelected, (value) => {
     <Head title="List Satuan" />
 
     <AuthenticatedLayout>
-        <template #header>
-            <div class="flex gap-4">
-                <h2 class="text-xl font-semibold leading-tight text-gray-800">Satuan</h2>
-                <PrimaryButton @click="router.get(route('unit.create'))">
-                    Baru
-                </PrimaryButton>
-                <PrimaryButton @click="router.get(route('unit.show-import-form'))">
-                    Import data
-                </PrimaryButton>
-                <template v-if="selectedItems.length">
-                    <DangerButton @click="deleteSelectedItems">
-                        Hapus data yang dipilih
-                    </DangerButton>
-                </template>
-            </div>
-        </template>
+        <div class="px-4 py-3 border-b bg-white flex gap-4">
+            <h2 class="text-xl font-semibold leading-tight text-gray-800">Satuan</h2>
+            <PrimaryButton @click="router.get(route('unit.create'))">
+                Baru
+            </PrimaryButton>
+            <PrimaryButton @click="router.get(route('unit.show-import-form'))">
+                Import data
+            </PrimaryButton>
+            <template v-if="selectedItems.length">
+                <DangerButton @click="deleteSelectedItems">
+                    Hapus data yang dipilih
+                </DangerButton>
+            </template>
+        </div>
 
         <div class="mx-auto">
             <div class="overflow-hidden bg-white shadow-sm">

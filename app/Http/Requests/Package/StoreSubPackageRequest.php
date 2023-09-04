@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Package;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ImportProductRequest extends FormRequest
+class StoreSubPackageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,15 +22,8 @@ class ImportProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => 'required|file'
-        ];
-    }
-
-    public function messages(): array
-    {
-        return [
-            'file.required' => 'File tidak boleh kosong.',
-            'file.mimes' => 'Berikut tipe file yang diperbolehkan: xlsx, xls, csv.'
+            'name' => 'required|string|max:255',
+            'parent_id' => 'required|exists:packages,id'
         ];
     }
 }

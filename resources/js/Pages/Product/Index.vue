@@ -51,25 +51,23 @@ watch(selectedItems, (value) => {
     <Head title="List Product" />
 
     <AuthenticatedLayout>
-        <template #header>
-            <div class="flex gap-4">
-                <h2 class="text-xl font-semibold leading-tight text-gray-800">Product</h2>
-                <PrimaryButton @click="router.get(route('product.create'))">
-                    Baru
-                </PrimaryButton>
-                <PrimaryButton @click="router.get(route('product.import'))">
-                    Import data
-                </PrimaryButton>
-                <template v-if="selectedItems.length">
-                    <DangerButton @click="deleteSelectedItems">
-                        Hapus data yang dipilih
-                    </DangerButton>
-                </template>
-            </div>
-        </template>
+        <div class="sticky top-12 z-10 px-4 py-3 border-b bg-white flex gap-4">
+            <h2 class="text-xl font-semibold leading-tight text-gray-800">Product</h2>
+            <PrimaryButton @click="router.get(route('product.create'))">
+                Baru
+            </PrimaryButton>
+            <PrimaryButton @click="router.get(route('product.import'))">
+                Import data
+            </PrimaryButton>
+            <template v-if="selectedItems.length">
+                <DangerButton @click="deleteSelectedItems">
+                    Hapus data yang dipilih
+                </DangerButton>
+            </template>
+        </div>
 
         <div class="mx-auto">
-            <div class="overflow-hidden bg-white shadow-sm">
+            <div class="overflow-hidden h-full bg-white shadow-sm">
                 <div class="relative overflow-x-auto shadow-md">
                     <table class="w-full text-sm text-left text-gray-500">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
@@ -94,7 +92,7 @@ watch(selectedItems, (value) => {
                                 </th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="h-[80vh]">
                             <template v-if="products.data.length">
                                 <tr v-for="product in products.data" :key="product.id" class="bg-white border-b hover:bg-gray-50">
                                     <td class="w-4 px-4 py-2">

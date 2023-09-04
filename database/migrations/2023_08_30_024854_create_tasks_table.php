@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description');
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
-            $table->foreignId('package_id')->constrained('packages')->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('status_id');
+            $table->text('description')->nullable();
+            $table->dateTime('start_date')->nullable();
+            $table->dateTime('end_date')->nullable();
+            $table->foreignId('package_id')->constrained('packages')->cascadeOnDelete()->nullable();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete()->nullable();
+            $table->foreignId('status_id')->nullable();
             $table->timestamps();
         });
     }

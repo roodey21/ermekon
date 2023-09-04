@@ -42,11 +42,12 @@ class ProductImport implements ToCollection, WithHeadingRow
         $types = Type::get();
         foreach ($rows as $row)
         {
-            $type = match ($row['jenis']) {
+            $type = match ($row['jenis_barang']) {
                 'INV' => $types->where('slug', 'bahan-baku')->first()->id,
                 'SVC' => $types->where('slug', 'pekerjaan')->first()->id,
                 'NON' => $types->where('slug', 'bahan-baku')->first()->id,
                 'GROUP' => $types->where('slug', 'paket-pekerjaan')->first()->id,
+                default => $types->where('slug', 'bahan-baku')->first()->id
             };
             $product = Product::create([
                 'name' => $row['nama_barang'],
