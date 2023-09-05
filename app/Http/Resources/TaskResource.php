@@ -18,8 +18,14 @@ class TaskResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->when($this->description, $this->description),
-            'user_id' => $this->when($this->user_id, $this->user_id),
-            'package_id' => $this->package_id,
+            'employee' => $this->employee->name,
+            'package' => [
+                'id' => $this->package->id,
+                'name' => $this->package->name,
+                'parent_id' => $this->package->parent_id,
+            ],
+            'start_date' => $this->when($this->start_date, $this->start_date),
+            'end_date' => $this->when($this->end_date, $this->end_date),
         ];
     }
 }

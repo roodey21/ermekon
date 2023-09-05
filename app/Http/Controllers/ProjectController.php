@@ -37,7 +37,7 @@ class ProjectController extends Controller
                 $project->save();
             }
         });
-        return redirect()->back();
+        return redirect()->route('project.index');
     }
 
     public function show(Project $project)

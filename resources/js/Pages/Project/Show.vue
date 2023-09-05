@@ -2,10 +2,11 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Modal from '@/Components/Modal.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import { Link, useForm } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import { computed } from 'vue';
 
-const { project } = defineProps({
+const props = defineProps({
     errors: Object,
     project: Object
 })
@@ -32,14 +33,14 @@ const formSubPackage = useForm({
     parent_id: ''
 })
 
-const addSubPackage = (parent) => {
-    let parent_id = project.data.packages.find(taskPackage => taskPackage.id === parent)
-    formSubPackage.parent_id = parent_id.id
+const addSubPackage = (id) => {
+    const parentPackage = props.project.data.packages.find(item => item.id == id)
+    formSubPackage.parent_id = parentPackage.id
     showCreateSubPackageModal.value = true
 }
 
 const handleSubmitPackage = () => {
-    formPackage.post(route('project.package.store', project.data.id), {
+    formPackage.post(route('project.package.store', props.project.data.id), {
         onSuccess: () => {
             closeCreatePackageModal()
             formPackage.reset()
@@ -48,7 +49,7 @@ const handleSubmitPackage = () => {
 }
 
 const handleSubmitSubPackage = () => {
-    formSubPackage.post(route('project.package.store', project.data.id), {
+    formSubPackage.post(route('project.package.store-subpackage', props.project.data.id), {
         onSuccess: () => {
             closeCreateSubPackageModal()
             formSubPackage.reset()
@@ -58,6 +59,7 @@ const handleSubmitSubPackage = () => {
 </script>
 <template>
     <AuthenticatedLayout>
+        <Head :title="`Project ${project.data.name}`"/>
         <div class="flex flex-row justify-between px-4 py-3 bg-white border-b shadow-sm">
             <div class="flex flex-col">
                 <div class="flex flex-row items-center gap-2">
@@ -72,8 +74,12 @@ const handleSubmitSubPackage = () => {
                     <button @click="showCreatePackageModal = true" class="px-2 py-1 text-sm font-semibold text-white bg-stone-700">+ Paket Pekerjaan</button>
                 </div>
             </div>
-            <div class="flex items-center w-full max-w-xs gap-2 border rounded h-min border-stone-400">
-                <span>🔎</span>
+            <div class="flex items-center w-full max-w-xs border rounded h-min border-stone-400">
+                <span class="px-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                    </svg>
+                </span>
                 <input type="text" class="w-full px-2 py-1 text-sm font-semibold border-0 placeholder:text-sm" placeholder="Cari disini ...">
             </div>
         </div>
@@ -100,12 +106,12 @@ const handleSubmitSubPackage = () => {
                         </Link>
                     </template>
 
-                    <div @click="addSubPackage(taskPackage.id)" class="flex items-center justify-center w-full p-2 text-center rounded bg-stone-700 hover:cursor-pointer hover:bg-stone-800">
+                    <button type="button" @click="addSubPackage(taskPackage.id)" class="flex items-center justify-center w-full p-2 text-center rounded bg-stone-700 hover:cursor-pointer hover:bg-stone-800">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-white">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
                         </svg>
-                        <span class="text-xs font-medium capitalize text-stone-50">sub paket pekerjaan</span>
-                    </div>
+                        <span class="text-xs font-medium capitalize text-stone-50">sub paket pekerjaan {{ taskPackage.id }}</span>
+                    </button>
                 </div>
                 <div class="flex flex-row justify-between p-2 border-t">
                     <div></div>
@@ -118,14 +124,16 @@ const handleSubmitSubPackage = () => {
             </div>
         </div>
 
-        <Modal :show="showCreatePackageModal" @close="closeCreatePackageModal" max-width="lg">
+        <Modal :show="showCreatePackageModal" @close="closeCreatePackageModal" max-width="lg" :closeable="false">
             <form @submit.prevent="handleSubmitPackage">
                 <div class="flex justify-between p-4 border-b">
                     <h5 class="text-base font-semibold">
                         Buat Paket Pekerjaan Baru
                     </h5>
-                    <button @click="closeCreatePackageModal">
-                        ❌
+                    <button type="button" @click="closeCreatePackageModal" class="p-[2px] rounded hover:bg-stone-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
                     </button>
                 </div>
                 <div class="px-4 py-6">
@@ -148,19 +156,16 @@ const handleSubmitSubPackage = () => {
                 </div>
             </form>
         </Modal>
-        <Modal :show="showCreateSubPackageModal" @close="closeCreateSubPackageModal" max-width="lg">
-            <form @submit.prevent="formSubPackage.post(route('project.package.store-subpackage', project.data.id), {
-                onSuccess: () => {
-                    closeCreateSubPackageModal()
-                    formSubPackage.reset()
-                }
-            })">
+        <Modal :show="showCreateSubPackageModal" @close="closeCreateSubPackageModal" max-width="lg" :closeable="false">
+            <form @submit.prevent="handleSubmitSubPackage">
                 <div class="flex justify-between p-4 border-b">
                     <h5 class="text-base font-semibold">
                         Buat Sub Paket Pekerjaan Baru
                     </h5>
-                    <button @click="closeCreateSubPackageModal">
-                        ❌
+                    <button type="button" @click="closeCreateSubPackageModal" class="p-[2px] rounded hover:bg-stone-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
                     </button>
                 </div>
                 <div class="px-4 py-6">

@@ -6,52 +6,51 @@ import SecondaryButton from '@/Components/SecondaryButton.vue'
 import Modal from '@/Components/Modal.vue'
 
 import { ref } from 'vue';
+import Dropdown from '@/Components/Dropdown.vue'
 
-const { taskPackage } = defineProps({
+const props = defineProps({
     errors: Object,
     project: Object,
     taskPackage: Object
 })
 
-const form = useForm({
+const formTask = useForm({
     name: '',
     description: '',
     user_id: '',
+    user_name: '',
     package_id: '',
 })
 
 const formSubPackage = useForm({
     name: '',
-    parent_id: taskPackage.data.id,
+    parent_id: props.taskPackage.data.id,
 })
 const createTaskModal = ref(false)
 const createSubPackageModal = ref(false)
 
 const showCreateTaskModal = (package_id) => {
     createTaskModal.value = true
-    form.package_id = package_id
+    formTask.package_id = package_id
 }
 const closeCreateTaskModal = () => {
     createTaskModal.value = false
-    form.reset()
+    formTask.reset()
 }
 
 const showCreateSubPackageModal = (package_id) => {
     createSubPackageModal.value = true
-    form.package_id = package_id
+    formSubPackage.parent_id = package_id
 }
 const closeCreateSubPackageModal = () => {
     createSubPackageModal.value = false
     formSubPackage.reset()
 }
-const isAllSelected =  ref(false)
-const selectedItems = ref([])
-const selectAll = () => {
-    selectedItems.value = []
-    if(!isAllSelected.value) {
 
+const deleteSubPackage = (id) => {
+    if (confirm('Apakah anda yakin ingin menghapus sub paket pekerjaan ini?')) {
+        router.delete(route('project.package.destroy-subpackage', [props.project.data.id, id]))
     }
-    isAllSelected.value = !isAllSelected.value
 }
 </script>
 <template>
@@ -66,12 +65,6 @@ const selectAll = () => {
             <h3 class="text-lg font-semibold leading-tight text-gray-800">
                 {{ taskPackage.data.name }}
             </h3>
-            <!-- <PrimaryButton @click="router.get(route('product.create'))">
-                Baru
-            </PrimaryButton>
-            <PrimaryButton @click="router.get(route('product.import'))">
-                Import data
-            </PrimaryButton> -->
         </div>
 
         <div class="flex h-screen gap-4 px-4 py-3 overflow-auto flex-nowrap">
@@ -81,11 +74,26 @@ const selectAll = () => {
                         <h6 class="text-sm font-semibold">
                             {{ subpackage.name }}
                         </h6>
-                        <button class="hover:bg-stone-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
-                            </svg>
-                        </button>
+                        <Dropdown align="center" width="48">
+                            <template #trigger>
+                                <button class="hover:bg-stone-200">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+                                    </svg>
+                                </button>
+                            </template>
+
+                            <template #content>
+                                <ul class="space-y-1 text-sm">
+                                    <li class="px-2 py-1 hover:bg-stone-100" @click="deleteSubPackage(subpackage.id)">
+                                        Hapus
+                                    </li>
+                                    <li class="px-2 py-1 hover:bg-stone-100 text-stone-500">
+                                        Edit
+                                    </li>
+                                </ul>
+                            </template>
+                        </Dropdown>
                     </div>
                 </div>
                 <div class="flex flex-col gap-1">
@@ -118,18 +126,20 @@ const selectAll = () => {
         </div>
 
         <Modal :show="createTaskModal" @close="closeCreateTaskModal" max-width="2xl" :closeable="false">
-            <form @submit.prevent="form.post(route('project.package.task.store', project.data.id), {
+            <form @submit.prevent="formTask.post(route('project.package.task.store', project.data.id), {
                 onSuccess: () => {
                     closeCreateTaskModal()
-                    form.reset()
+                    formTask.reset()
                 }
             })">
                 <div class="flex justify-between p-4 border-b">
                     <h5 class="text-base font-semibold">
                         Buat Pekerjaan Baru
                     </h5>
-                    <button type="button" @click="closeCreateTaskModal">
-                        ❌
+                    <button type="button" @click="closeCreateTaskModal" class="p-[2px] rounded hover:bg-stone-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
                     </button>
                 </div>
                 <div class="px-4 py-6">
@@ -138,7 +148,7 @@ const selectAll = () => {
                             <label for="name" class="block mb-2 text-sm font-medium text-gray-900 after:content-['*'] after:text-red-500">
                                 Nama Pekerjaan
                             </label>
-                            <input type="text" v-model="form.name"
+                            <input type="text" v-model="formTask.name"
                                 class="block w-full p-0 text-sm text-gray-900 border-t-0 border-gray-300 border-x-0 hover:border-gray-600 focus:border-gray-600 focus:ring-0"
                                 placeholder="Nama pekerjaan" required>
                             <template v-if="errors.name">
@@ -149,7 +159,7 @@ const selectAll = () => {
                             <label for="package_id" class="block mb-2 text-sm font-medium text-gray-900">
                                 Untuk Paket Pekerjaan
                             </label>
-                            <select v-model="form.package_id"
+                            <select v-model="formTask.package_id"
                                 class="block w-full p-0 text-sm text-gray-900 border-t-0 border-gray-300 border-x-0 hover:border-gray-600 focus:border-gray-600 focus:ring-0"
                                 placeholder="Paket Pekerjaan" disabled>
                                 <option :value="subpackage.id" v-for="subpackage in taskPackage.data.subpackages" :key="subpackage.id">{{ subpackage.name }}</option>
@@ -162,18 +172,18 @@ const selectAll = () => {
                             <label for="user_id" class="block mb-2 text-sm font-medium text-gray-900">
                                 Petugas
                             </label>
-                            <input type="text" v-model="form.user_id"
+                            <input type="text" v-model="formTask.user_name"
                                 class="block w-full p-0 text-sm text-gray-900 border-t-0 border-gray-300 border-x-0 hover:border-gray-600 focus:border-gray-600 focus:ring-0"
                                 placeholder="Nama Petugas">
-                            <template v-if="errors.user_id">
-                                <span class="text-sm text-red-500">{{ errors.user_id }}</span>
+                            <template v-if="errors.user_name">
+                                <span class="text-sm text-red-500">{{ errors.user_name }}</span>
                             </template>
                         </div>
                         <div class="col-span-2">
                             <label for="description" class="block mb-2 text-sm font-medium text-gray-900">
                                 Note / Deskripsi Pekerjaan
                             </label>
-                            <textarea rows="4" v-model="form.description"
+                            <textarea rows="4" v-model="formTask.description"
                                 class="block w-full p-0 text-sm text-gray-900 border-t-0 border-gray-300 border-x-0 hover:border-gray-600 focus:border-gray-600 focus:ring-0"
                                 placeholder="Tulis deskripsi ...">
                             </textarea>
@@ -184,7 +194,7 @@ const selectAll = () => {
                     </div>
                 </div>
                 <div class="p-4 border-t">
-                    <PrimaryButton type="submit" :disabled="form.processing">Simpan</PrimaryButton>
+                    <PrimaryButton type="submit" :disabled="formTask.processing">Simpan</PrimaryButton>
                 </div>
             </form>
         </Modal>
@@ -199,8 +209,10 @@ const selectAll = () => {
                     <h5 class="text-base font-semibold">
                         Buat Sub Paket Pekerjaan Baru
                     </h5>
-                    <button @click="closeCreateSubPackageModal">
-                        ❌
+                    <button type="button" @click="closeCreateSubPackageModal" class="p-[2px] rounded hover:bg-stone-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
                     </button>
                 </div>
                 <div class="px-4 py-6">

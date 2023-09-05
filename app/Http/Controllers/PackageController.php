@@ -23,12 +23,21 @@ class PackageController extends Controller
     public function store(Project $project, StorePackageRequest $request)
     {
         $project->packages()->create($request->validated());
-        return redirect()->back();
+        return redirect()->route('project.show', $project->id);
     }
 
     public function storeSubPackage(Project $project, StoreSubPackageRequest $request)
     {
         $project->packages()->create($request->validated());
-        return redirect()->back();
+        return redirect()->route('project.package.show', ['project' => $project->id, 'package' => $request->parent_id]);
+    }
+
+    public function destroySubPackage(Project $project, Package $package)
+    {
+        if ($package->subpackages()->count() > 0) {
+            return redirect()->route('project.package.show', ['project' => $project->id, 'package' => $package->parent_id])->with('error', 'Package ini memiliki subpackage, silahkan hapus subpackage terlebih dahulu');
+        }
+        $package->delete();
+        return redirect()->route('project.package.show', ['project' => $project->id, 'package' => $package->parent_id]);
     }
 }

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->dateTime('start_date')->nullable();
             $table->dateTime('end_date')->nullable();
             $table->foreignId('package_id')->constrained('packages')->cascadeOnDelete()->nullable();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete()->nullable();
+            $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete()->nullable();
             $table->foreignId('status_id')->nullable();
             $table->timestamps();
         });

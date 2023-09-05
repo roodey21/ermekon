@@ -60,9 +60,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/project/{project}/package/{package}', [PackageController::class, 'show'])->name('project.package.show');
     Route::post('/project/{project}/package', [PackageController::class, 'store'])->name('project.package.store');
     Route::post('/project/{project}/subpackage', [PackageController::class, 'storeSubPackage'])->name('project.package.store-subpackage');
+    Route::delete('/project/{project}/subpackage/{package}', [PackageController::class, 'destroySubPackage'])->name('project.package.destroy-subpackage');
 
     Route::post('/project/{project}/task', [TaskController::class, 'store'])->name('project.package.task.store');
     Route::get('/project/{project}/task/{task}', [TaskController::class, 'show'])->name('project.package.task.show');
+    Route::put('/project/{project}/task/{task}', [TaskController::class, 'update'])->name('project.package.task.update');
 });
 
 Route::get('/layouting', function () {
