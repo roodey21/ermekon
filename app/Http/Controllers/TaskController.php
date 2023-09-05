@@ -16,6 +16,14 @@ use Inertia\Inertia;
 
 class TaskController extends Controller
 {
+    public function index()
+    {
+        $tasks = Task::latest()->paginate(24);
+        return inertia('Project/Task/Index', [
+            'tasks' => TaskResource::collection($tasks)
+        ]);
+    }
+
     public function store(Project $project, StoreTaskRequest $request)
     {
         // dd($request->all());
@@ -56,5 +64,11 @@ class TaskController extends Controller
             'task' => new TaskResource($task),
             'products' => ProductResource::collection($products)
         ]);
+    }
+
+    public function destroy(Project $project, Task $task)
+    {
+        $task->delete();
+        return redirect()->route('project.package.show', ['project' => $project->id, 'package' => $task->package->parent->id]);
     }
 }

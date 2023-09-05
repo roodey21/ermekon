@@ -3,6 +3,7 @@ import { Link, router, Head, useForm } from '@inertiajs/vue3'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
+import DangerButton from '@/Components/DangerButton.vue'
 import Modal from '@/Components/Modal.vue'
 
 import { computed, onMounted, ref, watch } from 'vue';
@@ -56,7 +57,7 @@ const form = useForm({
     'name': props.task.data.name,
     'employee_name': props.task.data.employee,
     'package_id': props.task.data.package.id,
-    'products': [],
+    'products': props.task.data.products,
     'description': props.task.data.description,
     'start_date': props.task.data.start_date,
     'end_date': props.task.data.end_date,
@@ -77,7 +78,13 @@ onMounted(() => {
     mainPackage.value = props.project.data.packages.find((item) => {
         return item.id == props.task.data.package.parent_id
     })
+    selectedItems.value = props.task.data.products
 })
+const handleDeleteTask = (id) => {
+    if (confirm('Apakah anda yakin ingin menghapus pekerjaan ini?')) {
+        form.delete(route('project.package.task.destroy', [ props.project.data.id, id ]))
+    }
+}
 </script>
 <template>
     <AuthenticatedLayout>
@@ -103,6 +110,9 @@ onMounted(() => {
                             <SecondaryButton @click="router.get(route('project.package.show', [ project.data.id, mainPackage.id]))">
                                 Kembali
                             </SecondaryButton>
+                            <DangerButton type="button" @click="handleDeleteTask(task.data.id)">
+                                Hapus
+                            </DangerButton>
                             <PrimaryButton type="submit">
                                 Simpan
                             </PrimaryButton>
@@ -142,12 +152,12 @@ onMounted(() => {
                                     </div>
                                     <div class="col-span-full md:col-span-3 lg:col-span-4">
                                         <input type="text"
-                                            v-model="form.employee"
+                                            v-model="form.employee_name"
                                             class="block w-full p-1 px-2 text-sm text-gray-900 border-t-0 border-gray-300 border-x-0 hover:border-gray-600 focus:border-gray-600 focus:ring-0"
                                             placeholder="Nama Petugas"
                                             >
-                                        <template v-if="errors.employee">
-                                            <span class="text-sm text-red-500">{{ errors.employee }}</span>
+                                        <template v-if="errors.employee_name">
+                                            <span class="text-sm text-red-500">{{ errors.employee_name }}</span>
                                         </template>
                                     </div>
                                 </div>

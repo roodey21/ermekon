@@ -48,7 +48,7 @@ const closeCreateSubPackageModal = () => {
 }
 
 const deleteSubPackage = (id) => {
-    if (confirm('Apakah anda yakin ingin menghapus sub paket pekerjaan ini?')) {
+    if (confirm('Apakah anda yakin ingin menghapus sub paket pekerjaan ini? semua pekerjaan yang ada di dalam sub paket ini akan ikut terhapus!')) {
         router.delete(route('project.package.destroy-subpackage', [props.project.data.id, id]))
     }
 }
@@ -58,10 +58,10 @@ const deleteSubPackage = (id) => {
         <Head title="Paket Pekerjaan" />
 
         <div class="sticky z-10 flex items-center gap-2 px-4 py-3 bg-white border-b top-12">
-            <h2 class="text-xl font-semibold leading-tight text-gray-800 after:content-['/'] after:ml-2">Project</h2>
-            <h3 class="text-lg font-semibold leading-tight text-gray-800 after:content-['/'] after:ml-2">
+            <Link :href="route('project.index')" class="text-xl font-semibold leading-tight text-gray-800 after:content-['/'] after:ml-2">Project</Link>
+            <Link :href="route('project.show', props.project.data.id)" class="text-lg font-semibold leading-tight text-gray-800 after:content-['/'] after:ml-2">
                 {{ project.data.name }}
-            </h3>
+            </Link>
             <h3 class="text-lg font-semibold leading-tight text-gray-800">
                 {{ taskPackage.data.name }}
             </h3>

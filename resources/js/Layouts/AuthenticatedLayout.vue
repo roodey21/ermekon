@@ -7,13 +7,14 @@ import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
 
+const open = ref(false);
 const showingNavigationDropdown = ref(false);
 </script>
 
 <template>
     <div>
         <div class="min-h-screen bg-stone-100">
-            <nav class="fixed h-12 top-0 z-50 w-full border-b bg-stone-800 border-stone-100">
+            <nav class="fixed top-0 z-50 w-full h-12 border-b bg-stone-800 border-stone-100">
                 <!-- Primary Navigation Menu -->
                 <div class="px-4 mx-auto">
                     <div class="flex justify-between h-12">
@@ -32,15 +33,59 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
-                                <NavLink :href="route('project.index')" :active="route().current('project.*')">
+                                <!-- <NavLink :href="route('project.index')" :active="route().current('project.*')">
                                     Project
-                                </NavLink>
-                                <NavLink :href="route('product.index')" :active="route().current('product.*')">
-                                    Produk
-                                </NavLink>
-                                <NavLink :href="route('unit.index')" :active="route().current('unit.*')">
-                                    Satuan
-                                </NavLink>
+                                </NavLink> -->
+                                <div class="flex items-center px-1 pt-1 text-sm font-medium leading-5 text-gray-100 transition duration-150 ease-in-out border-b-2 border-transparent hover:text-gray-200 hover:border-gray-100 focus:outline-none focus:text-gray-300 focus:border-gray-300">
+                                    <Dropdown align="left" width="48" another-class="mt-2">
+                                        <template #trigger>
+                                            <div class="flex items-center gap-2 hover:cursor-pointer">
+                                                <span>
+                                                    Project
+                                                </span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                                </svg>
+                                            </div>
+                                        </template>
+
+                                        <template #content>
+                                            <div class="">
+                                                <DropdownLink :href="route('project.index')">
+                                                    List Proyek
+                                                </DropdownLink>
+                                                <DropdownLink :href="route('task.index')">
+                                                    List Pekerjaan
+                                                </DropdownLink>
+                                            </div>
+                                        </template>
+                                    </Dropdown>
+                                </div>
+                                <div class="flex items-center px-1 pt-1 text-sm font-medium leading-5 text-gray-100 transition duration-150 ease-in-out border-b-2 border-transparent hover:text-gray-200 hover:border-gray-100 focus:outline-none focus:text-gray-300 focus:border-gray-300">
+                                    <Dropdown align="left" width="48" another-class="mt-2">
+                                        <template #trigger>
+                                            <div class="flex items-center gap-2 hover:cursor-pointer">
+                                                <span>
+                                                    Produk
+                                                </span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                                </svg>
+                                            </div>
+                                        </template>
+
+                                        <template #content>
+                                            <div class="">
+                                                <DropdownLink :href="route('product.index')">
+                                                    Data Produk
+                                                </DropdownLink>
+                                                <DropdownLink :href="route('unit.index')">
+                                                    Satuan
+                                                </DropdownLink>
+                                            </div>
+                                        </template>
+                                    </Dropdown>
+                                </div>
                             </div>
                         </div>
 

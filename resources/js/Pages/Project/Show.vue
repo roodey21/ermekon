@@ -2,9 +2,10 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Modal from '@/Components/Modal.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { computed } from 'vue';
+import Dropdown from '@/Components/Dropdown.vue';
 
 const props = defineProps({
     errors: Object,
@@ -56,6 +57,12 @@ const handleSubmitSubPackage = () => {
         }
     })
 }
+
+const deletePackage = (id) => {
+    if (confirm('Apakah anda yakin ingin menghapus paket pekerjaan ini?')) {
+        router.delete(route('project.package.destroy', [props.project.data.id, id]))
+    }
+}
 </script>
 <template>
     <AuthenticatedLayout>
@@ -86,18 +93,33 @@ const handleSubmitSubPackage = () => {
 
         <div class="flex h-screen gap-4 px-4 py-3 overflow-auto flex-nowrap">
             <div class="flex-none bg-white border w-80 h-min" v-for="taskPackage in project.data.packages" :key="taskPackage.id">
-                <Link :href="route('project.package.show', [ project.data.id, taskPackage.id ])" class="block p-2 border-b hover:cursor-pointer">
+                <div class="block p-2 border-b">
                     <div class="flex flex-row justify-between">
-                        <h6 class="text-sm font-semibold">
+                        <h6 @click="router.get(route('project.package.show', [ project.data.id, taskPackage.id ]))" class="text-sm font-semibold hover:underline hover:cursor-pointer">
                             {{ taskPackage.name }}
                         </h6>
-                        <button class="hover:bg-stone-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
-                            </svg>
-                        </button>
+                        <Dropdown align="center" width="48">
+                            <template #trigger>
+                                <button class="hover:bg-stone-200">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+                                    </svg>
+                                </button>
+                            </template>
+
+                            <template #content>
+                                <ul class="space-y-1 text-sm">
+                                    <li class="px-2 py-1 hover:bg-stone-100 hover:cursor-pointer" @click="deletePackage(taskPackage.id)">
+                                        Hapus
+                                    </li>
+                                    <li class="px-2 py-1 bg-stone-100 text-stone-500">
+                                        Edit
+                                    </li>
+                                </ul>
+                            </template>
+                        </Dropdown>
                     </div>
-                </Link>
+                </div>
                 <div class="flex flex-col gap-1 p-2">
                     <template v-if="taskPackage.subpackages">
                         <Link :href="route('project.package.show', [ project.data.id, taskPackage.id ])" class="p-2 text-sm font-medium hover:cursor-pointer bg-stone-100 hover:bg-stone-200"

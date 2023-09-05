@@ -14,6 +14,10 @@ const props = defineProps({
         type: String,
         default: 'py-1 bg-white',
     },
+    anotherClass: {
+        type: String,
+        default: '',
+    },
 });
 
 const closeOnEscape = (e) => {
@@ -64,7 +68,7 @@ const open = ref(false);
             <div
                 v-show="open"
                 class="absolute z-50 border shadow"
-                :class="[widthClass, alignmentClasses]"
+                :class="[widthClass, alignmentClasses, anotherClass]"
                 style="display: none"
                 @click="open = false"
             >
