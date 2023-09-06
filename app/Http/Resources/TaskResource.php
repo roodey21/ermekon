@@ -33,6 +33,13 @@ class TaskResource extends JsonResource
                     'name' => $product->name,
                 ];
             }),
+            'documents' => $this->documents->map(function ($document) {
+                return [
+                    'id' => $document->uuid,
+                    'name' => $document->file_name,
+                    'url' => $document->getUrl(),
+                ];
+            }),
         ];
     }
 }

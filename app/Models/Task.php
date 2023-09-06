@@ -27,4 +27,9 @@ class Task extends Model implements HasMedia
     {
         return $this->belongsToMany(Product::class);
     }
+
+    public function getDocumentsAttribute()
+    {
+        return $this->getMedia('documents');
+    }
 }

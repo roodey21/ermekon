@@ -68,6 +68,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/project/{project}/task/{task}', [TaskController::class, 'update'])->name('project.package.task.update');
     Route::delete('/project/{project}/task/{task}', [TaskController::class, 'destroy'])->name('project.package.task.destroy');
 
+    Route::post('/project/{project}/task/{task}/document', [TaskController::class, 'upload'])->name('project.package.task.document.store');
+    Route::delete('/project/{project}/task/{task}/document/{document}', [TaskController::class, 'destroyDocument'])->name('project.package.task.document.destroy');
     Route::get('/task', [TaskController::class, 'index'])->name('task.index');
 });
 

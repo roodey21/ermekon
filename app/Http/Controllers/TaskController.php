@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Task\StoreTaskRequest;
+use App\Http\Requests\Task\UpdateTaskRequest;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ProjectResource;
 use App\Http\Resources\TaskResource;
@@ -37,9 +38,8 @@ class TaskController extends Controller
         return redirect()->route('project.package.show', ['project' => $project->id, 'package' => $task->package->parent->id]);
     }
 
-    public function update(Project $project, Task $task, StoreTaskRequest $request)
+    public function update(Project $project, Task $task, UpdateTaskRequest $request)
     {
-        // dd($request->all());
         if($request->employee_name) {
             $employee = Employee::firstOrCreate(
                 ['name' => $request->employee_name],
@@ -51,7 +51,8 @@ class TaskController extends Controller
             $product = Product::findOrFail($productData['id']);
             $task->products()->attach($product->id);
         }
-        return redirect()->route('project.package.task.show', ['project' => $project->id, 'task' => $task->id]);
+        return redirect()->route('project.package.task.show', ['project' => $project->id, 'task' => $task->id])
+            ->with('success', 'Pekerjaan berhasil diupdate');
     }
 
     public function show(Project $project, Task $task)
@@ -70,5 +71,23 @@ class TaskController extends Controller
     {
         $task->delete();
         return redirect()->route('project.package.show', ['project' => $project->id, 'package' => $task->package->parent->id]);
+    }
+
+    public function upload(Project $project, Task $task, Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|max:10240',
+        ]);
+        $task->addMediaFromRequest('file')->toMediaCollection('documents');
+        return redirect()->route('project.package.task.show', ['project' => $project->id, 'task' => $task->id])
+            ->with('success', 'Dokumen berhasil diupload');
+    }
+
+    public function destroyDocument(Project $project, Task $task, $document)
+    {
+        $document = $task->documents->where('uuid', $document)->first();
+        $task->deleteMedia($document);
+        return redirect()->route('project.package.task.show', ['project' => $project->id, 'task' => $task->id])
+            ->with('success', 'Dokumen berhasil dihapus');
     }
 }
