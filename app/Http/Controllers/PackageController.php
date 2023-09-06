@@ -38,7 +38,7 @@ class PackageController extends Controller
     public function storeSubPackage(Project $project, StoreSubPackageRequest $request)
     {
         $project->packages()->create($request->validated());
-        return redirect()->route('project.package.show', ['project' => $project->id, 'package' => $request->parent_id]);
+        return redirect()->route('project.show', $project->id);
     }
 
     public function destroySubPackage(Project $project, Package $package)
