@@ -44,7 +44,7 @@ watch(() => isAllSelected, (value) => {
     <Head title="List Satuan" />
 
     <AuthenticatedLayout>
-        <div class="px-4 py-3 border-b bg-white flex gap-4">
+        <div class="flex gap-4 px-4 py-3 bg-white border-b">
             <h2 class="text-xl font-semibold leading-tight text-gray-800">Satuan</h2>
             <PrimaryButton @click="router.get(route('unit.create'))">
                 Baru
@@ -61,9 +61,9 @@ watch(() => isAllSelected, (value) => {
 
         <div class="mx-auto">
             <div class="overflow-hidden bg-white shadow-sm">
-                <div class="relative overflow-x-auto shadow-md">
+                <div class="relative overflow-x-auto max-h-[90vh] shadow-md">
                     <table class="w-full text-sm text-left text-gray-500">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <thead class="sticky top-0 text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
                                 <th scope="col" class="px-4 py-3">
                                     <div class="flex items-center">

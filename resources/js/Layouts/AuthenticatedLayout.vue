@@ -52,7 +52,7 @@ const showingNavigationDropdown = ref(false);
                                         <template #content>
                                             <div class="">
                                                 <DropdownLink :href="route('project.index')">
-                                                    List Proyek
+                                                    Proyek
                                                 </DropdownLink>
                                                 <DropdownLink :href="route('task.index')">
                                                     List Pekerjaan
@@ -86,6 +86,9 @@ const showingNavigationDropdown = ref(false);
                                         </template>
                                     </Dropdown>
                                 </div>
+                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                                    File Bulk Space
+                                </NavLink>
                             </div>
                         </div>
 
