@@ -15,7 +15,7 @@ class ProjectResource extends JsonResource
     public function toArray(Request $request): array
     {
         $parentPackages = $this->packages()->whereNull('parent_id')->get();
-        
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -32,6 +32,15 @@ class ProjectResource extends JsonResource
                     }),
                 ];
             }),
+            'tasks' => $this->tasks->map(function ($task) {
+                return [
+                    'id' => $task->id,
+                    'name' => $task->name,
+                    'package_id' => $task->package_id,
+                    'package_name' => $task->package->name,
+                ];
+            }),
+            'task_count' => $this->tasks->count(),
         ];
     }
 }

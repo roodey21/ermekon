@@ -52,8 +52,7 @@ const closeCreateModal = () => {
                     </div>
                     <div class="mt-8">
                         <div class="flex flex-row justify-between">
-                            <span class="text-xs font-bold text-emerald-600">2 Tasks</span>
-
+                            <span class="text-xs font-bold text-emerald-600">{{ `${project.task_count} Tasks` }}</span>
                         </div>
                     </div>
                 </div>

@@ -20,4 +20,9 @@ class Project extends Model
     {
         return $this->hasMany(Package::class);
     }
+
+    public function tasks()
+    {
+        return $this->hasManyThrough(Task::class, Package::class);
+    }
 }
