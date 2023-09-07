@@ -61,7 +61,7 @@ watch(() => isAllSelected, (value) => {
 
         <div class="mx-auto">
             <div class="overflow-hidden bg-white shadow-sm">
-                <div class="relative overflow-x-auto max-h-[90vh] shadow-md">
+                <div class="relative overflow-x-auto max-h-[80vh] shadow-md">
                     <table class="w-full text-sm text-left text-gray-500">
                         <thead class="sticky top-0 text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>

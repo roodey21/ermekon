@@ -68,7 +68,7 @@ watch(selectedItems, (value) => {
 
         <div class="mx-auto">
             <div class="overflow-hidden bg-white shadow-sm">
-                <div class="relative overflow-x-auto shadow-md max-h-[90vh]">
+                <div class="relative overflow-x-auto shadow-md max-h-[80vh]">
                     <table class="w-full text-sm text-left text-gray-500">
                         <thead class="sticky top-0 text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
