@@ -19,7 +19,6 @@ class TaskResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->when($this->description, $this->description),
-            'employee' => $this->employee->name,
             'package' => [
                 'id' => $this->package->id,
                 'name' => $this->package->name,
@@ -27,10 +26,13 @@ class TaskResource extends JsonResource
             ],
             'start_date' => $this->when($this->start_date, Carbon::parse($this->start_date)->format('Y-m-d')),
             'end_date' => $this->when($this->end_date, Carbon::parse($this->end_date)->format('Y-m-d')),
-            'products' => $this->products->map(function ($product) {
+            'products' => $this->products
+                ->map(function ($product) {
                 return [
                     'id' => $product->id,
                     'name' => $product->name,
+                    'volume' => $product->pivot->volume,
+                    'unit' => $product->main_unit->name,
                 ];
             }),
             'documents' => $this->documents->map(function ($document) {

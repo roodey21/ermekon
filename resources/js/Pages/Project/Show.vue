@@ -67,7 +67,7 @@ const deletePackage = (id) => {
 <template>
     <AuthenticatedLayout>
         <Head :title="`Project ${project.data.name}`"/>
-        <div class="flex flex-row justify-between px-4 py-3 bg-white border-b shadow-sm">
+        <div class="sticky z-10 top-12 flex flex-row justify-between px-4 py-3 bg-white border-b shadow-sm">
             <div class="flex flex-col">
                 <div class="flex flex-row items-center gap-2">
                     <Link :href="route('project.index')" class="text-lg font-semibold capitalize">

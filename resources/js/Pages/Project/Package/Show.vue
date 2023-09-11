@@ -1,13 +1,15 @@
 <script setup>
-import { Link, router, Head, useForm } from '@inertiajs/vue3'
+import { Link, router, Head, useForm, usePage } from '@inertiajs/vue3'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import Modal from '@/Components/Modal.vue'
+import { toast } from 'vue3-toastify'
 
 import { ref } from 'vue';
 import Dropdown from '@/Components/Dropdown.vue'
 
+const page = usePage()
 const props = defineProps({
     errors: Object,
     project: Object,
@@ -17,8 +19,6 @@ const props = defineProps({
 const formTask = useForm({
     name: '',
     description: '',
-    user_id: '',
-    user_name: '',
     package_id: '',
 })
 
@@ -45,6 +45,45 @@ const showCreateSubPackageModal = (package_id) => {
 const closeCreateSubPackageModal = () => {
     createSubPackageModal.value = false
     formSubPackage.reset()
+}
+
+const handleSubmitTask = () => {
+    const toastCreate = toast.loading('Sedang Menyimpan')
+    formTask.post(route('project.package.task.store', props.project.data.id), {
+        onSuccess: () => {
+            if (page.props.flash.success) {
+                setTimeout(() => {
+                    toast.update(toastCreate,{
+                        render: page.props.flash.success,
+                        type: 'success',
+                        autoClose: true,
+                        isLoading: false,
+                    })
+                }, 2000)
+                closeCreateTaskModal()
+                formTask.reset()
+            }
+        }
+    })
+}
+const handleSubmitSubPackage = () => {
+    const toastCreate = toast.loading('Sedang Menyimpan')
+    formSubPackage.post(route('project.package.store-subpackage', props.project.data.id), {
+        onSuccess: () => {
+            if (page.props.flash.success) {
+                setTimeout(() => {
+                    toast.update(toastCreate,{
+                        render: page.props.flash.success,
+                        type: 'success',
+                        autoClose: true,
+                        isLoading: false,
+                    })
+                }, 2000)
+                closeCreateSubPackageModal()
+                formSubPackage.reset()
+            }
+        }
+    })
 }
 
 const deleteSubPackage = (id) => {
@@ -98,9 +137,15 @@ const deleteSubPackage = (id) => {
                 </div>
                 <div class="flex flex-col gap-1">
                     <template v-if="subpackage.tasks">
-                        <div @click="router.get(route('project.package.task.show', [project.data.id, task.id]))" class="p-2 text-sm font-medium bg-white border hover:cursor-pointer hover:bg-stone-50"
+                        <div @click="router.get(route('project.package.task.show', [project.data.id, task.id]))"
+                            class="p-2 relative text-sm font-medium bg-white border hover:cursor-pointer hover:bg-stone-50 group/list"
                             v-for="task in subpackage.tasks" :key="task.id">
                             {{ task.name }}
+                            <span class="absolute top-1/2 right-2 -translate-y-1/2 opacity-0 group-hover/list:opacity-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 text-stone-500">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                                </svg>
+                            </span>
                         </div>
                     </template>
                     <button type="button" @click="showCreateTaskModal(subpackage.id)" class="flex items-center justify-center w-full p-2 text-sm font-medium text-center text-white transition-all duration-200 border opacity-0 bg-stone-800 group-hover:opacity-100 hover:cursor-pointer">
@@ -126,12 +171,7 @@ const deleteSubPackage = (id) => {
         </div>
 
         <Modal :show="createTaskModal" @close="closeCreateTaskModal" max-width="2xl" :closeable="false">
-            <form @submit.prevent="formTask.post(route('project.package.task.store', project.data.id), {
-                onSuccess: () => {
-                    closeCreateTaskModal()
-                    formTask.reset()
-                }
-            })">
+            <form @submit.prevent="handleSubmitTask">
                 <div class="flex justify-between p-4 border-b">
                     <h5 class="text-base font-semibold">
                         Buat Pekerjaan Baru
@@ -144,13 +184,13 @@ const deleteSubPackage = (id) => {
                 </div>
                 <div class="px-4 py-6">
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="col-span-2">
+                        <div class="col-span-1">
                             <label for="name" class="block mb-2 text-sm font-medium text-gray-900 after:content-['*'] after:text-red-500">
-                                Nama Pekerjaan
+                                Nama Item Pekerjaan
                             </label>
                             <input type="text" v-model="formTask.name"
                                 class="block w-full p-0 text-sm text-gray-900 border-t-0 border-gray-300 border-x-0 hover:border-gray-600 focus:border-gray-600 focus:ring-0"
-                                placeholder="Nama pekerjaan" required>
+                                placeholder="Nama Item pekerjaan" required>
                             <template v-if="errors.name">
                                 <span class="text-sm text-red-500">{{ errors.name }}</span>
                             </template>
@@ -166,17 +206,6 @@ const deleteSubPackage = (id) => {
                             </select>
                             <template v-if="errors.package_id">
                                 <span class="text-sm text-red-500">{{ errors.package_id }}</span>
-                            </template>
-                        </div>
-                        <div class="col-span-1">
-                            <label for="user_id" class="block mb-2 text-sm font-medium text-gray-900">
-                                Petugas
-                            </label>
-                            <input type="text" v-model="formTask.user_name"
-                                class="block w-full p-0 text-sm text-gray-900 border-t-0 border-gray-300 border-x-0 hover:border-gray-600 focus:border-gray-600 focus:ring-0"
-                                placeholder="Nama Petugas">
-                            <template v-if="errors.user_name">
-                                <span class="text-sm text-red-500">{{ errors.user_name }}</span>
                             </template>
                         </div>
                         <div class="col-span-2">
@@ -199,12 +228,7 @@ const deleteSubPackage = (id) => {
             </form>
         </Modal>
         <Modal :show="createSubPackageModal" @close="closeCreateSubPackageModal" max-width="lg">
-            <form @submit.prevent="formSubPackage.post(route('project.package.store-subpackage', project.data.id), {
-                onSuccess: () => {
-                    closeCreateSubPackageModal()
-                    formSubPackage.reset()
-                }
-            })">
+            <form @submit.prevent="handleSubmitSubPackage">
                 <div class="flex justify-between p-4 border-b">
                     <h5 class="text-base font-semibold">
                         Buat Sub Paket Pekerjaan Baru

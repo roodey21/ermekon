@@ -41,7 +41,9 @@ watch(selectedItems, (value) => {
     value.forEach((item) => {
         form.products.push({
             'id': item.id,
-            'name': item.name
+            'name': item.name,
+            'volume': item.volume,
+            'unit': item.unit
         })
     })
 })
@@ -55,7 +57,6 @@ const closeAddProductModal = () => {
 }
 const form = useForm({
     'name': props.task.data.name,
-    'employee_name': props.task.data.employee,
     'package_id': props.task.data.package.id,
     'products': props.task.data.products,
     'description': props.task.data.description,
@@ -190,11 +191,11 @@ const deleteDocument = (id) => {
                     <div class="py-6">
                         <div class="px-8 mb-4 md:mb-6">
                             <label for="name" class="block mb-2 text-sm font-medium text-gray-900">
-                                Nama Pekerjaan
+                                Item Pekerjaan
                             </label>
                             <input type="text" v-model="form.name"
                                 class="border-x-0 border-t-0 border-gray-300 hover:border-gray-600 focus:border-gray-600 text-gray-900 text-3xl block w-full p-2.5 focus:ring-0"
-                                placeholder="Nama Pekerjaan" required>
+                                placeholder="Item Pekerjaan" required>
                             <template v-if="errors.name">
                                 <span class="text-sm text-red-500">{{ errors.name }}</span>
                             </template>
@@ -220,21 +221,7 @@ const deleteDocument = (id) => {
                         </div>
                         <div v-if="tabActive === 1">
                             <div class="grid grid-cols-1 gap-4 px-8 py-4 md:mb-6 md:grid-cols-2">
-                                <div class="grid grid-cols-5 align-center">
-                                    <div class="col-span-full md:col-span-2 lg:col-span-1">
-                                        <label for="user_id" class="text-sm font-medium">Petugas</label>
-                                    </div>
-                                    <div class="col-span-full md:col-span-3 lg:col-span-4">
-                                        <input type="text"
-                                            v-model="form.employee_name"
-                                            class="block w-full p-1 px-2 text-sm text-gray-900 border-t-0 border-gray-300 border-x-0 hover:border-gray-600 focus:border-gray-600 focus:ring-0"
-                                            placeholder="Nama Petugas"
-                                            >
-                                        <template v-if="errors.employee_name">
-                                            <span class="text-sm text-red-500">{{ errors.employee_name }}</span>
-                                        </template>
-                                    </div>
-                                </div>
+                                <div></div>
                                 <div>
                                     <input type="hidden" v-model="form.package_id">
                                 </div>
@@ -289,6 +276,9 @@ const deleteDocument = (id) => {
                                             <th scope="col" class="px-4 py-2">
                                                 Nama Barang / Jasa
                                             </th>
+                                            <th scope="col" class="px-4 py-2">
+                                                Volume
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -302,6 +292,9 @@ const deleteDocument = (id) => {
                                                 </button>
                                                 <span>{{ product.name }}</span>
                                             </th>
+                                            <td>
+                                                <input type="number" min="0" v-model="form.products[index].volume" class="w-20 px-4 py-2 text-sm text-gray-900 border-t-0 border-gray-300 border-x-0 hover:border-gray-600 focus:border-gray-600 focus:ring-0 bg-transparent"> {{ form.products[index].unit }}
+                                            </td>
                                         </tr>
                                         <tr class="bg-white border-b hover:bg-stone-50">
                                             <th scope="row"

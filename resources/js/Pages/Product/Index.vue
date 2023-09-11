@@ -35,11 +35,11 @@ const deleteSelectedItems = () => {
 }
 watch(() => isAllSelected, (value) => {
     if (value.length === 0) {
-        isAllSelected = false;
+        isAllSelected.value = false;
     } else if (value.length === products.length) {
-        isAllSelected = true;
+        isAllSelected.value = true;
     } else {
-        isAllSelected = false;
+        isAllSelected.value = false;
     }
 })
 watch(selectedItems, (value) => {

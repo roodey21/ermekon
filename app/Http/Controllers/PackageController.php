@@ -23,7 +23,7 @@ class PackageController extends Controller
     public function store(Project $project, StorePackageRequest $request)
     {
         $project->packages()->create($request->validated());
-        return redirect()->route('project.show', $project->id);
+        return redirect()->route('project.show', $project->id)->with('success', 'Paket pekerjaan berhasil dibuat');
     }
 
     public function destroy(Project $project, Package $package)
@@ -38,7 +38,7 @@ class PackageController extends Controller
     public function storeSubPackage(Project $project, StoreSubPackageRequest $request)
     {
         $project->packages()->create($request->validated());
-        return redirect()->route('project.show', $project->id);
+        return redirect()->route('project.show', $project->id)->with('success', 'Subpaket pekerjaan berhasil dibuat');
     }
 
     public function destroySubPackage(Project $project, Package $package)

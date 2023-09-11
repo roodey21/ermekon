@@ -28,28 +28,18 @@ class TaskController extends Controller
     public function store(Project $project, StoreTaskRequest $request)
     {
         // dd($request->all());
-        if($request->user_name) {
-            $employee = Employee::firstOrCreate(
-                ['name' => $request->user_name],
-                ['name' => $request->user_name]
-            );
-        }
-        $task = Task::create($request->only(['name','package_id','description'])+['employee_id' => $employee->id]);
-        return redirect()->route('project.package.show', ['project' => $project->id, 'package' => $task->package->parent->id]);
+        $task = Task::create($request->only(['name','package_id','description']));
+        return redirect()->route('project.package.show', ['project' => $project->id, 'package' => $task->package->parent->id])->with('success', 'Pekerjaan berhasil dibuat');
     }
 
     public function update(Project $project, Task $task, UpdateTaskRequest $request)
     {
-        if($request->employee_name) {
-            $employee = Employee::firstOrCreate(
-                ['name' => $request->employee_name],
-                ['name' => $request->employee_name]
-            );
-        }
-        $task->update($request->only(['name','package_id','description','start_date','end_date'])+['employee_id' => $employee->id]);
+        // dd($request->all());
+        $task->update($request->only(['name','package_id','description','start_date','end_date']));
+        $task->products()->detach();
         foreach ($request->products as $productData) {
             $product = Product::findOrFail($productData['id']);
-            $task->products()->attach($product->id);
+            $task->products()->attach($product, ['volume' => $productData['volume']]); // with the volume from request
         }
         return redirect()->route('project.package.task.show', ['project' => $project->id, 'task' => $task->id])
             ->with('success', 'Pekerjaan berhasil diupdate');

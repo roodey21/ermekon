@@ -201,7 +201,7 @@ const showingNavigationDropdown = ref(false);
             </nav>
 
             <!-- Page Content -->
-            <main class="py-12">
+            <main class="py-12 relative">
                 <slot />
             </main>
         </div>

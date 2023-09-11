@@ -18,14 +18,9 @@ class Task extends Model implements HasMedia
         return $this->belongsTo(Package::class);
     }
 
-    public function employee()
-    {
-        return $this->belongsTo(Employee::class);
-    }
-
     public function products()
     {
-        return $this->belongsToMany(Product::class);
+        return $this->belongsToMany(Product::class)->withPivot('volume');
     }
 
     public function getDocumentsAttribute()

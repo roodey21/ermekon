@@ -45,11 +45,8 @@ const selectAll = () => {
                     <table class="w-full text-sm text-left text-gray-500">
                         <thead class="sticky top-0 text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
-                                <th scope="col" class="px-4 py-3">
-                                    <div class="flex items-center">
-                                        <input v-model="isAllSelected" @click="selectAll" id="checkbox-all-search" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
-                                        <label for="checkbox-all-search" class="sr-only">checkbox</label>
-                                    </div>
+                                <th scope="col">
+
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Nama Barang
