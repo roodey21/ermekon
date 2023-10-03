@@ -20,6 +20,7 @@
     },
     "dependencies": {
         "@mahdikhashan/vue3-click-outside": "^0.1.2",
+        "tw-elements": "^1.0.0",
         "vue-select": "^4.0.0-beta.6",
         "vue3-toastify": "^0.1.12"
     }
