@@ -42,7 +42,9 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
+        $projects = Project::latest()->get();
         return inertia('Project/Show', [
+            'projects' => ProjectResource::collection($projects),
             'project' => new ProjectResource($project)
         ]);
     }
