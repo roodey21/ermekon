@@ -43,7 +43,7 @@ const showingNavigationDropdown = ref(false);
                             <path d="M13.9997 27.33C13.4657 27.33 13.0229 26.9136 13.0229 26.4115V22.7376C13.0229 22.2355 13.4657 21.8191 13.9997 21.8191C14.5336 21.8191 14.9764 22.2355 14.9764 22.7376V26.4115C14.9764 26.9136 14.5336 27.33 13.9997 27.33Z" fill="#FEFEFE"/>
                         </svg>
                     </Link>
-                    <Link :href="route('project.index')" class="flex items-center justify-center w-12 h-12 text-center rounded-lg fill-white" :class="route().current('project.index') ? 'bg-amber-500':'bg-emerald-600 hover:bg-opacity-80'">
+                    <Link :href="route('project.index')" class="flex items-center justify-center w-12 h-12 text-center rounded-lg fill-white" :class="route().current('project.*') ? 'bg-amber-500':'bg-emerald-600 hover:bg-opacity-80'">
                         <svg class="w-7 h-7" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
                             <g clip-path="url(#clip0_221_384)">
                             <path d="M24.2439 27.4756H3.75608V7.18591H12.2366L14.5658 11.7994H24.2439L24.2439 27.4756ZM5.58536 25.664H22.4146V13.611H13.4342L11.1049 8.99748H5.58536V25.664ZM28 27.4756H0V25.664H28V27.4756ZM10.5 18.2366H8.17077V16.425H10.5V18.2366ZM10.5 13.611H8.17077V11.7994H10.5V13.611ZM10.5 22.85H8.17077V21.0385H10.5V22.85ZM15.1707 22.85H12.8293V21.0385H15.1707V22.85ZM19.8293 22.85H17.5V21.0385H19.8292L19.8293 22.85ZM15.1707 18.2366H12.8293V16.425H15.1707V18.2366ZM19.8293 18.2366H17.5V16.425H19.8292L19.8293 18.2366ZM7.9146 8.0917H6.08537V0H7.91463L7.9146 8.0917ZM21.9146 11.5578H20.0853V2.30677H21.9146V11.5578ZM14.9146 11.5578H13.0854V2.68169e-05H14.9146V11.5578ZM14 4.37192H4.67073V2.56035H14V4.37192ZM23.3293 7.83803H14V6.02657H23.3293V7.83803Z"/>
@@ -86,7 +86,7 @@ const showingNavigationDropdown = ref(false);
                             <path d="M21.5835 22.53L24.5002 25.4185" stroke="#FEFEFE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </Link>
-                    <Link href="#" class="flex items-center justify-center w-12 h-12 text-center rounded-lg bg-emerald-600 hover:bg-opacity-80">
+                    <Link href="#" class="flex items-center justify-center w-12 h-12 text-center rounded-lg" :class="route().current('product.*') ? 'bg-amber-500':'bg-emerald-600 hover:bg-opacity-80'">
                         <svg class="w-7 h-7" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M23.3332 8.75L13.9998 3.5L4.6665 8.75M23.3332 8.75V19.25L13.9998 24.5M23.3332 8.75L13.9998 14M13.9998 24.5L4.6665 19.25V8.75M13.9998 24.5V14M4.6665 8.75L13.9998 14M9.5665 11.4333L18.4332 6.06667" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
