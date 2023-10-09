@@ -20,10 +20,15 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::orderBy('name')->paginate(100);
-        return Inertia::render('Product/Index', [
-            'products' => ProductResource::collection($products)
-        ]);
+        $products = Product::when(request('query'), function($query) {
+            $query->where('name', 'like', '%' . request('query') . '%');
+        })->orderBy('name')->paginate(100);
+        if(request()->inertia()) {
+            return Inertia::render('Product/Index', [
+                'products' => ProductResource::collection($products)
+            ]);
+        }
+        return ProductResource::collection($products);
     }
 
     public function create()

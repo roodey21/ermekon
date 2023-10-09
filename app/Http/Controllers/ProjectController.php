@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Project\StoreProjectRequest;
+use App\Http\Resources\ProductResource;
 use App\Http\Resources\ProjectResource;
 use App\Models\Customer;
+use App\Models\Product;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
@@ -15,7 +18,7 @@ class ProjectController extends Controller
     {
         $projects = Project::latest()->paginate(24);
         return inertia('Project/Index', [
-            'projects' => ProjectResource::collection($projects)
+            'projects' => ProjectResource::collection($projects),
         ]);
     }
 
@@ -45,7 +48,13 @@ class ProjectController extends Controller
         $projects = Project::latest()->get();
         return inertia('Project/Show', [
             'projects' => ProjectResource::collection($projects),
-            'project' => new ProjectResource($project)
+            'project' => new ProjectResource($project),
+            'products' => Inertia::lazy(function () {
+                $products = Product::when(request('search'), function ($product) {
+                    $product->where('name', 'like', '%' . request('search') . '%');
+                })->orderBy('name')->paginate(10);
+                return ProductResource::collection($products);
+            })
         ]);
     }
 }

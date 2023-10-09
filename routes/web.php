@@ -59,6 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('project', ProjectController::class);
     Route::get('/project/{project}/package/{package}', [PackageController::class, 'show'])->name('project.package.show');
     Route::post('/project/{project}/package', [PackageController::class, 'store'])->name('project.package.store');
+    Route::put('/project/{project}/package/{package}', [PackageController::class, 'update'])->name('project.package.update');
     Route::post('/project/{project}/subpackage', [PackageController::class, 'storeSubPackage'])->name('project.package.store-subpackage');
     Route::delete('/project/{project}/package/{package}', [PackageController::class, 'destroy'])->name('project.package.destroy');
     Route::delete('/project/{project}/subpackage/{package}', [PackageController::class, 'destroySubPackage'])->name('project.package.destroy-subpackage');

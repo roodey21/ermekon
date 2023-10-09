@@ -24,10 +24,20 @@ class ProjectResource extends JsonResource
                 return [
                     'id' => $package->id,
                     'name' => $package->name,
+                    'description' => $package->description,
+                    'project_id' => $package->project_id,
                     'subpackages' => $package->subpackages->map(function ($subpackage) {
                         return [
                             'id' => $subpackage->id,
                             'name' => $subpackage->name,
+                            'tasks' => $subpackage->tasks->map(function ($task) {
+                                return [
+                                    'id' => $task->id,
+                                    'name' => $task->name,
+                                    'package_id' => $task->package_id,
+                                    'package_name' => $task->package->name,
+                                ];
+                            }),
                         ];
                     }),
                 ];

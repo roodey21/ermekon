@@ -9,7 +9,7 @@ class Package extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','parent_id'];
+    protected $fillable = ['name','parent_id', 'description'];
 
     public function getIsPrimaryAttribute()
     {

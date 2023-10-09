@@ -1,6 +1,5 @@
 <script setup>
 import { nextTick, ref } from 'vue'
-import GroupChildList from './GroupChildList.vue'
 import Tooltip from '@/Components/Tooltip.vue'
 
 const editNameForm = ref(null)
@@ -14,6 +13,12 @@ const props = defineProps({
         required: true
     }
 })
+
+const emit = defineEmits(['showAddItem'])
+
+const showAddItem = () => {
+    emit('showAddItem')
+}
 
 const handleRename = async () => {
     showEditNameForm.value = true
@@ -62,11 +67,10 @@ const isTextareaFocused = () => {
                     </div>
                     <div class="flex gap-1" style="display: none;" v-show="showEditName">
                         <Tooltip text="Create Item">
-                            <div class="flex items-center gap-0.5 p-1 rounded fill white bg-emerald-700" @click="handleRename">
+                            <div class="p-1 rounded fill white bg-emerald-700" @click="handleRename">
                                 <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M4.99984 8.33341V5.00008M4.99984 5.00008V1.66675M4.99984 5.00008H8.33317M4.99984 5.00008H1.6665" stroke="white" stroke-width="1.16667" stroke-linecap="round"/>
                                 </svg>
-                                <span class="text-xs font-medium text-white">New Item</span>
                             </div>
                         </Tooltip>
                         <Tooltip text="Rename">
@@ -100,7 +104,20 @@ const isTextareaFocused = () => {
             </div>
         </div>
         <div class="" v-show="showList">
-            <GroupChildList :tasks="subpackage.tasks"/>
+            <slot/>
+            <div class="flex pl-16 pr-8 border-b border-gray-200 table-header">
+                <div class="py-2.5 opacity-60 grow-0 hover:cursor-pointer" @click="showAddItem">
+                    <div class="flex items-center gap-2 px-2 py-1 text-gray-800 transition-all bg-gray-200 bg-opacity-0 rounded hover:bg-opacity-100">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6.99984 4.66675V7.00008M6.99984 7.00008V9.33341M6.99984 7.00008H9.33317M6.99984 7.00008H4.6665" stroke="black" stroke-opacity="0.5" stroke-width="1.16667" stroke-linecap="round"/>
+                            <path d="M6.99984 12.8334C10.2215 12.8334 12.8332 10.2217 12.8332 7.00008C12.8332 3.77842 10.2215 1.16675 6.99984 1.16675C3.77818 1.16675 1.1665 3.77842 1.1665 7.00008C1.1665 10.2217 3.77818 12.8334 6.99984 12.8334Z" stroke="black" stroke-opacity="0.5" stroke-width="1.16667"/>
+                        </svg>
+                        <div class="text-xs font-medium h-min">
+                            Tambah Item Pekerjaan
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>

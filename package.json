@@ -19,7 +19,14 @@
         "vue": "^3.2.41"
     },
     "dependencies": {
+        "@heroicons/vue": "^2.0.18",
         "@mahdikhashan/vue3-click-outside": "^0.1.2",
+        "@tiptap/extension-placeholder": "^2.1.11",
+        "@tiptap/pm": "^2.1.11",
+        "@tiptap/starter-kit": "^2.1.11",
+        "@tiptap/vue-3": "^2.1.11",
+        "@vueuse/core": "^10.4.1",
+        "pinia": "^2.1.6",
         "tw-elements": "^1.0.0",
         "vue-select": "^4.0.0-beta.6",
         "vue3-toastify": "^0.1.12"

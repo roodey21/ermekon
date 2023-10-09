@@ -3,19 +3,29 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Modal from '@/Components/Modal.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TableGroupList from '@/Components/Table/TableGroupList.vue';
+import ListGroup from '@/Components/ListGroup/ListGroup.vue';
+import TaskList from '@/Components/ListGroup/TaskList.vue';
+import SubTaskList from '@/Components/ListGroup/SubTaskList.vue';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
-import { computed } from 'vue';
+import { nextTick, ref, computed } from 'vue';
 import Dropdown from '@/Components/Dropdown.vue';
+import axios from 'axios';
 
 const props = defineProps({
     projects: Object,
     errors: Object,
-    project: Object
+    project: Object,
+    products: {
+        type: Object,
+        default: () => ({
+            data: []
+        })
+    }
 })
 
 const showCreatePackageModal = ref(false)
 const showCreateSubPackageModal = ref(false)
+const showCreateTaskModal = ref(false)
 
 const closeCreatePackageModal = () => {
     showCreatePackageModal.value = false
@@ -27,8 +37,14 @@ const closeCreateSubPackageModal = () => {
     formPackage.reset()
 }
 
+const closeCreateTaskModal = () => {
+    showCreateTaskModal.value = false
+    // formPackage.reset()
+}
+
 const formPackage = useForm({
-    name: ''
+    name: '',
+    description: ''
 })
 
 const formSubPackage = useForm({
@@ -51,6 +67,14 @@ const handleSubmitPackage = () => {
     })
 }
 
+const namePackage = ref(null)
+
+const handleShowCreatePackageModal = async () => {
+    showCreatePackageModal.value = true
+    await nextTick()
+    namePackage.value.focus()
+}
+
 const handleSubmitSubPackage = () => {
     formSubPackage.post(route('project.package.store-subpackage', props.project.data.id), {
         onSuccess: () => {
@@ -60,10 +84,35 @@ const handleSubmitSubPackage = () => {
     })
 }
 
-const deletePackage = (id) => {
-    if (confirm('Apakah anda yakin ingin menghapus paket pekerjaan ini?')) {
-        router.delete(route('project.package.destroy', [props.project.data.id, id]))
-    }
+const isSearching = ref(false)
+
+const searchProduct = (search) => {
+    router.reload({
+        only: ['products'],
+        data: {
+            search
+        }
+    })
+}
+
+const createTaskForm = useForm({
+    name: '',
+    package_id: '',
+    description: '',
+    products : []
+})
+
+const test = ref(null)
+
+const addTaskItem = () => {
+    createTaskForm.products.push({
+        id: null,
+        name: ''
+    })
+};
+
+const deleteTaskItem = (task) => {
+    createTaskForm.products.splice(task, 1)
 }
 </script>
 <template>
@@ -123,7 +172,7 @@ const deletePackage = (id) => {
                 <div class="w-[1px] bg-white/50 h-6">
 
                 </div>
-                <button type="button" @click="showCreatePackageModal = true" class="flex items-center text-white py-0.5 px-1 gap-1 text-xs font-medium rounded bg-emerald-800">
+                <button type="button" @click="handleShowCreatePackageModal" class="flex items-center text-white py-0.5 px-1 gap-1 text-xs font-medium rounded bg-emerald-800">
                     <svg class="w-2.5 h-2.5" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M4.99984 8.33341V5.00008M4.99984 5.00008V1.66675M4.99984 5.00008H8.33317M4.99984 5.00008H1.6665" stroke="white" stroke-width="1.16667" stroke-linecap="round"/>
                     </svg>
@@ -140,8 +189,13 @@ const deletePackage = (id) => {
             </div>
         </div>
 
-        <div class="flex mt-5 space-y-5">
-            <TableGroupList/>
+        <div class="flex flex-col mt-5 space-y-5">
+            <!-- <TableGroupList v-for="projectPackage in project.data.packages" :key="projectPackage.id" :projectPackage="projectPackage"/> -->
+            <ListGroup :projectPackage="projectPackage" v-for="projectPackage in project.data.packages" :key="projectPackage.id">
+                <TaskList :subpackage="subpackage" v-for="subpackage in projectPackage.subpackages" :key="subpackage.id" @show-add-item="showCreateTaskModal=true">
+                    <SubTaskList :task="task" v-for="task in subpackage.tasks" :key="task.id" />
+                </TaskList>
+            </ListGroup>
             <!-- <div class="flex-none bg-white border w-80 h-min" v-for="taskPackage in project.data.packages" :key="taskPackage.id">
                 <div class="block p-2 border-b">
                     <div class="flex flex-row justify-between">
@@ -196,31 +250,31 @@ const deletePackage = (id) => {
             </div> -->
         </div>
 
-        <Modal :show="showCreatePackageModal" @close="closeCreatePackageModal" max-width="lg" :closeable="false">
+        <Modal :show="showCreatePackageModal" @close="closeCreatePackageModal" max-width="2xl" :closeable="false">
             <form @submit.prevent="handleSubmitPackage">
-                <div class="flex justify-between p-4 border-b">
-                    <h5 class="text-base font-semibold">
+                <div class="flex items-center justify-between px-4 py-3 bg-gray-100 border-b">
+                    <h5 class="text-sm font-medium">
                         Buat Paket Pekerjaan Baru
                     </h5>
-                    <button type="button" @click="closeCreatePackageModal" class="p-[2px] rounded hover:bg-stone-100">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                    <button type="button" @click="closeCreateTaskModal" class="p-[2px] rounded bg-white border">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3.5 h-3.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
                 <div class="px-4 py-6">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="col-span-2">
-                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 after:content-['*'] after:text-red-500">
-                                Nama Paket Pekerjaan
-                            </label>
-                            <input type="text" v-model="formPackage.name"
-                                class="block w-full p-0 text-xl text-gray-900 border-t-0 border-gray-300 border-x-0 hover:border-gray-600 focus:border-gray-600 focus:ring-0"
-                                placeholder="Nama paket pekerjaan" required @keydown.enter="handleSubmitPackage">
-                            <template v-if="errors.name">
-                                <span class="text-sm text-red-500">{{ errors.name }}</span>
-                            </template>
-                        </div>
+                    <div class="mb-2">
+                        <input type="text"
+                            class="w-full p-2 -ml-2 text-2xl font-light text-gray-900 border border-gray-200 border-opacity-0 rounded focus:ring-0 focus:border-gray-400 hover:border-opacity-100"
+                            v-model="formPackage.name"
+                            placeholder="Nama Paket Pekerjaan">
+                    </div>
+                    <div class="mb-2">
+                        <textarea
+                            rows="8"
+                            class="w-full p-2 -ml-2 text-sm font-light text-gray-900 border border-gray-200 border-opacity-0 rounded placeholder:text-gray-600 focus:ring-0 focus:border-gray-400 hover:border-opacity-100"
+                            placeholder="deskripsi atau catatan lainnya ditulis disini"
+                            v-model="formPackage.description"></textarea>
                     </div>
                 </div>
                 <div class="p-4 border-t">
@@ -273,5 +327,161 @@ const deletePackage = (id) => {
                 </div>
             </form>
         </Modal>
+        <Modal :show="showCreateTaskModal" @close="closeCreateTaskModal" max-width="6xl" :closeable="false">
+            <form @submit.prevent="handleSubmitSubPackage">
+                <div class="flex items-center justify-between px-4 py-3 bg-gray-100 border-b">
+                    <h5 class="text-sm font-medium">
+                        Buat Item Pekerjaan Baru
+                    </h5>
+                    <button type="button" @click="closeCreateTaskModal" class="p-[2px] rounded bg-white border">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3.5 h-3.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="flex flex-row divide-x">
+                    <div class="px-4 py-6 basis-3/5 h-[70vh] overflow-y-scroll scroll-smooth">
+                        <div class="mb-2">
+                            <input type="text"
+                                class="w-full p-2 -ml-2 text-2xl font-light text-gray-900 border border-gray-200 border-opacity-0 rounded focus:ring-0 focus:border-gray-400 hover:border-opacity-100"
+                                v-model="createTaskForm.name"
+                                placeholder="Nama Item Pekerjaan">
+                        </div>
+                        <div class="mb-2">
+                            <textarea
+                                rows="8"
+                                class="w-full p-2 -ml-2 text-sm font-light text-gray-900 border border-gray-200 border-opacity-0 rounded placeholder:text-gray-600 focus:ring-0 focus:border-gray-400 hover:border-opacity-100"
+                                placeholder="deskripsi atau catatan lainnya ditulis disini"
+                                v-model="createTaskForm.description"></textarea>
+                        </div>
+                        <div class="items-form">
+                            <div class="flex items-center gap-3 py-2 mb-2">
+                                <h6 class="text-base font-medium text-gray-600">Barang & Jasa</h6>
+                                <button @click="addTaskItem" class="py-0.5 px-2 rounded border border-emerald-700 text-emerald-700 bg-white text-xs">
+                                    Add
+                                </button>
+                            </div>
+                            <table class="w-full">
+                                <thead class="bg-gray-100">
+                                    <tr>
+                                        <th></th>
+                                        <th class="text-sm font-medium text-center">Nama</th>
+                                        <th class="text-sm font-medium text-center">Volume</th>
+                                        <th class="text-sm font-medium text-center">Jenis Transaksi</th>
+                                        <th class="text-sm font-medium text-center">Harga Satuan</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="space-y-2">
+                                    <tr v-for="(item, index) in createTaskForm.products" :key="item.id">
+                                        <td>
+                                            <span @click="deleteTaskItem(index)">
+                                                x
+                                            </span>
+                                        </td>
+                                        <td class="text-sm font-light">
+                                            <span class="line-clamp-1">
+                                                Pipa PVC AW dia. 4" (Pipa Tegak)
+                                            </span>
+                                        </td>
+                                        <td class="text-sm font-light text-center" width="150px">100 m</td>
+                                        <td class="text-sm font-light text-center" width="150px">Pembelian</td>
+                                        <td class="text-sm font-light text-center" width="150px">50,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-sm font-light">
+                                            <v-select
+                                                v-model="test"
+                                                :options="products.data"
+                                                :reduce="product => product.id"
+                                                :clearable="false"
+                                                label="name"
+                                                @search="searchProduct"
+                                                class="searchProduct"
+                                                >
+                                            </v-select>
+                                            <!-- <div class="relative">
+                                                <input class="w-full p-0 text-sm border-0 rounded focus:border-0 focus:ring-0 placeholder:text-gray-400" placeholder="Cari barang" @input="handleSearchProduct">
+                                                <template v-if="isSearching">
+                                                    <div class="absolute bottom-0 z-50 w-full translate-y-full bg-white border search-wrapper">
+                                                        <ul class="py-2">
+                                                           <li class="p-2" v-for="product in products.data" :key="product.id">{{ product.name }}</li>
+                                                        </ul>
+                                                    </div>
+                                                </template>
+                                            </div> -->
+                                        </td>
+                                        <td class="text-sm font-light text-center">100 m</td>
+                                        <td class="text-sm font-light text-center">Pembelian</td>
+                                        <td class="text-sm font-light text-center">50,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">&nbsp;</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="px-4 py-6 w-72 basis-2/5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-light">you membuat item pekerjaan ini.</span>
+                            <span class="text-[11px] font-light">Yesterday at 08.00 am</span>
+                        </div>
+                    </div>
+                    <!-- <div class="grid grid-cols-2 gap-4">
+                        <div class="col-span-2">
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 after:content-['*'] after:text-red-500">
+                                Paket Pekerjaan
+                            </label>
+                            <select v-model="formSubPackage.parent_id"
+                                class="block w-full p-0 text-sm text-gray-900 border-t-0 border-gray-300 border-x-0 hover:border-gray-600 focus:border-gray-600 focus:ring-0"
+                                placeholder="Pilih Paket Pekerjaan" required disabled>
+                                <option :value="taskPackage.id" v-for="taskPackage in project.data.packages" :key="taskPackage">{{ taskPackage.name }}</option>
+                            </select>
+                            <template v-if="errors.parent_id">
+                                <span class="text-sm text-red-500">{{ errors.parent_id }}</span>
+                            </template>
+                        </div>
+                        <div class="col-span-2">
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 after:content-['*'] after:text-red-500">
+                                Nama Sub Paket Pekerjaan
+                            </label>
+                            <input type="text" v-model="formSubPackage.name"
+                                class="block w-full p-0 text-sm text-gray-900 border-t-0 border-gray-300 border-x-0 hover:border-gray-600 focus:border-gray-600 focus:ring-0"
+                                placeholder="Nama sub paket pekerjaan" required>
+                            <template v-if="errors.name">
+                                <span class="text-sm text-red-500">{{ errors.name }}</span>
+                            </template>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="p-4 text-right border-t">
+                    <PrimaryButton type="submit" :disabled="formSubPackage.processing">Simpan</PrimaryButton>
+                </div>
+            </form>
+        </Modal>
     </AuthenticatedLayout>
 </template>
+
+<style>
+table tr th {
+    padding: 4px 4px;
+}
+table tr td {
+    padding: 8px 4px;
+}
+.vs__dropdown-menu {
+    max-height: 150px;
+    z-index: 60;
+    -ms-overflow-style: none;
+    /* scrollbar-width: none; */
+}
+.vs__dropdown-menu::-webkit-scrollbar {
+    display: none;
+}
+</style>

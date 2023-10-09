@@ -26,6 +26,12 @@ class PackageController extends Controller
         return redirect()->route('project.show', $project->id)->with('success', 'Paket pekerjaan berhasil dibuat');
     }
 
+    public function update(Project $project, Package $package, StorePackageRequest $request)
+    {
+        $package->update($request->validated());
+        return redirect()->route('project.show', $project->id)->with('success', 'Paket pekerjaan berhasil diupdate');
+    }
+
     public function destroy(Project $project, Package $package)
     {
         if ($package->subpackages()->count() > 0) {

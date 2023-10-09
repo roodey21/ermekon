@@ -245,7 +245,7 @@ const deleteProduct = (id) => {
                                                 <th scope="col" class="px-4 py-2 text-center">
                                                     Nama Variant
                                                 </th>
-                                                <th scope="col" class="px-4 py-2 w-2/3">
+                                                <th scope="col" class="w-2/3 px-4 py-2">
                                                     Value
                                                 </th>
                                             </tr>
