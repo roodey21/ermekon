@@ -13,22 +13,5 @@ defineProps({
                 {{ task.name }}
             </div>
         </div>
-        <div class="flex items-center">
-            <div class="w-40 py-2">
-                <div class="text-xs font-light text-center">
-                    Pembelian Site
-                </div>
-            </div>
-            <div class="w-40 py-2">
-                <div class="text-xs font-light text-center">
-                    5
-                </div>
-            </div>
-            <div class="w-40 py-2">
-                <div class="text-xs font-light text-center">
-                    m
-                </div>
-            </div>
-        </div>
     </div>
 </template>

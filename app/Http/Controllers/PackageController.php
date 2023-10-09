@@ -50,9 +50,9 @@ class PackageController extends Controller
     public function destroySubPackage(Project $project, Package $package)
     {
         if ($package->subpackages()->count() > 0) {
-            return redirect()->route('project.package.show', ['project' => $project->id, 'package' => $package->parent_id])->with('error', 'Package ini memiliki subpackage, silahkan hapus subpackage terlebih dahulu');
+            return redirect()->route('project.show', ['project' => $project->id])->with('error', 'Package ini memiliki subpackage, silahkan hapus subpackage terlebih dahulu');
         }
         $package->delete();
-        return redirect()->route('project.package.show', ['project' => $project->id, 'package' => $package->parent_id]);
+        return redirect()->route('project.show', ['project' => $project->id]);
     }
 }

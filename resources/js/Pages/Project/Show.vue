@@ -10,6 +10,7 @@ import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import { nextTick, ref, computed } from 'vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import axios from 'axios';
+import Tiptap from '@/Components/Tiptap.vue';
 
 const props = defineProps({
     projects: Object,
@@ -26,6 +27,12 @@ const props = defineProps({
 const showCreatePackageModal = ref(false)
 const showCreateSubPackageModal = ref(false)
 const showCreateTaskModal = ref(false)
+const showEditPackageModal = ref(false)
+
+const closeEditPackageModal = () => {
+    showEditPackageModal.value = false
+    formPackage.reset()
+}
 
 const closeCreatePackageModal = () => {
     showCreatePackageModal.value = false
@@ -84,6 +91,16 @@ const handleSubmitSubPackage = () => {
     })
 }
 
+const handleSubmitUpdatePackage = () => {
+    console.log('clicked');
+    editPackageForm.put(route('project.package.update', [ props.project.data.id, editPackageForm.id ]), {
+        onSuccess: () => {
+            closeEditPackageModal()
+            editPackageForm.reset()
+        }
+    })
+}
+
 const isSearching = ref(false)
 
 const searchProduct = (search) => {
@@ -102,7 +119,18 @@ const createTaskForm = useForm({
     products : []
 })
 
+const createTask = (packageId) => {
+    createTaskForm.package_id = packageId
+    showCreateTaskModal.value = true
+}
+
 const test = ref(null)
+
+const editPackageForm = useForm({
+    id: null,
+    name:'',
+    description:''
+})
 
 const addTaskItem = () => {
     createTaskForm.products.push({
@@ -111,8 +139,31 @@ const addTaskItem = () => {
     })
 };
 
+const editPackage = (packageId) => {
+    const packageData = props.project.data.packages.find(item => item.id == packageId)
+    editPackageForm.id = packageData.id
+    editPackageForm.name = packageData.name
+    editPackageForm.description = packageData.description
+    showEditPackageModal.value = true
+}
+
 const deleteTaskItem = (task) => {
     createTaskForm.products.splice(task, 1)
+}
+
+const handleDeleteSubPackage = (task) => {
+    console.log(task)
+    router.delete(route('project.package.destroy-subpackage', [props.project.data.id, task]))
+}
+
+const updateNameSubPackageForm = useForm({
+    name:'',
+    description:''
+})
+const handleUpdateNameSubPackage = (id, value) => {
+    console.log(value)
+    updateNameSubPackageForm.name = value
+    updateNameSubPackageForm.put(route('project.package.update', [props.project.id, id]))
 }
 </script>
 <template>
@@ -191,8 +242,16 @@ const deleteTaskItem = (task) => {
 
         <div class="flex flex-col mt-5 space-y-5">
             <!-- <TableGroupList v-for="projectPackage in project.data.packages" :key="projectPackage.id" :projectPackage="projectPackage"/> -->
-            <ListGroup :projectPackage="projectPackage" v-for="projectPackage in project.data.packages" :key="projectPackage.id">
-                <TaskList :subpackage="subpackage" v-for="subpackage in projectPackage.subpackages" :key="subpackage.id" @show-add-item="showCreateTaskModal=true">
+            <ListGroup
+                :projectPackage="projectPackage"
+                v-for="projectPackage in project.data.packages" :key="projectPackage.id"
+                @update-package="editPackage">
+                <TaskList
+                    :subpackage="subpackage"
+                    v-for="subpackage in projectPackage.subpackages" :key="subpackage.id"
+                    @show-add-item="createTask(subpackage.id)"
+                    @show-delete-sub-package="handleDeleteSubPackage"
+                    @update-name-sub-package="handleUpdateNameSubPackage">
                     <SubTaskList :task="task" v-for="task in subpackage.tasks" :key="task.id" />
                 </TaskList>
             </ListGroup>
@@ -279,6 +338,36 @@ const deleteTaskItem = (task) => {
                 </div>
                 <div class="p-4 border-t">
                     <PrimaryButton type="submit" :disabled="formPackage.processing">Simpan</PrimaryButton>
+                </div>
+            </form>
+        </Modal>
+        <Modal :show="showEditPackageModal" @close="closeEditPackageModal" max-width="2xl" :closeable="false">
+            <form @submit.prevent="handleSubmitUpdatePackage">
+                <div class="flex items-center justify-between px-4 py-3 bg-gray-100 border-b">
+                    <h5 class="text-sm font-medium">
+                        Edit Paket Pekerjaan
+                    </h5>
+                    <button type="button" @click="closeEditPackageModal" class="p-[2px] rounded bg-white border">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3.5 h-3.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="px-4 py-6">
+                    <div class="mb-2">
+                        <input type="text"
+                            class="w-full p-2 -ml-2 text-2xl font-light text-gray-900 border border-gray-200 border-opacity-0 rounded focus:ring-0 focus:border-gray-400 hover:border-opacity-100"
+                            v-model="editPackageForm.name"
+                            placeholder="Nama Paket Pekerjaan">
+                    </div>
+                    <div class="mb-2">
+                        <Tiptap
+                        v-model="editPackageForm.description"
+                    />
+                    </div>
+                </div>
+                <div class="p-4 border-t">
+                    <PrimaryButton type="submit" :disabled="editPackageForm.processing">Simpan</PrimaryButton>
                 </div>
             </form>
         </Modal>
