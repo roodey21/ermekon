@@ -1,3 +1,7 @@
+<script>
+
+</script>
+
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Modal from '@/Components/Modal.vue';
@@ -165,11 +169,15 @@ const handleUpdateNameSubPackage = (id, value) => {
     updateNameSubPackageForm.name = value
     updateNameSubPackageForm.put(route('project.package.update', [props.project.id, id]))
 }
+
+defineOptions({
+    layout: AuthenticatedLayout,
+})
 </script>
 <template>
-    <AuthenticatedLayout>
+    <!-- <AuthenticatedLayout> -->
         <Head :title="`Project ${project.data.name}`"/>
-        <template #sidebar>
+        <!-- <template #sidebar>
             <nav class="flex px-5 py-6 border-r w-72 bg-emerald-700 border-emerald-600">
                 <div class="flex flex-col w-full">
                     <h2 class="mb-3 text-2xl font-medium text-white">
@@ -214,7 +222,7 @@ const handleUpdateNameSubPackage = (id, value) => {
                     </div>
                 </div>
             </nav>
-        </template>
+        </template> -->
         <div class="flex flex-row justify-between p-4 rounded-lg shadow bg-emerald-700">
             <div class="flex items-center gap-3">
                 <h3 class="text-white">
@@ -554,7 +562,7 @@ const handleUpdateNameSubPackage = (id, value) => {
                 </div>
             </form>
         </Modal>
-    </AuthenticatedLayout>
+    <!-- </AuthenticatedLayout> -->
 </template>
 
 <style>

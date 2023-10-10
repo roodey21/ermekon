@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\UnitController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,3 +23,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware('auth:sanctum')->post('/unit/create', [UnitController::class, 'store'])->name('api.unit.store');
 Route::middleware('auth:sanctum')->get('/products', [ProductController::class, 'index'])->name('api.product.index');
+Route::middleware('auth:sanctum')->get('/projects', [ProjectController::class, 'index'])->name('api.project.index');
