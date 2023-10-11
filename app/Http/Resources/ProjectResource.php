@@ -19,7 +19,7 @@ class ProjectResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'client_name' => $this->customer()->first()->name,
+            'client_name' => $this->customer()->count() > 0 ? $this->customer()->first()->name:null,
             'packages' => $parentPackages->map(function ($package) {
                 return [
                     'id' => $package->id,
