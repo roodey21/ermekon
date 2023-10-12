@@ -129,6 +129,11 @@ const onMenuHovered = (menu) => {
                                 </li>
                                 <li class="text-black">
                                     <div class="px-6 py-3 text-xs hover:cursor-pointer hover:bg-gray-200">
+                                        Data Kustomer
+                                    </div>
+                                </li>
+                                <li class="text-black">
+                                    <div class="px-6 py-3 text-xs hover:cursor-pointer hover:bg-gray-200">
                                         Data Permission dan Role User
                                     </div>
                                 </li>
