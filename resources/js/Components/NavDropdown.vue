@@ -16,10 +16,10 @@
 
 <template>
     <div class="relative">
-        <div class="flex items-center h-full gap-2 px-4 text-white hover:cursor-pointer hover:bg-emerald-900" @click="open=!open">
-            <div class="bg-white rounded-full h-9 w-9"></div>
+        <div class="flex items-center h-full gap-2 px-4 text-gray-500 hover:cursor-pointer hover:bg-gray-200" @click="open=!open" :class="{ 'bg-gray-200' : open}">
+            <div class="bg-gray-900 rounded-full h-9 w-9"></div>
             <div>
-                <div class="text-base text-white">Ermekon Daya Mephindo</div>
+                <div class="text-base">Ermekon Daya Mephindo</div>
                 <div class="text-sm">Fahrudin Abadi</div>
             </div>
         </div>

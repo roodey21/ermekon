@@ -43,8 +43,13 @@ class ProjectController extends Controller
         return redirect()->route('project.index');
     }
 
-    public function show(Project $project)
+    public function show($project)
     {
+        if ($project == 'latest') {
+            $project = Project::latest()->first();
+        } else {
+            $project = Project::findOrFail($project);
+        }
         $projects = Project::latest()->get();
         return inertia('Project/Show', [
             'projects' => ProjectResource::collection($projects),
