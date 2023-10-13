@@ -43,6 +43,22 @@ class ProjectController extends Controller
         return redirect()->route('project.index');
     }
 
+    public function update(Project $project, StoreProjectRequest $request)
+    {
+        DB::transaction(function () use ($project, $request) {
+            $project->update($request->validated());
+            if ($request->client_name) {
+                $customer = Customer::firstOrCreate(
+                    ['name' => $request->client_name],
+                    ['name' => $request->client_name, 'telephone' => $request->client_telephone]
+                );
+                $project->customer()->associate($customer);
+                $project->save();
+            }
+        });
+        return redirect()->route('project.show', $project->id);
+    }
+
     public function show($project)
     {
         if ($project == 'latest') {

@@ -2,6 +2,7 @@
 import { ref, nextTick, onMounted, onUpdated, watch } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 import { useForm } from '@inertiajs/vue3'
+import { ChevronDownIcon, PlusCircleIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 
 const props = defineProps({
     projectPackage: {
@@ -10,9 +11,6 @@ const props = defineProps({
     }
 })
 
-const addNewSubpackage = () => {
-
-}
 const createSubPackageForm = useForm({
     name: '',
     parent_id: props.projectPackage.id
@@ -28,16 +26,17 @@ const showSubPackageForm = ref(false)
 const showList = ref(true)
 const input = ref(null)
 
-const handleShowSubPackageForm = async () => {
+const handleShowSubPackageForm = () => {
     showSubPackageForm.value = true
-    await nextTick()
-    input.value.focus()
+    nextTick(() => input.value.focus())
 }
 
 const handleSubmitCreateSubPackage = () => {
+    if (!createSubPackageForm.name) return
     createSubPackageForm.post(route('project.package.store-subpackage', props.projectPackage.project_id), {
         onSuccess: () => {
             input.value.value = ''
+            createSubPackageForm.reset()
         }
     })
 }
@@ -48,13 +47,8 @@ onClickOutside(input, (event) => showSubPackageForm.value = false)
 <template>
     <div class="w-full bg-white border rounded-lg shadow">
         <div class="flex flex-col p-3 header">
-            <div class="flex gap-2 mb-3">
-                <span class="inline-block transition-all -rotate-90 hover:cursor-pointer" @click="showList = !showList" :class="showList ? 'rotate-0':''">
-                    <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M3 7.5L9 14.1667L15 7.5" stroke="black" stroke-width="1.16667" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                    </svg>
-                </span>
+            <div class="flex gap-1.5 mb-3">
+                <ChevronDownIcon class="inline-block w-5 h-5 text-gray-500 transition-all -rotate-90 hover:cursor-pointer" :class="{'rotate-0':showList}" @click="showList = !showList"/>
                 <div class="flex items-center gap-3">
                     <h5 class="text-base font-medium select-none text-gray-950 hover:cursor-pointer hover:text-emerald-900"  @click="editPackage">
                         {{ projectPackage.name }}
@@ -65,14 +59,13 @@ onClickOutside(input, (event) => showSubPackageForm.value = false)
                 </div>
             </div>
             <template v-if="projectPackage.description">
-                <div class="text-sm text-gray-800 pl-7 font-extralight" @click="editPackage" v-html="projectPackage.description">
-                </div>
+                <div class="text-sm text-gray-600 pl-7 font-extralight" @click="editPackage" v-html="projectPackage.description"></div>
             </template>
             <template v-else>
                 <div class="w-full -ml-4 pl-7">
                     <textarea
-                        class="w-full px-4 pt-1 text-sm border-gray-400 border-opacity-0 rounded peer hover:border-opacity-100 focus:ring-0 focus:border-gray-400"
-                        placeholder="Tulis deskripsi disini"
+                        class="w-full px-4 pt-1 text-sm border-gray-400 border-opacity-0 rounded peer hover:border-opacity-100 focus:ring-0 focus:border-gray-400 placeholder:text-gray-400"
+                        placeholder="Tambahkan deskripsi"
                         @focus="editPackage"
                         ></textarea>
                 </div>
@@ -100,19 +93,14 @@ onClickOutside(input, (event) => showSubPackageForm.value = false)
                                     Save
                                 </button>
                                 <button type="reset" class="py-0.5 px-2 text-xs" @click="showSubPackageForm=false">
-                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M11.6668 11.6668L2.3335 2.3335M11.6668 2.3335L2.3335 11.6668" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
-                                    </svg>
+                                    <XMarkIcon class="w-4 h-4"/>
                                 </button>
                             </div>
                         </form>
                     </div>
                     <div class="py-2.5 grow-0 hover:cursor-pointer" v-show="!showSubPackageForm">
                         <div class="flex items-center gap-2 px-2 py-1 transition-all bg-gray-200 bg-opacity-0 rounded text-gray-800/60 hover:bg-opacity-100" @click="handleShowSubPackageForm">
-                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M6.99984 4.66675V7.00008M6.99984 7.00008V9.33341M6.99984 7.00008H9.33317M6.99984 7.00008H4.6665" stroke="black" stroke-opacity="0.5" stroke-width="1.16667" stroke-linecap="round"/>
-                                <path d="M6.99984 12.8334C10.2215 12.8334 12.8332 10.2217 12.8332 7.00008C12.8332 3.77842 10.2215 1.16675 6.99984 1.16675C3.77818 1.16675 1.1665 3.77842 1.1665 7.00008C1.1665 10.2217 3.77818 12.8334 6.99984 12.8334Z" stroke="black" stroke-opacity="0.5" stroke-width="1.16667"/>
-                            </svg>
+                            <PlusCircleIcon class="w-4 h-4"/>
                             <div class="text-xs font-medium h-min">
                                 Tambah Sub Pekerjaan Baru
                             </div>

@@ -9,6 +9,10 @@ const showEditNameForm = ref(false)
 const showList = ref(true)
 
 const props = defineProps({
+    packageId: {
+        type: Number,
+        required: true
+    },
     subpackage: {
         type: Object,
         required: true
@@ -22,7 +26,7 @@ const props = defineProps({
 const emit = defineEmits(['showAddItem','showDeleteSubPackage'])
 
 const showAddItem = () => {
-    emit('showAddItem', props.subpackage.id)
+    emit('showAddItem', [props.packageId, props.subpackage.id])
 }
 
 const showDeleteSubPackage = () => {
@@ -32,14 +36,11 @@ const showDeleteSubPackage = () => {
 const handleRename = async () => {
     showEditNameForm.value = true
     showEditName.value = false
-    console.log('hi')
     await nextTick()
     editNameInput.value.focus()
-
 }
 
 const handleMouseEnter = () => {
-    console.log(editNameInput.value.focus)
     if (isTextareaFocused()) return
     showEditName.value = true
 }

@@ -1,21 +1,19 @@
 <script setup>
 import Modal from '@/Components/Modal.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 const props = defineProps({
     project: {
         type: Object,
         required: true
     },
-    showEditProjectModal: {
-        type: Boolean,
-        required: true
-    }
 });
 
 const showEditProjectModal = ref(false);
 
-const openEditProjectModal = () => {
+const openModal = () => {
     showEditProjectModal.value = true;
 };
 
@@ -24,7 +22,11 @@ const closeEditProjectModal = () => {
 };
 
 const handleSubmitUpdateProject = () => {
-    console.log('submit');
+    editProjectForm.put(route('project.update', props.project.data.id), {
+        onSuccess: () => {
+            closeEditProjectModal()
+        }
+    })
 };
 
 const editProjectForm = useForm({
@@ -32,6 +34,10 @@ const editProjectForm = useForm({
     client_name: props.project.data.client_name,
     client_telephone: props.project.data.client_telephone,
     description: ''
+});
+
+defineExpose({
+    openModal,
 });
 </script>
 
@@ -110,7 +116,7 @@ const editProjectForm = useForm({
                 </div>
             </div>
             <div class="p-4 border-t">
-                <PrimaryButton type="submit" :disabled="editPackageForm.processing">Simpan</PrimaryButton>
+                <PrimaryButton type="submit" :disabled="editProjectForm.processing">Simpan</PrimaryButton>
             </div>
         </form>
     </Modal>

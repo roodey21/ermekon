@@ -106,7 +106,7 @@ onBeforeUnmount(() => {
         content: this.modelValue,
         editorProps: {
             attributes: {
-                class: 'prose prose-sm text-sm sm:prose lg:prose-lg xl:prose-2xl focus:outline-none p-2 -ml-2 border border-gray-200 border-opacity-0 hover:border-opacity-100 rounded hover:shadow-sm focus:border-opacity-100 focus:shadow-sm',
+                class: 'w-full prose prose-sm text-sm sm:prose lg:prose-lg xl:prose-2xl focus:outline-none p-2 -ml-2 border border-gray-200 border-opacity-0 hover:border-opacity-100 rounded hover:shadow-sm focus:border-opacity-100 focus:shadow-sm',
             },
         },
         onUpdate: () => {
