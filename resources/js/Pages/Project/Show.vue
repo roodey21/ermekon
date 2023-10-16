@@ -11,7 +11,7 @@ import { nextTick, ref, computed } from 'vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import axios from 'axios';
 import Tiptap from '@/Components/Tiptap.vue';
-import { ChevronDownIcon, ArrowUturnLeftIcon, PencilSquareIcon, TrashIcon, LinkIcon, EllipsisHorizontalIcon } from '@heroicons/vue/24/outline';
+import { ChevronDownIcon, ArrowUturnLeftIcon, PencilSquareIcon, TrashIcon, LinkIcon, EllipsisHorizontalIcon, TableCellsIcon, CheckCircleIcon, DocumentIcon, FolderIcon } from '@heroicons/vue/24/outline';
 import UpdateProjectModal from './Partials/UpdateProjectModal.vue';
 import UpdatePackageModal from './Partials/UpdatePackageModal.vue';
 import CreatePackageModal from './Partials/CreatePackageModal.vue';
@@ -155,26 +155,6 @@ const openEditPackageModal = (id) => {
 <template>
     <Head :title="`Project ${project.data.name}`"/>
 
-    <!-- <nav class="flex h-full px-5 py-6 bg-white shadow w-72">
-        <div class="flex flex-col w-full">
-            <div
-                class="flex flex-col link-group">
-                <h5 class="mb-4 text-lg text-gray-800">List Proyek</h5>
-                <template v-if="projects.data">
-                    <Link
-                        v-for="project in projects.data"
-                        :key="project.id"
-                        :href="route('project.show', project.id)"
-                        :class="$page.url && route().current('project.show', { project : project.id}) ? 'bg-gray-300/50' : ''"
-                        class="flex gap-3 px-3 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200">
-                        <span class="line-clamp-1">
-                            {{ project.name }}
-                        </span>
-                    </Link>
-                </template>
-            </div>
-        </div>
-    </nav> -->
     <div class="overflow-y-auto grow">
         <div class="flex flex-row justify-between p-4 bg-teal-700 shadow">
             <div class="flex items-center gap-3">
@@ -232,6 +212,22 @@ const openEditPackageModal = (id) => {
                     </svg>
                 </span>
                 <input type="text" class="w-full px-2 py-1 text-sm font-semibold border-0 placeholder:text-sm" placeholder="Cari disini ...">
+            </div>
+        </div>
+        <div class="px-4 mt-5">
+            <div class="flex w-full gap-2 p-4 overflow-x-auto bg-white border rounded-lg shadow">
+                <div class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-gray-600 transition-all border-b-2 border-teal-700 border-opacity-0 hover:border-opacity-100 hover:cursor-pointer">
+                    <TableCellsIcon class="w-4 h-4"/> Overview
+                </div>
+                <div class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-gray-600 transition-all border-b-2 border-teal-700 border-opacity-0 hover:border-opacity-100 hover:cursor-pointer">
+                    <FolderIcon class="w-4 h-4" /> BoQ
+                </div>
+                <div class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-gray-600 transition-all border-b-2 border-teal-700 border-opacity-0 hover:border-opacity-100 hover:cursor-pointer">
+                    <CheckCircleIcon class="w-4 h-4" /> Tasks
+                </div>
+                <div class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-gray-600 transition-all border-b-2 border-teal-700 border-opacity-0 hover:border-opacity-100 hover:cursor-pointer">
+                    <DocumentIcon class="w-4 h-4" /> Files
+                </div>
             </div>
         </div>
 

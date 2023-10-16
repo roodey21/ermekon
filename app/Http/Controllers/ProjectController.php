@@ -78,4 +78,11 @@ class ProjectController extends Controller
             })
         ]);
     }
+
+    public function overview(Project $project)
+    {
+        return Inertia('Project/Overview', [
+            'project' => new ProjectResource($project)
+        ]);
+    }
 }
