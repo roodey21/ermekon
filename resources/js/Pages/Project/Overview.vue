@@ -2,8 +2,9 @@
 import Dropdown from '@/Components/Dropdown.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { ArrowUturnLeftIcon, CalendarIcon, CheckCircleIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, DocumentIcon, FolderIcon, LinkIcon, PencilSquareIcon, TableCellsIcon, TrashIcon } from '@heroicons/vue/24/outline';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import SubMenu from './Partials/SubMenu.vue';
 
 defineProps({
     project: {
@@ -77,30 +78,7 @@ defineOptions({
                 <input type="text" class="w-full px-2 py-1 text-sm font-semibold border-0 placeholder:text-sm" placeholder="Cari disini ...">
             </div>
         </div>
-        <div class="px-4 mt-5">
-            <div class="flex flex-row justify-between w-full gap-2 p-4 overflow-x-auto bg-white border rounded-lg shadow">
-                <div class="flex items-center py-1 mr-2">
-                    <ChevronLeftIcon class="w-4 h-4" />
-                </div>
-                <div class="flex gap-2 grow">
-                    <div class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-gray-600 transition-all border-b-2 border-teal-700 hover:cursor-pointer " :class="{ 'border-opacity-100 ' : route().current('project.overview') }">
-                        <TableCellsIcon class="w-4 h-4"/> Overview
-                    </div>
-                    <div class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-gray-600 transition-all border-b-2 border-teal-700 border-opacity-0 hover:border-opacity-100 hover:cursor-pointer">
-                        <DocumentIcon class="w-4 h-4" /> BoQ
-                    </div>
-                    <div class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-gray-600 transition-all border-b-2 border-teal-700 border-opacity-0 hover:border-opacity-100 hover:cursor-pointer">
-                        <CheckCircleIcon class="w-4 h-4" /> Tasks
-                    </div>
-                    <div class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-gray-600 transition-all border-b-2 border-teal-700 border-opacity-0 hover:border-opacity-100 hover:cursor-pointer">
-                        <FolderIcon class="w-4 h-4" /> Files
-                    </div>
-                </div>
-                <div class="flex items-center py-1 mr-2">
-                    <ChevronRightIcon class="w-4 h-4" />
-                </div>
-            </div>
-        </div>
+        <SubMenu :project="project" />
 
         <div class="grid grid-cols-4 gap-6 px-4 mt-5">
             <div class="col-span-2">
@@ -108,7 +86,7 @@ defineOptions({
                     <div class="px-6 py-4 border-b card-header">
                         <div class="mb-1 text-sm text-gray-700">Project Progress 0.00%</div>
                         <div class="relative h-2 overflow-hidden bg-gray-100 rounded">
-                            <div class="absolute inset-0 w-10 bg-teal-700">
+                            <div class="absolute inset-0 w-1 bg-teal-700">
 
                             </div>
                         </div>
@@ -122,27 +100,27 @@ defineOptions({
                             </div>
                             <div>
                                 <dt class="text-sm font-medium text-gray-500">Customer</dt>
-                                <dd class="text-sm text-gray-900 font-base">PT. Contoh Aman</dd>
+                                <dd class="text-sm text-gray-900 font-base">{{ project.data.client_name }}</dd>
                             </div>
                             <div>
                                 <dt class="text-sm font-medium text-gray-500">Status</dt>
-                                <dd class="text-sm text-gray-900 font-base">In Progress</dd>
+                                <dd class="text-sm text-gray-900 font-base">{{ project.data.status ?? '-' }}</dd>
                             </div>
                             <div>
                                 <dt class="text-sm font-medium text-gray-500">Date Created</dt>
-                                <dd class="text-sm text-gray-900 font-base">10-06-2023</dd>
+                                <dd class="text-sm text-gray-900 font-base">{{ project.data.created_at ?? '-' }}</dd>
                             </div>
                             <div>
                                 <dt class="text-sm font-medium text-gray-500">Start Date</dt>
-                                <dd class="text-sm text-gray-900 font-base">13-10-2023</dd>
+                                <dd class="text-sm text-gray-900 font-base">{{ project.data.start_date ?? '-' }}</dd>
                             </div>
                             <div>
                                 <dt class="text-sm font-medium text-gray-500">Deadline</dt>
-                                <dd class="text-sm text-gray-900 font-base">30-10-2024</dd>
+                                <dd class="text-sm text-gray-900 font-base">{{ project.data.end_date ?? '-' }}</dd>
                             </div>
                             <div class="col-span-2">
                                 <dt class="text-sm font-medium text-gray-500">Description</dt>
-                                <dd class="text-sm text-gray-900 font-base">Deskripsi disini</dd>
+                                <dd class="text-sm text-gray-900 font-base">{{ project.data.description ?? 'belum ada deskripsi' }}</dd>
                             </div>
                         </div>
                     </div>

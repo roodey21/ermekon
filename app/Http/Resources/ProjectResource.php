@@ -20,6 +20,11 @@ class ProjectResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'client_name' => $this->customer()->count() > 0 ? $this->customer()->first()->name:null,
+            'start_date' => $this->start_date ? $this->start_date->format('d-m-Y'):null,
+            'end_date' => $this->end_date ? $this->end_date->format('d-m-Y'):null,
+            'status' => $this->status ?: null,
+            'created_at' => $this->created_at->format('d-m-Y'),
+            'description' => $this->description,
             'packages' => $parentPackages->map(function ($package) {
                 return [
                     'id' => $package->id,

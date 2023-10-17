@@ -57,7 +57,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('unit', UnitController::class);
 
     Route::resource('project', ProjectController::class);
-    Route::get('/project/{project}/overview', [ProjectController::class, 'overview'])->name('poject.overview');
+    Route::get('/project/{project}/overview', [ProjectController::class, 'overview'])->name('project.overview');
     Route::get('/project/{project}/package/{package}', [PackageController::class, 'show'])->name('project.package.show');
     Route::post('/project/{project}/package', [PackageController::class, 'store'])->name('project.package.store');
     Route::put('/project/{project}/package/{package}', [PackageController::class, 'update'])->name('project.package.update');

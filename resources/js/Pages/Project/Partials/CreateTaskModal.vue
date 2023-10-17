@@ -51,6 +51,7 @@ const searchProduct = (search) => {
 
 const addTaskItem = () => {
     form.products.push({
+        id: '',
         name: '',
         volume: '',
         transaction_type: '',
@@ -103,7 +104,7 @@ defineExpose({
                         <table class="w-full">
                             <thead class="bg-gray-100">
                                 <tr>
-                                    <th></th>
+                                    <th class="w-2"></th>
                                     <th class="text-sm font-medium text-center">Nama</th>
                                     <th class="text-sm font-medium text-center">Volume</th>
                                     <th class="text-sm font-medium text-center">Jenis Transaksi</th>
@@ -111,40 +112,21 @@ defineExpose({
                                 </tr>
                             </thead>
                             <tbody class="space-y-2">
-                                <tr v-for="(item, index) in form.products" :key="item.id">
+                                <tr v-for="(item, index) in form.products" :key="item.id" class="group">
                                     <td>
-                                        <span @click="deleteTaskItem(index)">
-                                            x
-                                        </span>
+                                        <XMarkIcon class="w-3 h-3 opacity-0 hover:cursor-pointer group-hover:opacity-100" @click="deleteTaskItem(index)"/>
                                     </td>
-                                    <td class="text-sm font-light">
-                                        <span class="line-clamp-1">
-                                            Pipa PVC AW dia. 4" (Pipa Tegak)
-                                        </span>
-                                    </td>
-                                    <td class="text-sm font-light text-center" width="150px">100 m</td>
-                                    <td class="text-sm font-light text-center" width="150px">Pembelian</td>
-                                    <td class="text-sm font-light text-center" width="150px">50,000</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-sm font-light">
-                                        <v-select v-model="test" :options="products.data" :reduce="product => product.id"
+                                    <td class="text-xs font-light">
+                                        <v-select v-model="form.products[index].id" :options="products.data" :reduce="product => product.id"
                                             :clearable="false" label="name" @search="searchProduct" class="searchProduct">
                                         </v-select>
-                                        <!-- <div class="relative">
-                                            <input class="w-full p-0 text-sm border-0 rounded focus:border-0 focus:ring-0 placeholder:text-gray-400" placeholder="Cari barang" @input="handleSearchProduct">
-                                            <template v-if="isSearching">
-                                                <div class="absolute bottom-0 z-50 w-full translate-y-full bg-white border search-wrapper">
-                                                    <ul class="py-2">
-                                                        <li class="p-2" v-for="product in products.data" :key="product.id">{{ product.name }}</li>
-                                                    </ul>
-                                                </div>
-                                            </template>
-                                        </div> -->
+                                        <!-- <span class="line-clamp-1">
+                                            Pipa PVC AW dia. 4" (Pipa Tegak)
+                                        </span> -->
                                     </td>
-                                    <td class="text-sm font-light text-center">100 m</td>
-                                    <td class="text-sm font-light text-center">Pembelian</td>
-                                    <td class="text-sm font-light text-center">50,000</td>
+                                    <td class="text-xs font-light text-center" width="150px">100 m</td>
+                                    <td class="text-xs font-light text-center" width="150px">Pembelian</td>
+                                    <td class="text-xs font-light text-center" width="150px">50,000</td>
                                 </tr>
                                 <tr>
                                     <td colspan="4">&nbsp;</td>

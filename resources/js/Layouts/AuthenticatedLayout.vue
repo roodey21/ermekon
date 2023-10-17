@@ -4,7 +4,7 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import NavDropdown from '@/Components/NavDropdown.vue';
 import { Link } from '@inertiajs/vue3';
 import ProjectSidebar from '@/Layouts/Project/ProjectSidebar.vue';
-import { Cog6ToothIcon, CreditCardIcon, BuildingOffice2Icon, ShoppingCartIcon, ClipboardDocumentListIcon, ArchiveBoxIcon } from '@heroicons/vue/24/outline';
+import { Cog6ToothIcon, BuildingOffice2Icon, ShoppingCartIcon, ClipboardDocumentListIcon, ArchiveBoxIcon, BookmarkSquareIcon } from '@heroicons/vue/24/outline';
 
 const open = ref(false);
 const showingNavigationDropdown = ref(false);
@@ -35,14 +35,14 @@ const onMenuHovered = (menu) => {
                             ></div>
                     </div>
                     <div ref="payment_menu"
-                        @mouseover="onMenuHovered('payment')"
+                        @mouseover="onMenuHovered('finance')"
                         class="relative flex items-center justify-center text-center bg-white hover:cursor-pointer hover:bg-gray-100 w-14 h-14 group"
                         >
-                        <CreditCardIcon class="w-6 h-6 text-gray-600 group-hover:text-teal-700" />
+                        <BookmarkSquareIcon class="w-6 h-6 text-gray-600 group-hover:text-teal-700" />
                         <div class="absolute invisible group-hover:visible bottom-0 border-t-0 border-r-0 border-l-[15px] border-b-[15px] border-r-transparent border-l-transparent border-t-transparent border-b-teal-700 right-0"></div>
                     </div>
                     <div ref="absensi_menu"
-                        @mouseover="onMenuHovered('absensi')"
+                        @mouseover="onMenuHovered('attendant')"
                         class="relative flex items-center justify-center text-center bg-white hover:cursor-pointer hover:bg-gray-100 w-14 h-14 group"
                         >
                         <svg class="w-5 h-5 fill-gray-500 group-hover:fill-teal-700" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -64,7 +64,8 @@ const onMenuHovered = (menu) => {
                         :class="{ '!visible':activeMenu == 'project' || route().current('project*') }"
                         ></div>
                     </div>
-                    <div ref="employee_menu"
+                    <div ref="task_menu"
+                        @mouseover="onMenuHovered('tasks')"
                         class="relative flex items-center justify-center text-center bg-white hover:cursor-pointer hover:bg-gray-100 w-14 h-14 group"
                         >
                         <svg class="w-6 h-6 text-gray-600 group-hover:text-teal-700" viewBox="0 0 12 12" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -79,7 +80,8 @@ const onMenuHovered = (menu) => {
                         <ShoppingCartIcon class="w-6 h-6 text-gray-600 group-hover:text-teal-700" />
                         <div class="absolute invisible group-hover:visible bottom-0 border-t-0 border-r-0 border-l-[15px] border-b-[15px] border-r-transparent border-l-transparent border-t-transparent border-b-teal-700 right-0"></div>
                     </div>
-                    <div ref="report_menu"
+                    <div ref="sales_menu"
+                        @mouseover="onMenuHovered('sales')"
                         class="relative flex items-center justify-center text-center bg-white hover:cursor-pointer hover:bg-gray-100 w-14 h-14 group">
                         <ClipboardDocumentListIcon class="w-6 h-6 text-gray-600 group-hover:text-teal-700" />
                         <div class="absolute invisible group-hover:visible bottom-0 border-t-0 border-r-0 border-l-[15px] border-b-[15px] border-r-transparent border-l-transparent border-t-transparent border-b-teal-700 right-0"></div>
@@ -138,15 +140,30 @@ const onMenuHovered = (menu) => {
                                     </div>
                                 </li>
                             </ul>
-                            <ul class="sidebar-payment" v-if="activeMenu=='payment'">
-                                <h3 class="px-6 py-4 text-lg">Penjualan</h3>
+                            <ul class="sidebar-finance" v-if="activeMenu=='finance'">
+                                <h3 class="px-6 py-4 text-lg">Keuangan</h3>
                                 <li class="text-black">
                                     <div class="px-6 py-3 text-xs hover:cursor-pointer hover:bg-gray-200">
-                                        Penjualan
+                                        Akun Perkiraan
+                                    </div>
+                                </li>
+                                <li class="text-black">
+                                    <div class="px-6 py-3 text-xs hover:cursor-pointer hover:bg-gray-200">
+                                        Pencatatan Beban
+                                    </div>
+                                </li>
+                                <li class="text-black">
+                                    <div class="px-6 py-3 text-xs hover:cursor-pointer hover:bg-gray-200">
+                                        Jurnal Umum
+                                    </div>
+                                </li>
+                                <li class="text-black">
+                                    <div class="px-6 py-3 text-xs hover:cursor-pointer hover:bg-gray-200">
+                                        Histori Akun
                                     </div>
                                 </li>
                             </ul>
-                            <ul class="sidebar-payment" v-if="activeMenu=='absensi'">
+                            <ul class="sidebar-attendant" v-if="activeMenu=='attendant'">
                                 <h3 class="px-6 py-4 text-lg">Absensi</h3>
                                 <li class="text-black">
                                     <div class="px-6 py-3 text-xs hover:cursor-pointer hover:bg-gray-200">
@@ -154,18 +171,18 @@ const onMenuHovered = (menu) => {
                                     </div>
                                 </li>
                             </ul>
-                            <ul class="sidebar-payment" v-if="activeMenu=='project'">
+                            <ul class="sidebar-project" v-if="activeMenu=='project'">
                                 <h3 class="px-6 py-4 text-lg">Proyek</h3>
                                 <li class="text-black">
                                     <Link :href="route('project.index')" :class="{ 'text-teal-700' : route().current('project.index') }" class="block px-6 py-3 text-xs transition-all hover:cursor-pointer hover:bg-gray-200">
                                         List Proyek
                                     </Link>
                                 </li>
-                                <li class="text-black">
+                                <!-- <li class="text-black">
                                     <div class="px-6 py-3 text-xs hover:cursor-pointer hover:bg-gray-200">
                                         BoQ Proyek
                                     </div>
-                                </li>
+                                </li> -->
                                 <hr class="my-1">
                                 <h4 class="px-6 py-4 text-sm">Alat Bantu Hitung</h4>
                                 <li class="text-black">
@@ -184,7 +201,15 @@ const onMenuHovered = (menu) => {
                                     </div>
                                 </li>
                             </ul>
-                            <ul class="sidebar-payment" v-if="activeMenu=='purchase'">
+                            <ul class="sidebar-tasks" v-if="activeMenu=='tasks'">
+                                <h3 class="px-6 py-4 text-lg">Task Management</h3>
+                                <li class="text-black">
+                                    <div class="px-6 py-3 text-xs hover:cursor-pointer hover:bg-gray-200">
+                                        Task
+                                    </div>
+                                </li>
+                            </ul>
+                            <ul class="sidebar-purchase" v-if="activeMenu=='purchase'">
                                 <h3 class="px-6 py-4 text-lg">Pembelian</h3>
                                 <li class="text-black">
                                     <div class="px-6 py-3 text-xs hover:cursor-pointer hover:bg-gray-200">
@@ -192,7 +217,15 @@ const onMenuHovered = (menu) => {
                                     </div>
                                 </li>
                             </ul>
-                            <ul class="sidebar-payment" v-if="activeMenu=='warehouse'">
+                            <ul class="sidebar-sales" v-if="activeMenu=='sales'">
+                                <h3 class="px-6 py-4 text-lg">Penjualan</h3>
+                                <li class="text-black">
+                                    <div class="px-6 py-3 text-xs hover:cursor-pointer hover:bg-gray-200">
+                                        Penjualan
+                                    </div>
+                                </li>
+                            </ul>
+                            <ul class="sidebar-warehouse" v-if="activeMenu=='warehouse'">
                                 <h3 class="px-6 py-4 text-lg">Logistik / Gudang</h3>
                                 <li class="text-black">
                                     <div class="px-6 py-3 text-xs hover:cursor-pointer hover:bg-gray-200">

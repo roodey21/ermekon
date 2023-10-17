@@ -16,6 +16,7 @@ import UpdateProjectModal from './Partials/UpdateProjectModal.vue';
 import UpdatePackageModal from './Partials/UpdatePackageModal.vue';
 import CreatePackageModal from './Partials/CreatePackageModal.vue';
 import CreateTaskModal from './Partials/CreateTaskModal.vue';
+import SubMenu from './Partials/SubMenu.vue';
 
 const props = defineProps({
     projects: Object,
@@ -214,22 +215,7 @@ const openEditPackageModal = (id) => {
                 <input type="text" class="w-full px-2 py-1 text-sm font-semibold border-0 placeholder:text-sm" placeholder="Cari disini ...">
             </div>
         </div>
-        <div class="px-4 mt-5">
-            <div class="flex w-full gap-2 p-4 overflow-x-auto bg-white border rounded-lg shadow">
-                <div class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-gray-600 transition-all border-b-2 border-teal-700 border-opacity-0 hover:border-opacity-100 hover:cursor-pointer">
-                    <TableCellsIcon class="w-4 h-4"/> Overview
-                </div>
-                <div class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-gray-600 transition-all border-b-2 border-teal-700 border-opacity-0 hover:border-opacity-100 hover:cursor-pointer">
-                    <FolderIcon class="w-4 h-4" /> BoQ
-                </div>
-                <div class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-gray-600 transition-all border-b-2 border-teal-700 border-opacity-0 hover:border-opacity-100 hover:cursor-pointer">
-                    <CheckCircleIcon class="w-4 h-4" /> Tasks
-                </div>
-                <div class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-gray-600 transition-all border-b-2 border-teal-700 border-opacity-0 hover:border-opacity-100 hover:cursor-pointer">
-                    <DocumentIcon class="w-4 h-4" /> Files
-                </div>
-            </div>
-        </div>
+        <SubMenu :project="project" />
 
         <div class="flex flex-col px-4 mt-5 space-y-5">
             <ListGroup
