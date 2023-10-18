@@ -47,14 +47,7 @@ class ProjectResource extends JsonResource
                     }),
                 ];
             }),
-            'tasks' => $this->tasks->map(function ($task) {
-                return [
-                    'id' => $task->id,
-                    'name' => $task->name,
-                    'package_id' => $task->package_id,
-                    'package_name' => $task->package->name,
-                ];
-            }),
+            'tasks' => TaskResource::collection($this->tasks),
             'task_count' => $this->tasks->count(),
         ];
     }

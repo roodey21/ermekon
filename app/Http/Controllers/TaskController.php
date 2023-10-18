@@ -17,10 +17,11 @@ use Inertia\Inertia;
 
 class TaskController extends Controller
 {
-    public function index()
+    public function index(Project $project)
     {
         $tasks = Task::latest()->paginate(24);
         return inertia('Project/Task/Index', [
+            'project' => new ProjectResource($project),
             'tasks' => TaskResource::collection($tasks)
         ]);
     }
@@ -29,7 +30,7 @@ class TaskController extends Controller
     {
         // dd($request->all());
         $task = Task::create($request->only(['name','package_id','description']));
-        return redirect()->route('project.package.show', ['project' => $project->id, 'package' => $task->package->parent->id])->with('success', 'Pekerjaan berhasil dibuat');
+        return redirect()->back()->with('success', 'Pekerjaan berhasil dibuat');
     }
 
     public function update(Project $project, Task $task, UpdateTaskRequest $request)
@@ -41,8 +42,7 @@ class TaskController extends Controller
             $product = Product::findOrFail($productData['id']);
             $task->products()->attach($product, ['volume' => $productData['volume']]); // with the volume from request
         }
-        return redirect()->route('project.package.task.show', ['project' => $project->id, 'task' => $task->id])
-            ->with('success', 'Pekerjaan berhasil diupdate');
+        return redirect()->back()->with('success', 'Pekerjaan berhasil diupdate');
     }
 
     public function show(Project $project, Task $task)

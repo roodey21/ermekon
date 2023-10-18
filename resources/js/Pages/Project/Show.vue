@@ -17,6 +17,7 @@ import UpdatePackageModal from './Partials/UpdatePackageModal.vue';
 import CreatePackageModal from './Partials/CreatePackageModal.vue';
 import CreateTaskModal from './Partials/CreateTaskModal.vue';
 import SubMenu from './Partials/SubMenu.vue';
+import UpdateTaskModal from './Partials/UpdateTaskModal.vue';
 
 const props = defineProps({
     projects: Object,
@@ -136,9 +137,10 @@ const updateProjectModal = ref(null)
 const updatePackageModal = ref(null)
 const createPackageModal = ref(null)
 const createTaskModal = ref(null)
+const updateTaskModal = ref(null)
 
-const createTask = (args) => {
-    createTaskModal.value.openModal(...args)
+const createTask = (params) => {
+    createTaskModal.value.openModal(...params)
 }
 
 const openEditProjectModal = () => {
@@ -151,6 +153,11 @@ const openCreatePackageModal = () => {
 
 const openEditPackageModal = (id) => {
     updatePackageModal.value.openModal(id)
+}
+
+const openUpdateTaskModal = (params) => {
+    // console.log(params)
+    updateTaskModal.value.openModal(...params)
 }
 </script>
 <template>
@@ -228,7 +235,7 @@ const openEditPackageModal = (id) => {
                     v-for="subpackage in projectPackage.subpackages" :key="subpackage.id"
                     @show-add-item="createTask"
                     @show-delete-sub-package="handleDeleteSubPackage">
-                    <SubTaskList :task="task" v-for="task in subpackage.tasks" :key="task.id" />
+                    <SubTaskList :task="task" v-for="task in subpackage.tasks" :key="task.id" @edit-task="openUpdateTaskModal"/>
                 </TaskList>
             </ListGroup>
         </div>
@@ -241,6 +248,8 @@ const openEditPackageModal = (id) => {
     <UpdatePackageModal :project="project" ref="updatePackageModal"/>
 
     <CreateTaskModal :project="project" :products="products" ref="createTaskModal"/>
+
+    <UpdateTaskModal :project="project" :products="products" ref="updateTaskModal"/>
 </template>
 
 <style>

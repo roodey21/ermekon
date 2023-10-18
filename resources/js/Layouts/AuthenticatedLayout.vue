@@ -21,7 +21,9 @@ const onMenuHovered = (menu) => {
         <div class="relative flex min-h-screen bg-white">
             <!-- sidebar -->
             <nav class="z-40 flex flex-col gap-24 py-5 bg-white border-r border-gray-300 shadow-lg">
-                <ApplicationLogo class="w-10 h-10 mx-auto fill-gray-500"/>
+                <Link :href="route('dashboard')">
+                    <ApplicationLogo class="w-10 h-10 mx-auto fill-gray-500"/>
+                </Link>
                 <div class="flex flex-col divide-y divide-gray-300 navbar-group">
                     <div ref="setting_menu"
                         @mouseover="onMenuHovered('master')"

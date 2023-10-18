@@ -65,6 +65,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/project/{project}/package/{package}', [PackageController::class, 'destroy'])->name('project.package.destroy');
     Route::delete('/project/{project}/subpackage/{package}', [PackageController::class, 'destroySubPackage'])->name('project.package.destroy-subpackage');
 
+    Route::get('/project/{project}/tasks', [TaskController::class, 'index'])->name('project.package.task.index');
     Route::post('/project/{project}/task', [TaskController::class, 'store'])->name('project.package.task.store');
     Route::get('/project/{project}/task/{task}', [TaskController::class, 'show'])->name('project.package.task.show');
     Route::put('/project/{project}/task/{task}', [TaskController::class, 'update'])->name('project.package.task.update');

@@ -4,7 +4,8 @@ import Modal from '@/Components/Modal.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { EllipsisHorizontalIcon, TrashIcon,  UserPlusIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { router, useForm } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import axios from 'axios';
+import { ref } from 'vue';
 
 const props = defineProps({
     project: {
@@ -14,18 +15,14 @@ const props = defineProps({
     products: {
         type: Object,
         required: true,
-    }
+    },
 })
 
 const showModal = ref(false)
-const projectPackage = ref(null)
-const subPackage = ref(null)
+// const projectPackage = ref(null)
+// const subPackage = ref(null)
+const task = ref(null)
 
-const filteredProduct = computed(() => {
-    return props.products.data.filter((product) => {
-        return form.products.find((p) => p.id != product.id)
-    })
-})
 const form = useForm({
     name: '',
     description: '',
@@ -33,20 +30,29 @@ const form = useForm({
     products: []
 })
 
-const openModal = (packageId, subpackageId) => {
-    projectPackage.value = props.project.data.packages.find((p) => p.id === packageId)
-    subPackage.value = projectPackage.value.subpackages.find((s) => s.id === subpackageId)
+// const getTask = axios.get(route('api.task.get-task', taskId.value))
+
+const openModal = (taskId) => {
+    console.log(taskId)
+    task.value = props.project.data.tasks.find((t) => t.id === taskId)
+    form.name = task.value.name
+    form.description = task.value.description
+    form.package_id = task.value.package.id
+    form.products = task.value.products
+    // subPackage.value = projectPackage.value.subpackages.find((s) => s.id === subpackageId)
     showModal.value = true
-    form.package_id = subPackage.value.id
+    // form.package_id = subPackage.value.id
 }
 
 const closeModal = () => {
     showModal.value = false
-    form.reset()
 }
 
 const handleSubmit = () => {
-    form.post(route('project.package.task.store', props.project.data.id), {
+    form.put(route('project.package.task.update', {
+        project: props.project.data.id,
+        task: task.value.id
+    }), {
         onSuccess: () => {
             closeModal()
             form.reset()
@@ -55,7 +61,6 @@ const handleSubmit = () => {
 }
 
 const searchProduct = (search) => {
-    console.log(filteredProduct.value)
     router.reload({
         only: ['products'],
         data: {
@@ -89,7 +94,7 @@ defineExpose({
         <form @submit.prevent="handleSubmit">
             <div class="flex items-center justify-between px-4 py-3 bg-gray-100 border-b">
                 <h5 class="text-sm font-medium">
-                    {{ project.data.name }} / {{ projectPackage.name }} / {{ subPackage.name }}
+                    {{ project.data.name }} / {{ task.package.name }} / {{ task.name }}
                 </h5>
                 <button type="button" @click="closeModal" class="p-[2px] rounded bg-white border">
                     <XMarkIcon class="w-3.5 h-3.5" />
@@ -167,7 +172,7 @@ defineExpose({
                                             <XMarkIcon class="w-3 h-3 opacity-0 hover:cursor-pointer group-hover:opacity-100" @click="deleteTaskItem(index)"/>
                                         </td>
                                         <td class="text-xs font-light">
-                                            <v-select v-model="form.products[index].id" :options="filteredProduct" :reduce="product => product.id"
+                                            <v-select v-model="form.products[index].id" :options="products.data" :reduce="product => product.id"
                                                 :clearable="false" label="name" @search="searchProduct" class="searchProduct">
                                             </v-select>
                                             <!-- <span class="line-clamp-1">
