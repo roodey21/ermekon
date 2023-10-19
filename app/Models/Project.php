@@ -25,4 +25,9 @@ class Project extends Model
     {
         return $this->hasManyThrough(Task::class, Package::class);
     }
+
+    public function taskItems()
+    {
+        return $this->hasMany(ProjectTask::class, 'project_id');
+    }
 }

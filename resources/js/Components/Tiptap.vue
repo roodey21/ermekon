@@ -57,70 +57,79 @@ onBeforeUnmount(() => {
 
 <template>
     <editor-content :editor="editor" />
-  </template>
+</template>
 
-  <script>
-  import StarterKit from '@tiptap/starter-kit'
-  import { Editor, EditorContent } from '@tiptap/vue-3'
+<script>
+import Placeholder from '@tiptap/extension-placeholder'
+import StarterKit from '@tiptap/starter-kit'
+import { Editor, EditorContent } from '@tiptap/vue-3'
 
-  export default {
+export default {
     components: {
-      EditorContent,
+        EditorContent,
     },
-
     props: {
-      modelValue: {
-        type: String,
-      },
+        modelValue: {
+            type: String,
+        },
+        placeholder: {
+            type: String,
+            default: 'Write Something',
+        }
     },
-
     emits: ['update:modelValue'],
-
     data() {
-      return {
-        editor: null,
-      }
+        return {
+            editor: null,
+        }
     },
 
     watch: {
-      modelValue(value) {
-        // HTML
-        const isSame = this.editor.getHTML() === value
-
-        // JSON
-        // const isSame = JSON.stringify(this.editor.getJSON()) === JSON.stringify(value)
-
-        if (isSame) {
-          return
-        }
-
-        this.editor.commands.setContent(value, false)
-      },
+        modelValue(value) {
+            const isSame = this.editor.getHTML() === value
+            if (isSame) {
+                return
+            }
+            this.editor.commands.setContent(value, false)
+        },
     },
 
     mounted() {
-      this.editor = new Editor({
-        extensions: [
-          StarterKit,
-        ],
-        content: this.modelValue,
-        editorProps: {
-            attributes: {
-                class: 'w-full prose prose-sm text-sm sm:prose lg:prose-lg xl:prose-2xl focus:outline-none p-2 -ml-2 border border-gray-200 border-opacity-0 hover:border-opacity-100 rounded hover:shadow-sm focus:border-opacity-100 focus:shadow-sm',
+        this.editor = new Editor({
+            extensions: [
+                StarterKit,
+                Placeholder.configure({
+                    placeholder: this.placeholder,
+                }),
+            ],
+            content: this.modelValue,
+            editorProps: {
+                attributes: {
+                    class: 'w-full prose prose-sm text-sm sm:prose lg:prose-lg xl:prose-2xl focus:outline-none p-2 -ml-2 border border-gray-200 border-opacity-0 hover:border-opacity-100 rounded hover:shadow-sm focus:border-opacity-100 focus:shadow-sm',
+                },
             },
-        },
-        onUpdate: () => {
-          // HTML
-          this.$emit('update:modelValue', this.editor.getHTML())
+            onUpdate: () => {
+                // HTML
+                this.$emit('update:modelValue', this.editor.getHTML())
 
-          // JSON
-          // this.$emit('update:modelValue', this.editor.getJSON())
-        },
-      })
+                // JSON
+                // this.$emit('update:modelValue', this.editor.getJSON())
+            },
+        })
     },
 
     beforeUnmount() {
-      this.editor.destroy()
+        this.editor.destroy()
     },
-  }
-  </script>
+}
+</script>
+
+<style>
+.tiptap p.is-editor-empty:first-child::before {
+    color: #adb5bd;
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+}
+</style>

@@ -1,6 +1,6 @@
 <script setup>
 import { ArrowPathRoundedSquareIcon, CheckCircleIcon, ChevronLeftIcon, ChevronRightIcon, DocumentIcon, FolderIcon, TableCellsIcon } from '@heroicons/vue/24/outline';
-import { Link } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 
 defineProps({
     project: {
@@ -11,6 +11,7 @@ defineProps({
 </script>
 
 <template>
+<Head title="Task" />
 <div class="px-4 mt-5">
     <div class="flex flex-row justify-between w-full gap-2 p-4 overflow-x-auto bg-white border rounded-lg shadow">
         <div class="flex items-center py-1 mr-2">
@@ -23,9 +24,9 @@ defineProps({
             <Link :href="route('project.show', project.data.id)" class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-gray-600 transition-all border-b-2 border-teal-700 border-opacity-0 hover:border-opacity-100 hover:cursor-pointer" :class="{ 'border-opacity-100 ' : route().current('project.show') }">
                 <DocumentIcon class="w-4 h-4" /> BoQ
             </Link>
-            <div class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-gray-600 transition-all border-b-2 border-teal-700 border-opacity-0 hover:border-opacity-100 hover:cursor-pointer">
+            <Link :href="route('project.task.index', project.data.id)" class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-gray-600 transition-all border-b-2 border-teal-700 border-opacity-0 hover:border-opacity-100 hover:cursor-pointer" :class="{ 'border-opacity-100 ' : route().current('project.task.index') }">
                 <CheckCircleIcon class="w-4 h-4" /> Tasks
-            </div>
+            </Link>
             <div class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-gray-600 transition-all border-b-2 border-teal-700 border-opacity-0 hover:border-opacity-100 hover:cursor-pointer">
                 <FolderIcon class="w-4 h-4" /> Files
             </div>

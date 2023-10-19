@@ -11,6 +11,7 @@ use App\Models\Employee;
 use App\Models\Package;
 use App\Models\Product;
 use App\Models\Project;
+use App\Models\ProjectTask;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -19,7 +20,8 @@ class TaskController extends Controller
 {
     public function index(Project $project)
     {
-        $tasks = Task::latest()->paginate(24);
+        // $tasks = Task::latest()->paginate(24);
+        $tasks = ProjectTask::latest()->paginate(24);
         return inertia('Project/Task/Index', [
             'project' => new ProjectResource($project),
             'tasks' => TaskResource::collection($tasks)

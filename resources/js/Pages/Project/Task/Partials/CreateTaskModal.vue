@@ -2,86 +2,43 @@
 import Dropdown from '@/Components/Dropdown.vue';
 import Modal from '@/Components/Modal.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import InputError from '@/Components/InputError.vue';
 import Tiptap from '@/Components/Tiptap.vue';
 import { EllipsisHorizontalIcon, TrashIcon,  UserPlusIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { router, useForm } from '@inertiajs/vue3';
-import axios from 'axios';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const props = defineProps({
     project: {
         type: Object,
         required: true,
     },
-    products: {
-        type: Object,
-        required: true,
-    },
+    errors: Object
 })
 
 const showModal = ref(false)
-// const projectPackage = ref(null)
-// const subPackage = ref(null)
-const task = ref(null)
 
 const form = useForm({
     name: '',
     description: '',
     package_id: null,
-    products: []
 })
 
-// const getTask = axios.get(route('api.task.get-task', taskId.value))
-
-const openModal = (taskId) => {
-    console.log(taskId)
-    task.value = props.project.data.tasks.find((t) => t.id === taskId)
-    form.name = task.value.name
-    form.description = task.value.description
-    form.package_id = task.value.package.id
-    form.products = task.value.products
-    // subPackage.value = projectPackage.value.subpackages.find((s) => s.id === subpackageId)
+const openModal = () => {
     showModal.value = true
-    // form.package_id = subPackage.value.id
 }
 
 const closeModal = () => {
     showModal.value = false
+    form.reset()
 }
 
 const handleSubmit = () => {
-    form.put(route('project.package.task.update', {
-        project: props.project.data.id,
-        task: task.value.id
-    }), {
+    form.post(route('project.task.store', props.project.data.id), {
         onSuccess: () => {
-            closeModal()
-            form.reset()
+            console.log('submitted successfully')
         }
     })
-}
-
-const searchProduct = (search) => {
-    router.reload({
-        only: ['products'],
-        data: {
-            search
-        }
-    })
-}
-
-const addTaskItem = () => {
-    form.products.push({
-        id: '',
-        name: '',
-        volume: '',
-        transaction_type: '',
-        price: ''
-    })
-}
-
-const deleteTaskItem = (index) => {
-    form.products.splice(index, 1)
 }
 
 defineExpose({
@@ -95,14 +52,14 @@ defineExpose({
         <form @submit.prevent="handleSubmit">
             <div class="flex items-center justify-between px-4 py-3 bg-gray-100 border-b">
                 <h5 class="text-sm font-medium">
-                    {{ project.data.name }} / {{ task.package.name }} / {{ task.name }}
+                    {{ project.data.name }} / Create Task
                 </h5>
                 <button type="button" @click="closeModal" class="p-[2px] rounded bg-white border">
                     <XMarkIcon class="w-3.5 h-3.5" />
                 </button>
             </div>
             <div class="flex flex-row divide-x">
-                <div class="basis-3/5">
+                <div class="basis-3/5 ">
                     <div class="flex flex-row items-center justify-between p-4 border-b">
                         <div class="flex flex-row-reverse">
                             <div class="flex justify-center w-10 h-10 -ml-4 text-white border-2 border-teal-600 border-dashed rounded-full opacity-25 hover:opacity-100 hover:cursor-pointer">
@@ -141,61 +98,20 @@ defineExpose({
                         <div class="mb-2">
                             <input type="text"
                                 class="w-full p-2 -ml-2 text-2xl font-light text-gray-900 border border-gray-200 border-opacity-0 rounded focus:ring-0 focus:border-gray-400 hover:border-opacity-100"
-                                v-model="form.name" placeholder="Nama Item Pekerjaan">
+                                v-model="form.name" placeholder="Nama Pekerjaan">
+                            <InputError class="mt-2" :message="form.errors.name" />
                         </div>
                         <div class="mb-2">
-                            <Tiptap :model-value="form.description" placeholder="Tulis deskripsi atau catatan lainnya disini"/>
-                            <!-- <textarea rows="8"
-                                class="w-full p-2 -ml-2 text-sm font-light text-gray-900 border border-gray-200 border-opacity-0 rounded placeholder:text-gray-600 focus:ring-0 focus:border-gray-400 hover:border-opacity-100"
-                                placeholder="deskripsi atau catatan lainnya ditulis disini"
-                                v-model="form.description"></textarea> -->
+                            <Tiptap :model-value="form.description" placeholder="Tulis deskripsi pekerjaan disini" />
                         </div>
                         <div class="items-form">
                             <div class="flex items-center gap-3 py-2 mb-2">
                                 <h6 class="text-base font-medium text-gray-600">Barang & Jasa</h6>
-                                <button type="button" @click="addTaskItem"
+                                <button type="button"
                                     class="py-0.5 px-2 rounded border border-teal-700 text-teal-700 bg-white text-xs">
                                     Add
                                 </button>
                             </div>
-                            <table class="w-full">
-                                <thead class="bg-gray-100">
-                                    <tr>
-                                        <th class="w-2"></th>
-                                        <th class="text-sm font-medium text-center">Nama</th>
-                                        <th class="text-sm font-medium text-center">Volume</th>
-                                        <th class="text-sm font-medium text-center">Jenis Transaksi</th>
-                                        <th class="text-sm font-medium text-center">Harga Satuan</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="space-y-2">
-                                    <tr v-for="(item, index) in form.products" :key="item.id" class="group">
-                                        <td>
-                                            <XMarkIcon class="w-3 h-3 opacity-0 hover:cursor-pointer group-hover:opacity-100" @click="deleteTaskItem(index)"/>
-                                        </td>
-                                        <td class="text-xs font-light">
-                                            <v-select v-model="form.products[index].id" :options="products.data" :reduce="product => product.id"
-                                                :clearable="false" label="name" @search="searchProduct" class="searchProduct">
-                                            </v-select>
-                                            <!-- <span class="line-clamp-1">
-                                                Pipa PVC AW dia. 4" (Pipa Tegak)
-                                            </span> -->
-                                        </td>
-                                        <td class="text-xs font-light text-center" width="150px">100 m</td>
-                                        <td class="text-xs font-light text-center" width="150px">Pembelian</td>
-                                        <td class="text-xs font-light text-center" width="150px">50,000</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4">&nbsp;</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4">&nbsp;</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4">&nbsp;</td>
-                                    </tr>
-                                </tbody>
-                            </table>
                         </div>
                     </div>
                 </div>

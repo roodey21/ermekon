@@ -4,6 +4,7 @@ use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectTaskController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UnitController;
 use Illuminate\Foundation\Application;
@@ -65,7 +66,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/project/{project}/package/{package}', [PackageController::class, 'destroy'])->name('project.package.destroy');
     Route::delete('/project/{project}/subpackage/{package}', [PackageController::class, 'destroySubPackage'])->name('project.package.destroy-subpackage');
 
-    Route::get('/project/{project}/tasks', [TaskController::class, 'index'])->name('project.package.task.index');
+    Route::get('/project/{project}/tasks', [ProjectTaskController::class, 'index'])->name('project.task.index');
+    Route::post('/project/{project}/tasks', [ProjectTaskController::class, 'store'])->name('project.task.store');
     Route::post('/project/{project}/task', [TaskController::class, 'store'])->name('project.package.task.store');
     Route::get('/project/{project}/task/{task}', [TaskController::class, 'show'])->name('project.package.task.show');
     Route::put('/project/{project}/task/{task}', [TaskController::class, 'update'])->name('project.package.task.update');
