@@ -13,6 +13,9 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    taskStatuses: {
+        type: Object,
+    },
     errors: Object
 })
 
@@ -22,21 +25,23 @@ const form = useForm({
     name: '',
     description: '',
     package_id: null,
+    status_id: null,
 })
 
-const openModal = () => {
+const openModal = (statusId) => {
     showModal.value = true
+    form.status_id = statusId
 }
 
 const closeModal = () => {
     showModal.value = false
-    form.reset()
 }
 
 const handleSubmit = () => {
     form.post(route('project.task.store', props.project.data.id), {
         onSuccess: () => {
-            console.log('submitted successfully')
+            closeModal()
+            form.reset()
         }
     })
 }

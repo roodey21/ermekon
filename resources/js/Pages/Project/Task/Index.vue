@@ -7,43 +7,20 @@ import draggable from 'vuedraggable';
 import SubMenu from '../Partials/SubMenu.vue';
 import CreateTaskModal from './Partials/CreateTaskModal.vue';
 import { Link } from '@inertiajs/vue3';
+import { onMounted } from 'vue';
 
-defineProps({
+const props = defineProps({
     project: {
         type: Object,
         required: true,
     },
-    tasks: {
+    columns: {
         type: Object,
-    }
+    },
+    taskStatuses: {
+        type: Object,
+    },
 })
-
-const data = [{
-    data : [
-        { id: 1, name: 'task 1', status: 1},
-        { id: 2, name: 'task 2', status: 2},
-        { id: 3, name: 'task 3', status: 2},
-        { id: 4, name: 'task 4', status: 1},
-        { id: 5, name: 'task 5', status: 2},
-        { id: 6, name: 'task 6', status: 1},
-]
-}]
-
-const list1 = ref([
-    { id: 1, name: 'Task 1' },
-    { id: 2, name: 'Task 2' },
-    { id: 3, name: 'Task 3' },
-    { id: 4, name: 'Task 4' },
-    { id: 5, name: 'Task 5' },
-])
-
-const list2 = ref([
-    { id: 1, name: 'Task 1' },
-    { id: 2, name: 'Task 2' },
-    { id: 3, name: 'Task 3' },
-    { id: 4, name: 'Task 4' },
-    { id: 5, name: 'Task 5' },
-])
 
 const dropOptions = computed(() => ({
     animation: 200,
@@ -56,8 +33,12 @@ defineOptions({
 
 const createTaskModal = ref(null)
 
-const openCreateTask = () => {
-    createTaskModal.value.openModal()
+const openCreateTask = (statusId) => {
+    createTaskModal.value.openModal(statusId)
+}
+
+const handleChange = (event) => {
+    console.log(event)
 }
 </script>
 
@@ -81,9 +62,7 @@ const openCreateTask = () => {
                             <ArrowUturnLeftIcon class="w-3 h-3" /> <span>Kembali ke List Proyek</span>
                             </Link>
                         </li>
-                        <li class="px-3 py-1.5 hover:bg-gray-100 hover:cursor-pointer group rounded"
-
-                            >
+                        <li class="px-3 py-1.5 hover:bg-gray-100 hover:cursor-pointer group rounded">
                             <div class="flex items-center gap-2 text-xs">
                                 <PencilSquareIcon class="w-3 h-3" />
                                 <span>Edit proyek</span>
@@ -132,18 +111,18 @@ const openCreateTask = () => {
     <div class="w-[calc(100vw-4rem)]">
         <div class="p-4 overflow-x-auto">
             <div class="flex flex-row gap-6 flex-nowrap ">
-                <div class="flex-none bg-white border rounded-lg shadow w-80 h-min">
+                <div class="flex-none bg-white border rounded-lg shadow w-80 h-min" v-for="column in columns" :key="column.name">
                     <div class="flex items-center justify-between p-4 border-b">
-                        <h6 class="text-base font-medium text-gray-800">
-                            To Do
+                        <h6 class="text-base font-medium text-gray-800 capitalize">
+                            {{ column.name }}
                         </h6>
                         <div>
-                            <button type="button" @click="openCreateTask" class="p-1 bg-teal-700 border rounded">
+                            <button type="button" @click="openCreateTask(column.id)" class="p-1 bg-teal-700 border rounded">
                                 <PlusIcon class="w-4 h-4 text-white" />
                             </button>
                         </div>
                     </div>
-                    <draggable class="p-4 space-y-2" :list="list1" itemKey="name" group="task" v-bind="dropOptions">
+                    <draggable class="p-4 space-y-2" :list="column.tasks.data" itemKey="name" group="task" v-bind="dropOptions" @change="handleChange">
                         <template #item="{ element }">
                             <div class="border-l-2 border-teal-800 rounded-lg shadow">
                                 <div class="p-2 bg-white border rounded-lg">
@@ -154,29 +133,10 @@ const openCreateTask = () => {
                         </template>
                     </draggable>
                 </div>
-                <div class="flex-none bg-white border rounded-lg shadow w-80 h-min">
-                    <div class="flex items-center justify-between p-4 border-b">
-                        <h6 class="text-base font-medium text-gray-800">
-                            In Progress
-                        </h6>
-                        <div>
-                            <button type="button" @click="openCreateTask" class="p-1 bg-teal-700 border rounded">
-                                <PlusIcon class="w-4 h-4 text-white" />
-                            </button>
-                        </div>
-                    </div>
-                    <draggable class="p-4 space-y-2" :list="list2" itemKey="name" group="task" v-bind="dropOptions">
-                        <template #item="{ element }">
-                            <div class="p-4 bg-white border rounded-lg shadow">
-                                <span class="text-sm select-none">{{ element.name }}</span>
-                            </div>
-                        </template>
-                    </draggable>
-                </div>
             </div>
         </div>
     </div>
-    <CreateTaskModal :project="project" ref="createTaskModal"/>
+    <CreateTaskModal :project="project" ref="createTaskModal" :task-statuses="taskStatuses"/>
 </template>
 
 <style></style>

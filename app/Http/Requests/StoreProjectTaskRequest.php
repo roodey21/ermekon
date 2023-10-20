@@ -26,6 +26,7 @@ class StoreProjectTaskRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'start_date' => ['nullable', 'date'],
             'due_date' => ['nullable', 'date'],
+            'status_id' => ['nullable', 'integer'],
             'completed_date' => ['nullable', 'date'],
         ];
     }

@@ -17,6 +17,7 @@ class ProjectTaskResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'status_id' => $this->status_id,
         ];
     }
 }

@@ -18,9 +18,22 @@ class ProjectTaskController extends Controller
     public function index(Project $project)
     {
         $tasks = ProjectTask::latest()->paginate(24);
+
+        $taskStatuses = $project->taskStatuses;
+
+        $formattedData = $taskStatuses->map(function ($status) use ($tasks) {
+            return [
+                'id' => $status->id,
+                'name' => $status->name,
+                'tasks' => ProjectTaskResource::collection(
+                    $tasks->where('status_id', $status->id)
+                ),
+            ];
+        });
         return Inertia::render('Project/Task/Index', [
             'project' => new ProjectResource($project),
-            'tasks' => ProjectTaskResource::collection($tasks)
+            'columns' => $formattedData,
+            'taskStatuses' => $taskStatuses,
         ]);
     }
 
