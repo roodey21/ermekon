@@ -6,6 +6,7 @@ import { computed, ref } from 'vue';
 import draggable from 'vuedraggable';
 import SubMenu from '../Partials/SubMenu.vue';
 import CreateTaskModal from './Partials/CreateTaskModal.vue';
+import UpdateTaskModal from './Partials/UpdateTaskModal.vue';
 import { Link } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
 
@@ -33,8 +34,14 @@ defineOptions({
 
 const createTaskModal = ref(null)
 
+const updateTaskModal = ref(null)
+
 const openCreateTask = (statusId) => {
     createTaskModal.value.openModal(statusId)
+}
+
+const openUpdateTask = (task) => {
+    updateTaskModal.value.openModal(task)
 }
 
 const handleChange = (event) => {
@@ -124,7 +131,7 @@ const handleChange = (event) => {
                     </div>
                     <draggable class="p-4 space-y-2" :list="column.tasks.data" itemKey="name" group="task" v-bind="dropOptions" @change="handleChange">
                         <template #item="{ element }">
-                            <div class="border-l-2 border-teal-800 rounded-lg shadow">
+                            <div class="border-l-2 border-teal-800 rounded-lg shadow" @click="openUpdateTask(element)">
                                 <div class="p-2 bg-white border rounded-lg">
                                     <div class="text-[10px] font-light text-gray-600 capitalize">Kategori</div>
                                     <span class="text-xs select-none">{{ element.name }}</span>
@@ -137,6 +144,8 @@ const handleChange = (event) => {
         </div>
     </div>
     <CreateTaskModal :project="project" ref="createTaskModal" :task-statuses="taskStatuses"/>
+
+    <UpdateTaskModal :project="project" ref="updateTaskModal" :task-statuses="taskStatuses"/>
 </template>
 
 <style></style>

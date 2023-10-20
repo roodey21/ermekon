@@ -5,8 +5,8 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import InputError from '@/Components/InputError.vue';
 import Tiptap from '@/Components/Tiptap.vue';
 import { EllipsisHorizontalIcon, TrashIcon,  UserPlusIcon, XMarkIcon } from '@heroicons/vue/24/outline';
-import { router, useForm } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 const props = defineProps({
     project: {
@@ -28,9 +28,12 @@ const form = useForm({
     status_id: null,
 })
 
-const openModal = (statusId) => {
+const openModal = (task) => {
     showModal.value = true
-    form.status_id = statusId
+    form.name = task.name
+    form.description = task.description
+    form.status_id = task.status_id
+    form.project_id = task.project_id
 }
 
 const closeModal = () => {
@@ -70,10 +73,10 @@ defineExpose({
                             <div class="flex justify-center w-10 h-10 -ml-4 text-white border-2 border-teal-600 border-dashed rounded-full opacity-25 hover:opacity-100 hover:cursor-pointer">
                                 <UserPlusIcon class="self-center w-6 h-6 text-teal-600" />
                             </div>
-                            <div class="z-10 flex w-10 h-10 -ml-4 text-white bg-teal-600 border-2 rounded-full">
+                            <div class="z-10 flex w-10 h-10 -ml-4 text-white bg-teal-600 border rounded-full">
                                 <span class="self-center w-full text-center text-[12px]">FA</span>
                             </div>
-                            <div class="z-10 flex w-10 h-10 text-white bg-teal-600 border-2 rounded-full">
+                            <div class="z-10 flex w-10 h-10 text-white bg-teal-600 border rounded-full">
                                 <span class="self-center w-full text-center text-[12px]">FA</span>
                             </div>
                         </div>
