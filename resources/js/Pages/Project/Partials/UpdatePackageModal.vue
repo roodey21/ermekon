@@ -81,7 +81,7 @@ defineExpose({
 </script>
 
 <template>
-    <Modal :show="showModal" @close="closeModal" max-width="6xl" :closeable="false">
+    <Modal :show="showModal" @close="closeModal" max-width="6xl" :closeable="true">
         <form @submit.prevent="handleSubmit">
             <div class="flex items-center justify-between px-4 py-3 bg-gray-100 border-b">
                 <h5 class="text-sm font-medium">
@@ -120,6 +120,7 @@ defineExpose({
                     <div class="px-4 py-6 overflow-y-scroll">
                         <div class="mb-2">
                             <input type="text"
+                                ref="inputName"
                                 class="w-full p-2 -ml-2 text-2xl font-light text-gray-900 border border-gray-200 border-opacity-0 rounded focus:ring-0 focus:border-gray-400 hover:border-opacity-100"
                                 v-model="form.name" placeholder="Nama Paket Pekerjaan">
                         </div>

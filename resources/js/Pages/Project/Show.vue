@@ -11,7 +11,7 @@ import { nextTick, ref, computed } from 'vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import axios from 'axios';
 import Tiptap from '@/Components/Tiptap.vue';
-import { ChevronDownIcon, ArrowUturnLeftIcon, PencilSquareIcon, TrashIcon, LinkIcon, EllipsisHorizontalIcon, TableCellsIcon, CheckCircleIcon, DocumentIcon, FolderIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
+import { ChevronDownIcon, ArrowUturnLeftIcon, PencilSquareIcon, TrashIcon, LinkIcon, EllipsisHorizontalIcon, TableCellsIcon, CheckCircleIcon, DocumentIcon, FolderIcon, MagnifyingGlassIcon, XCircleIcon } from '@heroicons/vue/24/outline';
 import UpdateProjectModal from './Partials/UpdateProjectModal.vue';
 import UpdatePackageModal from './Partials/UpdatePackageModal.vue';
 import CreatePackageModal from './Partials/CreatePackageModal.vue';
@@ -163,8 +163,8 @@ const openUpdateTaskModal = (params) => {
 <template>
     <Head :title="`Project ${project.data.name}`"/>
 
-    <div class="overflow-y-auto grow">
-        <div class="flex flex-row justify-between p-4 bg-teal-700 shadow">
+    <div class="h-full overflow-y-auto grow">
+        <div class="sticky top-0 flex flex-row justify-between p-4 bg-teal-700 shadow">
             <div class="flex items-center gap-3">
                 <Dropdown align="left">
                     <template #trigger>
@@ -222,20 +222,28 @@ const openUpdateTaskModal = (params) => {
         </div>
         <SubMenu :project="project" />
 
-        <div class="flex flex-col px-4 mt-5 space-y-5">
-            <ListGroup
-                :projectPackage="projectPackage"
-                v-for="projectPackage in project.data.packages" :key="projectPackage.id"
-                @update-package="openEditPackageModal(projectPackage.id)">
-                <TaskList
-                    :subpackage="subpackage"
-                    :projectId="project.data.id" :package-id="projectPackage.id"
-                    v-for="subpackage in projectPackage.subpackages" :key="subpackage.id"
-                    @show-add-item="createTask"
-                    @show-delete-sub-package="handleDeleteSubPackage">
-                    <SubTaskList :task="task" v-for="task in subpackage.tasks" :key="task.id" @edit-task="openUpdateTaskModal"/>
-                </TaskList>
-            </ListGroup>
+        <div class="flex flex-col px-4 py-5 space-y-5">
+            <template v-if="project.data.packages.length">
+                <ListGroup
+                    :projectPackage="projectPackage"
+                    v-for="projectPackage in project.data.packages" :key="projectPackage.id"
+                    @update-package="openEditPackageModal(projectPackage.id)">
+                    <TaskList
+                        :subpackage="subpackage"
+                        :projectId="project.data.id" :package-id="projectPackage.id"
+                        v-for="subpackage in projectPackage.subpackages" :key="subpackage.id"
+                        @show-add-item="createTask"
+                        @show-delete-sub-package="handleDeleteSubPackage">
+                        <SubTaskList :task="task" v-for="task in subpackage.tasks" :key="task.id" @edit-task="openUpdateTaskModal"/>
+                    </TaskList>
+                </ListGroup>
+            </template>
+            <template v-else>
+                <div class="flex flex-col items-center py-20 text-sm leading-6 text-slate-600 md:py-32 lg:py-40">
+                    <XCircleIcon class="w-12 h-12 text-gray-300" />
+                    <p class="mt-6">No data found. <span @click="openCreatePackageModal" class="font-medium text-teal-600 hover:cursor-pointer hover:text-teal-800">Let's create one</span></p>
+                </div>
+            </template>
         </div>
     </div>
 

@@ -53,7 +53,7 @@ onClickOutside(input, (event) => showSubPackageForm.value = false)
                     <h5 class="text-base font-medium select-none text-gray-950 hover:cursor-pointer hover:text-emerald-900"  @click="editPackage">
                         {{ projectPackage.name }}
                     </h5>
-                    <span class="bg-amber-500 text-white px-2 py-0.5 text-[10px] uppercase rounded-full" v-if="projectPackage.subpackages.length">
+                    <span class="bg-teal-700 text-white px-2 py-0.5 text-[10px] uppercase rounded-full" v-if="projectPackage.subpackages.length">
                         {{ projectPackage.subpackages.length }} Sub Pekerjaan
                     </span>
                 </div>

@@ -117,30 +117,32 @@ const handleChange = (event) => {
     <SubMenu :project="project" />
     <div class="w-[calc(100vw-4rem)]">
         <div class="p-4 overflow-x-auto">
-            <div class="flex flex-row gap-6 flex-nowrap ">
-                <div class="flex-none bg-white border rounded-lg shadow w-80 h-min" v-for="column in columns" :key="column.name">
-                    <div class="flex items-center justify-between p-4 border-b">
-                        <h6 class="text-base font-medium text-gray-800 capitalize">
-                            {{ column.name }}
-                        </h6>
-                        <div>
-                            <button type="button" @click="openCreateTask(column.id)" class="p-1 bg-teal-700 border rounded">
-                                <PlusIcon class="w-4 h-4 text-white" />
-                            </button>
-                        </div>
-                    </div>
-                    <draggable class="p-4 space-y-2" :list="column.tasks.data" itemKey="name" group="task" v-bind="dropOptions" @change="handleChange">
-                        <template #item="{ element }">
-                            <div class="border-l-2 border-teal-800 rounded-lg shadow" @click="openUpdateTask(element)">
-                                <div class="p-2 bg-white border rounded-lg">
-                                    <div class="text-[10px] font-light text-gray-600 capitalize">Kategori</div>
-                                    <span class="text-xs select-none">{{ element.name }}</span>
-                                </div>
+            <draggable class="flex flex-row gap-6 flex-nowrap " :list="columns" itemKey="id" group="status" v-bind="dropOptions">
+                <template #item="{ element }">
+                    <div class="flex-none bg-white border rounded-lg shadow w-80 h-min">
+                        <div class="flex items-center justify-between p-4 border-b">
+                            <h6 class="text-base font-medium text-gray-800 capitalize">
+                                {{ element.name }}
+                            </h6>
+                            <div>
+                                <button type="button" @click="openCreateTask(element.id)" class="p-1 bg-teal-700 border rounded">
+                                    <PlusIcon class="w-4 h-4 text-white" />
+                                </button>
                             </div>
-                        </template>
-                    </draggable>
-                </div>
-            </div>
+                        </div>
+                        <draggable class="p-4 space-y-2" :list="element.tasks.data" itemKey="name" group="task" v-bind="dropOptions" @change="handleChange">
+                            <template #item="{ element }">
+                                <div class="border-l-2 border-teal-800 rounded-lg shadow" @click="openUpdateTask(element)">
+                                    <div class="p-2 bg-white border rounded-lg">
+                                        <div class="text-[10px] font-light text-gray-600 capitalize">Kategori</div>
+                                        <span class="text-xs select-none">{{ element.name }}</span>
+                                    </div>
+                                </div>
+                            </template>
+                        </draggable>
+                    </div>
+                </template>
+            </draggable>
         </div>
     </div>
     <CreateTaskModal :project="project" ref="createTaskModal" :task-statuses="taskStatuses"/>

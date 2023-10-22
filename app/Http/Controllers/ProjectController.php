@@ -39,6 +39,9 @@ class ProjectController extends Controller
                 $project->customer()->associate($customer);
                 $project->save();
             }
+            $project->taskStatuses()->createMany([
+                ['name' => 'To Do'], ['name' => 'Completed']
+            ]);
         });
         return redirect()->route('project.index');
     }
