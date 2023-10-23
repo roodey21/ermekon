@@ -97,6 +97,12 @@ const searchProduct = (search) => {
     })
 }
 
+const selectedProduct = ref(null)
+
+const selectProduct = (product) => {
+    selectedProduct.value = product
+}
+
 defineExpose({
     openModal,
     closeModal
@@ -248,7 +254,7 @@ defineExpose({
                 </div> -->
                 <div class="relative overflow-x-auto border">
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
                                 <th scope="col" class="px-3 py-3">
                                     Kode
@@ -262,9 +268,9 @@ defineExpose({
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="relative text-xs bg-white border-b dark:bg-gray-800 group dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 hover:cursor-pointer" v-for="product in products.data" :key="product.id">
+                            <tr class="relative text-xs bg-white border-b group hover:bg-gray-50 hover:cursor-pointer" v-for="product in products.data" :key="product.id">
                                 <th scope="row"
-                                    class="px-3 py-2.5 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    class="px-3 py-2.5 font-medium text-gray-900 whitespace-nowrap">
                                     {{ product.code }}
                                 </th>
                                 <td class="px-3 py-2">
@@ -273,7 +279,7 @@ defineExpose({
                                 <td class="px-3 py-2">
                                     {{ product.type.name }}
                                 </td>
-                                <div class="absolute invisible -translate-y-1/2 right-1 group-hover:visible top-1/2">
+                                <div class="absolute invisible -translate-y-1/2 right-1 group-hover:visible top-1/2" @click="selectProduct(product)">
                                     <ArrowRightIcon class="w-4 h-4 text-gray-500" />
                                 </div>
                             </tr>
@@ -282,19 +288,21 @@ defineExpose({
                 </div>
             </div>
             <div class="px-4 py-6 basis-2/5">
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-2 gap-3" v-if="selectedProduct">
                     <div class="col-span-2">
                         <label for="" class="text-xs">Nama Produk</label>
                         <div>
                             <input type="text"
-                                class="w-full p-2 text-sm font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-gray-400">
+                                disabled
+                                class="w-full p-2 text-sm font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-gray-400"
+                                v-model="selectedProduct.name">
                         </div>
                     </div>
                     <div>
                         <label for="" class="text-xs">Satuan</label>
-                        <select type="text"
+                        <select
                                 class="w-full p-2 text-sm font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-gray-400 placeholder:text-sm">
-                            <option value="">Pilih Satuan</option>
+                            <option value="">{{ selectedProduct.main_unit.name }}</option>
                         </select>
                     </div>
                     <div>

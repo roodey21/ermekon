@@ -240,7 +240,7 @@ const openUpdateTaskModal = (params) => {
             </template>
             <template v-else>
                 <div class="flex flex-col items-center py-20 text-sm leading-6 text-slate-600 md:py-32 lg:py-40">
-                    <XCircleIcon class="w-12 h-12 text-gray-300" />
+                    <XCircleIcon class="text-gray-300 w-14 h-14" />
                     <p class="mt-6">No data found. <span @click="openCreatePackageModal" class="font-medium text-teal-600 hover:cursor-pointer hover:text-teal-800">Let's create one</span></p>
                 </div>
             </template>

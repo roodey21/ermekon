@@ -1,5 +1,5 @@
 <script setup>
-import { ArrowPathRoundedSquareIcon, CheckCircleIcon, ChevronLeftIcon, ChevronRightIcon, DocumentIcon, FolderIcon, TableCellsIcon } from '@heroicons/vue/24/outline';
+import { ArrowPathRoundedSquareIcon, CheckCircleIcon, ChevronLeftIcon, ChevronRightIcon, DocumentIcon, FolderIcon, NewspaperIcon, TableCellsIcon } from '@heroicons/vue/24/outline';
 import { Head, Link } from '@inertiajs/vue3';
 
 defineProps({
@@ -29,6 +29,9 @@ defineProps({
             </Link>
             <div class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-gray-600 transition-all border-b-2 border-teal-700 border-opacity-0 hover:border-opacity-100 hover:cursor-pointer">
                 <FolderIcon class="w-4 h-4" /> Files
+            </div>
+            <div class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-gray-600 transition-all border-b-2 border-teal-700 border-opacity-0 hover:border-opacity-100 hover:cursor-pointer">
+                <NewspaperIcon class="w-4 h-4" /> Expenses
             </div>
             <div class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-gray-600 transition-all border-b-2 border-teal-700 border-opacity-0 hover:border-opacity-100 hover:cursor-pointer">
                 <ArrowPathRoundedSquareIcon class="w-4 h-4" /> Activity Log
