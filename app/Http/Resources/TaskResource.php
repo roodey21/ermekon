@@ -33,6 +33,8 @@ class TaskResource extends JsonResource
                     'name' => $product->name,
                     'volume' => $product->pivot->volume,
                     'unit' => $product->main_unit->name,
+                    'transaction_type' => $product->pivot->transaction_type,
+                    'price' => $product->pivot->price,
                 ];
             }),
             'documents' => $this->documents->map(function ($document) {

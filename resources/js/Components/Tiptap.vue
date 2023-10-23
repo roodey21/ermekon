@@ -1,60 +1,3 @@
-<!-- <template>
-    <editor-content :editor="editor" />
-</template>
-
-<script setup>
-import { useEditor, EditorContent } from '@tiptap/vue-3'
-import StarterKit from '@tiptap/starter-kit'
-import Placeholder from '@tiptap/extension-placeholder'
-import { ref, onBeforeUnmount, onMounted } from 'vue'
-
-const value = ref('')
-
-const editor = useEditor({
-    content: value.value,
-    extensions: [
-        StarterKit,
-        Placeholder.configure({
-            placeholder: 'Write Something',
-        }),
-    ],
-    editorProps: {
-        attributes: {
-            class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl focus:outline-none p-2 -ml-2 border border-gray-200 border-opacity-0 hover:border-opacity-100 rounded hover:shadow-sm focus:border-opacity-100 focus:shadow-sm',
-        },
-    },
-})
-
-// Watch for changes in the editor's content and update the value
-onMounted(() => {
-  editor.emit('transaction', (tr) => {
-    if (tr.docChanged) {
-      value.value = tr.doc.toString();
-    }
-  });
-});
-
-// Clean up the editor when the component is unmounted
-onBeforeUnmount(() => {
-  editor.destroy();
-});
-</script>
-
-<style>
-.tiptap p.is-editor-empty:first-child::before {
-  content: attr(data-placeholder);
-  float: left;
-  pointer-events: none;
-  height: 0;
-}
-</style>
-
-<style lang="postcss">
-.tiptap p.is-editor-empty:first-child::before {
-    @apply text-gray-400 text-sm
-  }
-</style> -->
-
 <template>
     <editor-content :editor="editor" />
 </template>
@@ -75,6 +18,14 @@ export default {
         placeholder: {
             type: String,
             default: 'Write Something',
+        },
+        showBorder: {
+            type: Boolean,
+            default: false,
+        },
+        margin: {
+            type: String,
+            default: '-ml-2',
         }
     },
     emits: ['update:modelValue'],
@@ -105,7 +56,7 @@ export default {
             content: this.modelValue,
             editorProps: {
                 attributes: {
-                    class: 'w-full prose prose-sm text-sm sm:prose lg:prose-lg xl:prose-2xl focus:outline-none p-2 -ml-2 border border-gray-200 border-opacity-0 hover:border-opacity-100 rounded hover:shadow-sm focus:border-opacity-100 focus:shadow-sm',
+                    class: 'w-full prose prose-sm text-sm sm:prose lg:prose-lg xl:prose-2xl focus:outline-none p-2 border border-gray-200 hover:border-opacity-100 rounded hover:shadow-sm focus:border-opacity-100 focus:shadow-sm'+(this.showBorder ? '' : ' border-opacity-0')+(this.margin ? ' '+this.margin : ''),
                 },
             },
             onUpdate: () => {

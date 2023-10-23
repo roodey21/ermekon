@@ -2,6 +2,7 @@
 import Dropdown from '@/Components/Dropdown.vue';
 import Modal from '@/Components/Modal.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import Tiptap from '@/Components/Tiptap.vue';
 import { ArrowRightIcon, EllipsisHorizontalIcon, TrashIcon, UserPlusIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { router, useForm } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
@@ -54,26 +55,6 @@ const handleSubmit = () => {
     })
 }
 
-// const searchProduct = (search) => {
-//     console.log(filteredProduct.value)
-//     router.reload({
-//         only: ['products'],
-//         data: {
-//             search
-//         }
-//     })
-// }
-
-const addTaskItem = () => {
-    form.products.push({
-        id: '',
-        name: '',
-        volume: '',
-        transaction_type: '',
-        price: ''
-    })
-}
-
 const deleteTaskItem = (index) => {
     form.products.splice(index, 1)
 }
@@ -86,21 +67,48 @@ const openProductModal = () => {
 
 const closeProductModal = () => {
     showProductModal.value = false
+    selectedProduct.reset()
 }
 
+const isSearching = ref(false)
 const searchProduct = (search) => {
     router.reload({
         only: ['products'],
         data: {
             search : search.target.value
-        }
+        },
+        onStart: () => { isSearching.value = true },
+        onFinish: () => { isSearching.value = false }
     })
 }
 
-const selectedProduct = ref(null)
+const selectedProduct = useForm({
+    id: '',
+    name: '',
+    main_unit: {
+        name: ''
+    },
+    volume: '',
+    transaction_type: '',
+    price: ''
+})
 
 const selectProduct = (product) => {
-    selectedProduct.value = product
+    selectedProduct.id = product.id
+    selectedProduct.name = product.name
+    selectedProduct.main_unit.name = product.main_unit.name
+}
+
+const  addProductToTask = () => {
+    form.products.push({
+        id: selectedProduct.id,
+        name: selectedProduct.name,
+        volume: selectedProduct.volume,
+        unit: selectedProduct.main_unit.name,
+        transaction_type: selectedProduct.transaction_type,
+        price: selectedProduct.price
+    })
+    closeProductModal()
 }
 
 defineExpose({
@@ -110,7 +118,7 @@ defineExpose({
 </script>
 
 <template>
-    <Modal :show="showModal" @close="closeModal" max-width="6xl" :closeable="false">
+    <Modal :show="showModal" @close="closeModal" max-width="6xl" :closeable="true">
         <form @submit.prevent="handleSubmit">
             <div class="flex items-center justify-between px-4 py-3 bg-gray-100 border-b">
                 <h5 class="text-sm font-medium">
@@ -122,8 +130,8 @@ defineExpose({
             </div>
             <div class="flex flex-row divide-x">
                 <div class="basis-3/5 ">
-                    <div class="flex flex-row justify-between p-4 border-b">
-                        <div class="flex flex-row-reverse">
+                    <div class="flex flex-row items-center justify-between p-4 border-b">
+                        <div class="flex flex-row-reverse invisible">
                             <div
                                 class="flex justify-center w-10 h-10 -ml-4 text-white border-2 border-teal-600 border-dashed rounded-full opacity-25 hover:opacity-100 hover:cursor-pointer">
                                 <UserPlusIcon class="self-center w-6 h-6 text-teal-600" />
@@ -136,7 +144,7 @@ defineExpose({
                             </div>
                         </div>
                         <div>
-                            <Dropdown align="left">
+                            <Dropdown align="right">
                                 <template #trigger>
                                     <div class="group hover:cursor-pointer">
                                         <EllipsisHorizontalIcon
@@ -149,7 +157,7 @@ defineExpose({
                                         <li class="px-3 py-1.5 hover:bg-gray-100 hover:cursor-pointer group rounded">
                                             <div class="flex items-center gap-2 text-xs text-red-700">
                                                 <TrashIcon class="w-3 h-3" />
-                                                <span>Hapus Paket Pekerjaan</span>
+                                                <span>Hapus Item Pekerjaan</span>
                                             </div>
                                         </li>
                                     </ul>
@@ -164,10 +172,7 @@ defineExpose({
                                 v-model="form.name" placeholder="Nama Item Pekerjaan">
                         </div>
                         <div class="mb-2">
-                            <textarea rows="8"
-                                class="w-full p-2 -ml-2 text-sm font-light text-gray-900 border border-gray-200 border-opacity-0 rounded placeholder:text-gray-600 focus:ring-0 focus:border-gray-400 hover:border-opacity-100"
-                                placeholder="deskripsi atau catatan lainnya ditulis disini"
-                                v-model="form.description"></textarea>
+                            <Tiptap v-model="form.description" placeholder="Tulis deskripsi atau catatan lainnya disini"/>
                         </div>
                         <div class="items-form">
                             <div class="flex items-center gap-3 py-2 mb-2">
@@ -177,47 +182,28 @@ defineExpose({
                                     Add
                                 </button>
                             </div>
-                            <table class="w-full">
-                                <thead class="bg-gray-100">
-                                    <tr>
-                                        <th class="w-2"></th>
-                                        <th class="text-sm font-medium text-center">Nama</th>
-                                        <th class="text-sm font-medium text-center">Volume</th>
-                                        <th class="text-sm font-medium text-center">Jenis Transaksi</th>
-                                        <th class="text-sm font-medium text-center">Harga Satuan</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="space-y-2">
-                                    <tr v-for="(item, index) in form.products" :key="item.id" class="group">
-                                        <td>
-                                            <XMarkIcon
-                                                class="w-3 h-3 opacity-0 hover:cursor-pointer group-hover:opacity-100"
-                                                @click="deleteTaskItem(index)" />
-                                        </td>
-                                        <td class="text-xs font-light">
-                                            <v-select v-model="form.products[index].id" :options="filteredProduct"
-                                                :reduce="product => product.id" :clearable="false" label="name"
-                                                @search="searchProduct" class="searchProduct">
-                                            </v-select>
-                                            <!-- <span class="line-clamp-1">
-                                                Pipa PVC AW dia. 4" (Pipa Tegak)
-                                            </span> -->
-                                        </td>
-                                        <td class="text-xs font-light text-center" width="150px">100 m</td>
-                                        <td class="text-xs font-light text-center" width="150px">Pembelian</td>
-                                        <td class="text-xs font-light text-center" width="150px">50,000</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4">&nbsp;</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4">&nbsp;</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4">&nbsp;</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="space-y-2">
+                                <template v-if="form.products.length">
+                                    <div class="relative flex p-3 overflow-hidden bg-white border rounded-lg group" v-for="(item, index) in form.products" :key="item.id" >
+                                        <div class="grow">
+                                            <div class="mb-2 text-sm font-medium">{{ item.name }}</div>
+                                            <div class="text-xs">
+                                                {{ item.volume }} {{ item.unit }} <span class="capitalize">({{ item.transaction_type }})</span> @ Rp. {{ item.price }}
+                                            </div>
+                                        </div>
+                                        <div class="absolute inset-y-0 right-0 items-center hidden px-1 bg-red-400 hover:cursor-pointer group-hover:flex" @click="deleteTaskItem(index)">
+                                            <XMarkIcon class="w-4 h-4 text-white"/>
+                                        </div>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <div class="relative flex px-3 py-5 overflow-hidden border rounded-lg shadow group">
+                                        <div class="grow">
+                                            <div class="text-sm text-gray-600">Belum ada data</div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -236,96 +222,110 @@ defineExpose({
     <Modal :show="showProductModal" @close="closeProductModal" max-width="4xl" :closeable="true">
         <div class="flex items-center justify-between px-4 py-3 bg-gray-100 border-b">
             <h5 class="text-sm font-medium">
-                {{ project.data.name }} / {{ projectPackage.name }} / {{ subPackage.name }}
+                Tambah Barang / Jasa
             </h5>
             <button type="button" @click="closeProductModal" class="p-[2px] rounded bg-white border">
                 <XMarkIcon class="w-3.5 h-3.5" />
             </button>
         </div>
-        <div class="flex flex-row divide-x">
-            <div class="px-4 py-6 basis-3/5 grow">
-                <div class="mb-4">
-                    <input type="text"
-                        class="w-full p-2 text-base font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-gray-400"
-                        placeholder="Cari Produk" @input="searchProduct">
-                </div>
-                <!-- <div class="mb-2">
-                    <span class="text-sm text-gray-800">Hasil pencarian</span>
-                </div> -->
-                <div class="relative overflow-x-auto border">
-                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-3 py-3">
-                                    Kode
-                                </th>
-                                <th scope="col" class="px-3 py-3">
-                                    Nama Produk
-                                </th>
-                                <th scope="col" class="px-3 py-3">
-                                    Jenis
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="relative text-xs bg-white border-b group hover:bg-gray-50 hover:cursor-pointer" v-for="product in products.data" :key="product.id">
-                                <th scope="row"
-                                    class="px-3 py-2.5 font-medium text-gray-900 whitespace-nowrap">
-                                    {{ product.code }}
-                                </th>
-                                <td class="px-3 py-2">
-                                    {{ product.name }}
-                                </td>
-                                <td class="px-3 py-2">
-                                    {{ product.type.name }}
-                                </td>
-                                <div class="absolute invisible -translate-y-1/2 right-1 group-hover:visible top-1/2" @click="selectProduct(product)">
-                                    <ArrowRightIcon class="w-4 h-4 text-gray-500" />
+        <form @submit="addProductToTask">
+            <div class="flex flex-row divide-x">
+                <div class="px-4 py-6 basis-3/5 grow">
+                    <div class="mb-4">
+                        <input type="text"
+                            class="w-full p-2 text-base font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-gray-400"
+                            placeholder="Cari Produk" @input="searchProduct">
+                    </div>
+                    <!-- <div class="mb-2">
+                        <span class="text-sm text-gray-800">Hasil pencarian</span>
+                    </div> -->
+                    <div class="relative overflow-x-auto border">
+                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-3 py-3">
+                                        Kode
+                                    </th>
+                                    <th scope="col" class="px-3 py-3">
+                                        Nama Produk
+                                    </th>
+                                    <th scope="col" class="px-3 py-3">
+                                        Jenis
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="relative">
+                                <tr class="relative text-xs bg-white border-b group hover:bg-gray-50 hover:cursor-pointer" v-for="product in products.data" :key="product.id" @click="selectProduct(product)">
+                                    <th scope="row"
+                                        class="px-3 py-2.5 font-medium text-gray-900 whitespace-nowrap">
+                                        {{ product.code }}
+                                    </th>
+                                    <td class="px-3 py-2">
+                                        {{ product.name }}
+                                    </td>
+                                    <td class="px-3 py-2">
+                                        {{ product.type.name }}
+                                    </td>
+                                    <div class="absolute invisible -translate-y-1/2 right-1 group-hover:visible top-1/2">
+                                        <ArrowRightIcon class="w-4 h-4 text-gray-500" />
+                                    </div>
+                                </tr>
+                                <div class="absolute inset-0 flex items-center justify-center bg-gray-700/50" v-show="isSearching">
+                                    <span class="text-white">Loading data</span>
                                 </div>
-                            </tr>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-            <div class="px-4 py-6 basis-2/5">
-                <div class="grid grid-cols-2 gap-3" v-if="selectedProduct">
-                    <div class="col-span-2">
-                        <label for="" class="text-xs">Nama Produk</label>
+                <div class="px-4 py-6 basis-2/5">
+                    <div class="grid grid-cols-2 gap-3" v-if="selectedProduct.isDirty">
+                        <div class="col-span-2">
+                            <label for="" class="text-xs">Nama Produk</label>
+                            <div>
+                                <input type="text"
+                                    disabled
+                                    class="w-full p-2 text-sm font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-gray-400"
+                                    v-model="selectedProduct.name">
+                            </div>
+                        </div>
                         <div>
-                            <input type="text"
-                                disabled
-                                class="w-full p-2 text-sm font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-gray-400"
-                                v-model="selectedProduct.name">
+                            <label for="" class="text-xs">Satuan</label>
+                            <select
+                                    class="w-full p-2 text-sm font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-gray-400 placeholder:text-sm">
+                                <option value="">{{ selectedProduct.main_unit.name }}</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="" class="text-xs">Volume</label>
+                            <input type="number"
+                                    v-model="selectedProduct.volume"
+                                    class="w-full p-2 text-sm font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-gray-400">
+                        </div>
+                        <div>
+                            <label for="" class="text-xs">Jenis Transaksi</label>
+                            <select  v-model="selectedProduct.transaction_type" class="w-full p-2 text-sm font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-gray-400">
+                                <option value="pembelian">Pembelian</option>
+                                <option value="pengiriman">Pengiriman</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="" class="text-xs">Harga Satuan</label>
+                            <input type="number"
+                                    v-model="selectedProduct.price"
+                                    class="w-full p-2 text-sm font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-gray-400">
                         </div>
                     </div>
-                    <div>
-                        <label for="" class="text-xs">Satuan</label>
-                        <select
-                                class="w-full p-2 text-sm font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-gray-400 placeholder:text-sm">
-                            <option value="">{{ selectedProduct.main_unit.name }}</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="" class="text-xs">Volume</label>
-                        <input type="text"
-                                class="w-full p-2 text-sm font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-gray-400">
-                    </div>
-                    <div>
-                        <label for="" class="text-xs">Jenis Transaksi</label>
-                        <input type="text"
-                                class="w-full p-2 text-sm font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-gray-400">
-                    </div>
-                    <div>
-                        <label for="" class="text-xs">Harga Satuan</label>
-                        <input type="text"
-                                class="w-full p-2 text-sm font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-gray-400">
-                    </div>
+                    <template v-else>
+                        <div class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+                            Cari dan pilih produk yang akan ditambahkan ke item pekerjaan melalui form di sebelah kiri.
+                        </div>
+                    </template>
                 </div>
             </div>
-        </div>
-        <div class="p-4 text-right border-t">
+            <div class="p-4 text-right border-t">
                 <PrimaryButton type="submit" :disabled="form.processing">Simpan</PrimaryButton>
             </div>
+        </form>
     </Modal>
 </template>
 

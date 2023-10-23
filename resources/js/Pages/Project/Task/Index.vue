@@ -1,7 +1,7 @@
 <script setup>
 import Dropdown from '@/Components/Dropdown.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { ArrowUturnLeftIcon, ChevronDownIcon, LinkIcon, PencilSquareIcon, PlusIcon, TrashIcon } from '@heroicons/vue/24/outline';
+import { ArrowUturnLeftIcon, Bars3BottomLeftIcon, ChevronDownIcon, DocumentTextIcon, LinkIcon, ListBulletIcon, PencilSquareIcon, PlusIcon, TrashIcon } from '@heroicons/vue/24/outline';
 import { computed, ref } from 'vue';
 import draggable from 'vuedraggable';
 import SubMenu from '../Partials/SubMenu.vue';
@@ -133,9 +133,26 @@ const handleChange = (event) => {
                         <draggable class="p-4 space-y-2" :list="element.tasks.data" itemKey="name" group="task" v-bind="dropOptions" @change="handleChange">
                             <template #item="{ element }">
                                 <div class="border-l-2 border-teal-800 rounded-lg shadow" @click="openUpdateTask(element)">
-                                    <div class="p-2 bg-white border rounded-lg">
-                                        <div class="text-[10px] font-light text-gray-600 capitalize">Kategori</div>
-                                        <span class="text-xs select-none">{{ element.name }}</span>
+                                    <div class="border rounded-lg">
+                                        <div class="p-2 bg-white">
+                                            <div class="mb-2 text-sm select-none">{{ element.name }}</div>
+                                            <div class="flex gap-2">
+                                                <div class="p-[2px] flex border rounded-sm items-center">
+                                                    <Bars3BottomLeftIcon class="w-4 h-4" />
+                                                </div>
+                                                <div class="flex items-center border p-[2px] rounded-sm">
+                                                    <DocumentTextIcon class="w-4 h-4" />
+                                                    <span class="text-xs font-medium ml-[2px]">2</span>
+                                                </div>
+                                                <!-- <ListBulletIcon class="w-4 h-4" /> -->
+                                            </div>
+                                        </div>
+                                        <div class="p-2 mt-2 border-t">
+                                            <div class="flex flex-row-reverse justify-end mx-2">
+                                                <div class="w-6 h-6 bg-teal-600 -ml-2 border flex justify-center items-center border-white rounded-full text-[10px] text-white">FA</div>
+                                                <div class="w-6 h-6 bg-teal-600 -ml-2 border flex justify-center items-center border-white rounded-full text-[10px] text-white">FA</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </template>

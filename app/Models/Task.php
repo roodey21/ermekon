@@ -20,7 +20,7 @@ class Task extends Model implements HasMedia
 
     public function products()
     {
-        return $this->belongsToMany(Product::class)->withPivot('volume');
+        return $this->belongsToMany(Product::class)->withPivot(['volume', 'transaction_type', 'price']);
     }
 
     public function getDocumentsAttribute()

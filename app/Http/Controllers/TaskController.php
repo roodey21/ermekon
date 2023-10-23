@@ -31,7 +31,12 @@ class TaskController extends Controller
     public function store(Project $project, StoreTaskRequest $request)
     {
         // dd($request->all());
-        $task = Task::create($request->only(['name','package_id','description']));
+        $validated = $request->validated();
+        $task = Task::create($validated);
+        foreach ($request->products as $productData) {
+            $product = Product::findOrFail($productData['id']);
+            $task->products()->attach($product, ['volume' => $productData['volume'], 'transaction_type' => $productData['transaction_type'], 'price' => $productData['price']]);
+        }
         return redirect()->back()->with('success', 'Pekerjaan berhasil dibuat');
     }
 
@@ -42,7 +47,7 @@ class TaskController extends Controller
         $task->products()->detach();
         foreach ($request->products as $productData) {
             $product = Product::findOrFail($productData['id']);
-            $task->products()->attach($product, ['volume' => $productData['volume']]); // with the volume from request
+            $task->products()->attach($product, ['volume' => $productData['volume'], 'transaction_type' => $productData['transaction_type'], 'price' => $productData['price']]);
         }
         return redirect()->back()->with('success', 'Pekerjaan berhasil diupdate');
     }
