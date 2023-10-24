@@ -1,7 +1,7 @@
 <script setup>
 import Dropdown from '@/Components/Dropdown.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { ArrowUturnLeftIcon, Bars3BottomLeftIcon, ChevronDownIcon, DocumentTextIcon, LinkIcon, ListBulletIcon, PencilSquareIcon, PlusIcon, TrashIcon } from '@heroicons/vue/24/outline';
+import { ArrowUturnLeftIcon, Bars3BottomLeftIcon, ChevronDownIcon, DocumentTextIcon, LinkIcon, ListBulletIcon, PencilSquareIcon, PlusIcon, TrashIcon, UserPlusIcon } from '@heroicons/vue/24/outline';
 import { computed, ref } from 'vue';
 import draggable from 'vuedraggable';
 import SubMenu from '../Partials/SubMenu.vue';
@@ -149,8 +149,14 @@ const handleChange = (event) => {
                                         </div>
                                         <div class="p-2 mt-2 border-t">
                                             <div class="flex flex-row-reverse justify-end mx-2">
-                                                <div class="w-6 h-6 bg-teal-600 -ml-2 border flex justify-center items-center border-white rounded-full text-[10px] text-white">FA</div>
-                                                <div class="w-6 h-6 bg-teal-600 -ml-2 border flex justify-center items-center border-white rounded-full text-[10px] text-white">FA</div>
+                                                <template v-if="element.assignees">
+                                                    <div class="w-6 h-6 bg-teal-600 -ml-2 border flex justify-center items-center border-white rounded-full text-[10px] text-white" v-for="assignee in element.assignees" :key="assignee.id">FA</div>
+                                                </template>
+                                                <template v-else>
+                                                    <div class="w-6 h-6 bg-white -ml-2 border flex justify-center items-center border-teal-600 border-dashed rounded-full text-[10px] text-teal-600 hover:cursor-pointer">
+                                                        <UserPlusIcon class="w-4 h-4" />
+                                                    </div>
+                                                </template>
                                             </div>
                                         </div>
                                     </div>
