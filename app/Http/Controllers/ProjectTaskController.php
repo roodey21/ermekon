@@ -51,6 +51,7 @@ class ProjectTaskController extends Controller
     public function store(Project $project, StoreProjectTaskRequest $request)
     {
         $validated = $request->validated();
+        $validated['assignees'] = json_encode($validated['assignees']);
         $validated['created_by'] = auth()->user()->id;
         $project->taskItems()->create($validated);
         return redirect()->back();

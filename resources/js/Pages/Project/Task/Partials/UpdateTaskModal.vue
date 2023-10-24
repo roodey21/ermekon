@@ -4,9 +4,10 @@ import Modal from '@/Components/Modal.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import InputError from '@/Components/InputError.vue';
 import Tiptap from '@/Components/Tiptap.vue';
-import { EllipsisHorizontalIcon, TrashIcon,  UserPlusIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { CloudArrowUpIcon, EllipsisHorizontalIcon, TrashIcon,  UserPlusIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { nextTick, ref } from 'vue';
+import AssignUserInput from '@/Components/AssignUserInput.vue';
 
 const props = defineProps({
     project: {
@@ -25,8 +26,15 @@ const form = useForm({
     name: '',
     description: '',
     package_id: null,
+    start_date: null,
+    due_date: null,
+    completed_date: null,
     status_id: null,
+    files: [],
+    assignees: [],
 })
+
+const userInput = ref(null)
 
 const openModal = (task) => {
     showModal.value = true
@@ -34,6 +42,13 @@ const openModal = (task) => {
     form.description = task.description
     form.status_id = task.status_id
     form.project_id = task.project_id
+    form.start_date = task.start_date
+    form.due_date = task.due_date
+    form.completed_date = task.completed_date
+    form.assignees = task.assignees
+    nextTick(() => {
+        userInput.value.selectedUser = task.assignees
+    })
 }
 
 const closeModal = () => {
@@ -69,17 +84,7 @@ defineExpose({
             <div class="flex flex-row divide-x">
                 <div class="basis-3/5 ">
                     <div class="flex flex-row items-center justify-between p-4 border-b">
-                        <div class="flex flex-row-reverse">
-                            <div class="flex justify-center w-10 h-10 -ml-4 text-white border-2 border-teal-600 border-dashed rounded-full opacity-25 hover:opacity-100 hover:cursor-pointer">
-                                <UserPlusIcon class="self-center w-6 h-6 text-teal-600" />
-                            </div>
-                            <div class="z-10 flex w-10 h-10 -ml-4 text-white bg-teal-600 border rounded-full">
-                                <span class="self-center w-full text-center text-[12px]">FA</span>
-                            </div>
-                            <div class="z-10 flex w-10 h-10 text-white bg-teal-600 border rounded-full">
-                                <span class="self-center w-full text-center text-[12px]">FA</span>
-                            </div>
-                        </div>
+                        <AssignUserInput ref="userInput"/>
                         <div>
                             <Dropdown align="left">
                                 <template #trigger>
@@ -103,22 +108,65 @@ defineExpose({
                         </div>
                     </div>
                     <div class="px-4 py-6 h-[70vh] overflow-y-scroll scroll-smooth">
-                        <div class="mb-2">
+                        <div class="mb-3">
                             <input type="text"
-                                class="w-full p-2 -ml-2 text-2xl font-light text-gray-900 border border-gray-200 border-opacity-0 rounded focus:ring-0 focus:border-gray-400 hover:border-opacity-100"
+                                class="w-full p-2 text-2xl font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-teal-700 hover:border-opacity-100"
                                 v-model="form.name" placeholder="Nama Pekerjaan">
                             <InputError class="mt-2" :message="form.errors.name" />
                         </div>
-                        <div class="mb-2">
-                            <Tiptap v-model="form.description" placeholder="Tulis deskripsi pekerjaan disini" />
+                        <div class="mb-3">
+                            <Tiptap v-model="form.description" placeholder="Tulis deskripsi pekerjaan disini" :show-border="true" margin="ml-0"/>
+                        </div>
+                        <div class="flex gap-2">
+                            <div class="flex-1 mb-3">
+                                <label for="" class="text-xs text-gray-800">Tanggal Mulai</label>
+                                <input type="date"
+                                    v-model="form.start_date"
+                                    class="w-full p-2 text-sm font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-teal-700 hover:border-opacity-100"
+                                    placeholder="Nama Pekerjaan">
+                            </div>
+                            <div class="flex-1 mb-3">
+                                <label for="" class="text-xs text-gray-800">Tanggal Selesai</label>
+                                <input type="date"
+                                    v-model="form.due_date"
+                                    class="w-full p-2 text-sm font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-teal-700 hover:border-opacity-100"
+                                    placeholder="Nama Pekerjaan">
+                            </div>
                         </div>
                         <div class="items-form">
                             <div class="flex items-center gap-3 py-2 mb-2">
-                                <h6 class="text-base font-medium text-gray-600">Barang & Jasa</h6>
+                                <h6 class="text-base font-medium text-gray-600">File & Dokumen</h6>
                                 <button type="button"
-                                    class="py-0.5 px-2 rounded border border-teal-700 text-teal-700 bg-white text-xs">
+                                    class="py-0.5 px-2 rounded border border-teal-700 text-teal-700 bg-white text-xs"
+                                    @click="addFileInput">
                                     Add
                                 </button>
+                            </div>
+                            <div class="grid grid-cols-4 gap-4">
+                                <label v-for="(file, index) in form.files" :key="index" class="relative flex flex-col items-center justify-center overflow-hidden border-2 border-gray-300 border-dashed rounded-lg cursor-pointer aspect-square bg-gray-50 hover:bg-gray-100">
+                                    <template v-if="form.files[index]">
+                                        <div class="flex flex-col items-center justify-center w-full gap-2 px-2 pt-5 pb-6">
+                                            <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                                                <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
+                                                <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2Z"/>
+                                            </svg>
+                                            <p class="text-sm text-gray-500 break-all"><span class="font-semibold">{{ file.name }}</span></p>
+                                        </div>
+                                    </template>
+                                    <template v-else>
+                                        <div class="flex flex-col items-center justify-center w-full px-2 pt-5 pb-6">
+                                            <CloudArrowUpIcon class="w-8 h-8 text-gray-500" />
+                                            <p class="mb-2 text-sm text-gray-500 break-all"><span class="font-semibold">Click to upload</span></p>
+                                        </div>
+                                    </template>
+                                    <div class="absolute top-0 right-0 z-40">
+                                        <div class="flex items-center justify-center p-1 pb-2 pl-2 rounded-bl-full hover:bg-red-400 group" @click.prevent="removeFileInput(index)">
+                                            <XMarkIcon class="w-4 h-4 text-gray-500 group-hover:text-white" />
+                                        </div>
+                                    </div>
+                                    <input type="file" @input="form.files[index] = $event.target.files[0]; console.log($event.target.files)" class="hidden"/>
+                                    <!-- <input type="file" @input="console.log($event.target.files)" class="hidden" :class="'file-'+index"/> -->
+                                </label>
                             </div>
                         </div>
                     </div>

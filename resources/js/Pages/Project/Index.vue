@@ -31,7 +31,7 @@ defineOptions({
     <div class="flex flex-row justify-between p-4 bg-teal-700 shadow">
         <div class="flex items-center gap-3">
             <h3 class="text-white">
-                Proyek / Overview
+                Proyek / List Proyek
             </h3>
             <div class="w-[1px] bg-white/50 h-6">
 

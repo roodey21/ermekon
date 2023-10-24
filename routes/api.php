@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\UnitController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,3 +27,4 @@ Route::middleware('auth:sanctum')->post('/unit/create', [UnitController::class, 
 Route::middleware('auth:sanctum')->get('/products', [ProductController::class, 'index'])->name('api.product.index');
 Route::middleware('auth:sanctum')->get('/projects', [ProjectController::class, 'index'])->name('api.project.index');
 Route::middleware('auth:sanctum')->get('/task/{task}', [TaskController::class, 'getTask'])->name('api.task.get-task');
+Route::middleware('auth:sanctum')->get('/users', [UserController::class, 'getUsers'])->name('api.get-users');

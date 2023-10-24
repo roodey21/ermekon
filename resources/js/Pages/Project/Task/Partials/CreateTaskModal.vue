@@ -4,9 +4,10 @@ import Modal from '@/Components/Modal.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import InputError from '@/Components/InputError.vue';
 import Tiptap from '@/Components/Tiptap.vue';
-import { CloudArrowUpIcon, EllipsisHorizontalIcon, TrashIcon,  UserPlusIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { CloudArrowUpIcon, EllipsisHorizontalIcon, MagnifyingGlassIcon, TrashIcon,  UserPlusIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { router, useForm } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
+import AssignUserInput from '@/Components/AssignUserInput.vue';
 
 const props = defineProps({
     project: {
@@ -25,8 +26,12 @@ const form = useForm({
     name: '',
     description: '',
     package_id: null,
+    start_date: null,
+    due_date: null,
+    completed_date: null,
     status_id: null,
     files: [],
+    assignees: [],
 })
 
 const openModal = (statusId) => {
@@ -38,7 +43,11 @@ const closeModal = () => {
     showModal.value = false
 }
 
+const userInput = ref(null)
+
 const handleSubmit = () => {
+    form.assignees = userInput.value.selectedUser
+    console.log(form)
     form.post(route('project.task.store', props.project.data.id), {
         onSuccess: () => {
             closeModal()
@@ -76,36 +85,7 @@ defineExpose({
             <div class="flex flex-row divide-x">
                 <div class="w-full">
                     <div class="flex flex-row items-center justify-between p-4 border-b">
-                        <div class="flex flex-row-reverse">
-                            <Dropdown align="left">
-                                <template #trigger>
-                                    <div class="flex justify-center w-10 h-10 -ml-4 text-white border-2 border-teal-600 border-dashed rounded-full opacity-25 hover:opacity-100 hover:cursor-pointer">
-                                        <UserPlusIcon class="self-center w-6 h-6 text-teal-600" />
-                                    </div>
-                                </template>
-
-                                <template #content>
-                                    <div>
-                                        <input type="text" class="w-full p-2">
-                                        <ul class="p-1.5 text-black">
-                                            <li class="px-3 py-1.5 hover:bg-gray-100 hover:cursor-pointer group rounded" >
-                                                <div class="flex items-center gap-2 text-xs text-red-700">
-                                                    <TrashIcon class="w-3 h-3" />
-                                                    <span>Hapus Paket Pekerjaan</span>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </template>
-                            </Dropdown>
-
-                            <div class="z-10 flex w-10 h-10 -ml-4 text-white bg-teal-600 border-2 rounded-full">
-                                <span class="self-center w-full text-center text-[12px]">FA</span>
-                            </div>
-                            <div class="z-10 flex w-10 h-10 text-white bg-teal-600 border-2 rounded-full">
-                                <span class="self-center w-full text-center text-[12px]">FA</span>
-                            </div>
-                        </div>
+                        <AssignUserInput ref="userInput"/>
                         <div>
                             <Dropdown align="right">
                                 <template #trigger>
@@ -141,12 +121,16 @@ defineExpose({
                         <div class="flex gap-2">
                             <div class="flex-1 mb-3">
                                 <label for="" class="text-xs text-gray-800">Tanggal Mulai</label>
-                                <input type="date" class="w-full p-2 text-sm font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-teal-700 hover:border-opacity-100"
+                                <input type="date"
+                                    v-model="form.start_date"
+                                    class="w-full p-2 text-sm font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-teal-700 hover:border-opacity-100"
                                     placeholder="Nama Pekerjaan">
                             </div>
                             <div class="flex-1 mb-3">
                                 <label for="" class="text-xs text-gray-800">Tanggal Selesai</label>
-                                <input type="date" class="w-full p-2 text-sm font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-teal-700 hover:border-opacity-100"
+                                <input type="date"
+                                    v-model="form.due_date"
+                                    class="w-full p-2 text-sm font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-teal-700 hover:border-opacity-100"
                                     placeholder="Nama Pekerjaan">
                             </div>
                         </div>
