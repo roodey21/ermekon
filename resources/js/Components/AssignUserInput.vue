@@ -32,7 +32,8 @@ const searchUser = () => {
     searchTimeout = setTimeout(() => {
         axios.get(route('api.get-users'), {
             params: {
-                name: inputUserName.value.value
+                name: inputUserName.value.value,
+                except: selectedUser.value.map(user => user.id)
             }
         }).then(response => {
             users.value = response.data
@@ -55,6 +56,7 @@ const addUser = (user) => {
     }
     selectedUser.value.push(user)
     close()
+    users.value = []
 }
 
 const clearSelectedUser = () => {
@@ -97,22 +99,23 @@ defineExpose({
                                 placeholder="Cari nama user" ref="inputUserName" @input="searchUser">
                         </div>
                         <ul class="py-1">
-                            <li class="relative px-4 py-2 hover:bg-gray-100 hover:cursor-pointer" v-for="user in users.data" :key="user.id" @click="addUser(user)">
-                                <div class="flex items-center gap-2">
-                                    <div
-                                        class="flex items-center justify-center w-8 h-8 text-xs text-white bg-teal-600 rounded-full">
-                                        {{ getInitial(user.name) }}</div>
-                                    <span class="text-sm font-medium">{{ user.name }}</span>
-                                    <div class="absolute right-2">
-                                        <template v-if="!selectedUser.find(u => u.id == user.id)">
-                                            <span class="py-1 px-2 bg-teal-600 text-[10px] text-white rounded">Add</span>
-                                        </template>
-                                        <template v-else>
-                                            <span class="py-[2px] px-1 bg-white border border-teal-600 text-teal-600 text-[10px] rounded">Added</span>
-                                        </template>
+                            <template v-if="users.data">
+                                <li class="relative px-4 py-2 hover:bg-gray-100 hover:cursor-pointer" v-for="user in users.data" :key="user.id" @click="addUser(user)">
+                                    <div class="flex items-center gap-2">
+                                        <div
+                                            class="flex items-center justify-center w-8 h-8 text-xs text-white bg-teal-600 rounded-full">
+                                            {{ getInitial(user.name) }}</div>
+                                        <span class="text-sm font-medium">{{ user.name }}</span>
                                     </div>
-                                </div>
-                            </li>
+                                </li>
+                            </template>
+                            <template v-else>
+                                <li class="relative px-4 py-2">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-xs"></span>
+                                    </div>
+                                </li>
+                            </template>
                         </ul>
                     </div>
                 </div>

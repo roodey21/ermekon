@@ -5,7 +5,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import InputError from '@/Components/InputError.vue';
 import Tiptap from '@/Components/Tiptap.vue';
 import { CloudArrowUpIcon, EllipsisHorizontalIcon, TrashIcon,  UserPlusIcon, XMarkIcon } from '@heroicons/vue/24/outline';
-import { useForm } from '@inertiajs/vue3';
+import { router, useForm } from '@inertiajs/vue3';
 import { nextTick, ref } from 'vue';
 import AssignUserInput from '@/Components/AssignUserInput.vue';
 
@@ -38,6 +38,7 @@ const userInput = ref(null)
 
 const openModal = (task) => {
     showModal.value = true
+    form.id = task.id
     form.name = task.name
     form.description = task.description
     form.status_id = task.status_id
@@ -57,6 +58,15 @@ const closeModal = () => {
 
 const handleSubmit = () => {
     form.post(route('project.task.store', props.project.data.id), {
+        onSuccess: () => {
+            closeModal()
+            form.reset()
+        }
+    })
+}
+
+const handleDelete = () => {
+    router.delete(route('project.task.destroy', [props.project.data.id, form.id]), {
         onSuccess: () => {
             closeModal()
             form.reset()
@@ -96,7 +106,7 @@ defineExpose({
 
                                 <template #content>
                                     <ul class="p-1.5 text-black">
-                                        <li class="px-3 py-1.5 hover:bg-gray-100 hover:cursor-pointer group rounded" >
+                                        <li class="px-3 py-1.5 hover:bg-gray-100 hover:cursor-pointer group rounded" @click="handleDelete">
                                             <div class="flex items-center gap-2 text-xs text-red-700">
                                                 <TrashIcon class="w-3 h-3" />
                                                 <span>Hapus Paket Pekerjaan</span>

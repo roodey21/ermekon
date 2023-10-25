@@ -13,6 +13,8 @@ class UserController extends Controller
     {
         $users =  User::when($request->name, function ($q) {
             $q->where('name', 'LIKE', '%' . request()->name . '%');
+        })->when($request->except, function ($q) use ($request) {
+            $q->whereNotIn('id', $request->except);
         })->orderBy('name', 'ASC')->paginate(20);
 
         return UserResource::collection($users);

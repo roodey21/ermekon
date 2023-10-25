@@ -84,8 +84,9 @@ class ProjectTaskController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProjectTask $projectTask)
+    public function destroy(Project $project, ProjectTask $projectTask)
     {
-        //
+        $projectTask->delete();
+        return redirect()->back();
     }
 }

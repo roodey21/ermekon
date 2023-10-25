@@ -53,7 +53,7 @@ defineOptions({
         </div>
     </div>
 
-    <div class="grid gap-2 px-5 py-8 lg:grid-cols-3 2xl:grid-cols-4">
+    <div class="grid px-5 py-8 gap-y-6 gap-x-3 lg:grid-cols-3 2xl:grid-cols-4">
         <template v-if="projects.data">
             <div @click="router.get(route('project.show', project.id))"
                 class="p-4 py-3 bg-white border rounded-lg shadow card hover:cursor-pointer"
@@ -89,17 +89,19 @@ defineOptions({
                 </div>
             </div>
         </template>
-        <!-- <div @click="showCreateModal = true"
-            class="flex flex-col p-4 py-3 text-center transition-all duration-200 border rounded-lg shadow card opacity-60 hover:opacity-100 hover:cursor-pointer">
-            <svg class="w-24 h-full mx-auto" viewBox="0 0 106 105" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M53 35V52.5M53 52.5V70M53 52.5H70.5M53 52.5H35.5" stroke="#E7E5E4" stroke-width="6"
-                    stroke-linecap="round" />
-                <path
-                    d="M53 96.25C77.1625 96.25 96.75 76.6625 96.75 52.5C96.75 28.3375 77.1625 8.75 53 8.75C28.8375 8.75 9.25 28.3375 9.25 52.5C9.25 76.6625 28.8375 96.25 53 96.25Z"
-                    stroke="#E7E5E4" stroke-width="6" />
-            </svg>
-            <h4 class="text-lg font-medium text-gray-400">Tambah Pekerjaan Baru</h4>
-        </div> -->
+        <template v-else>
+            <div @click="showCreateModal = true"
+                class="flex flex-col p-4 py-3 text-center transition-all duration-200 border rounded-lg shadow card opacity-60 hover:opacity-100 hover:cursor-pointer">
+                <svg class="w-24 h-full mx-auto" viewBox="0 0 106 105" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M53 35V52.5M53 52.5V70M53 52.5H70.5M53 52.5H35.5" stroke="#E7E5E4" stroke-width="6"
+                        stroke-linecap="round" />
+                    <path
+                        d="M53 96.25C77.1625 96.25 96.75 76.6625 96.75 52.5C96.75 28.3375 77.1625 8.75 53 8.75C28.8375 8.75 9.25 28.3375 9.25 52.5C9.25 76.6625 28.8375 96.25 53 96.25Z"
+                        stroke="#E7E5E4" stroke-width="6" />
+                </svg>
+                <h4 class="text-lg font-medium text-gray-400">Tambah Pekerjaan Baru</h4>
+            </div>
+        </template>
     </div>
 
     <Modal :show="showCreateModal" @close="closeCreateModal">

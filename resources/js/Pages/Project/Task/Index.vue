@@ -117,55 +117,60 @@ const handleChange = (event) => {
     <SubMenu :project="project" />
     <div class="w-[calc(100vw-4rem)]">
         <div class="p-4 overflow-x-auto">
-            <draggable class="flex flex-row gap-6 flex-nowrap " :list="columns" itemKey="id" group="status" v-bind="dropOptions">
-                <template #item="{ element }">
-                    <div class="flex-none bg-white border rounded-lg shadow w-80 h-min">
-                        <div class="flex items-center justify-between p-4 border-b">
-                            <h6 class="text-base font-medium text-gray-800 capitalize">
-                                {{ element.name }}
-                            </h6>
-                            <div>
-                                <button type="button" @click="openCreateTask(element.id)" class="p-1 bg-teal-700 border rounded">
-                                    <PlusIcon class="w-4 h-4 text-white" />
-                                </button>
+            <template v-if="columns.length">
+                <draggable class="flex flex-row gap-6 flex-nowrap " :list="columns" itemKey="id" group="status" v-bind="dropOptions">
+                    <template #item="{ element }">
+                        <div class="flex-none bg-white border rounded-lg shadow w-80 h-min">
+                            <div class="flex items-center justify-between p-4 border-b">
+                                <h6 class="text-base font-medium text-gray-800 capitalize">
+                                    {{ element.name }}
+                                </h6>
+                                <div>
+                                    <button type="button" @click="openCreateTask(element.id)" class="p-1 bg-teal-700 border rounded">
+                                        <PlusIcon class="w-4 h-4 text-white" />
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        <draggable class="p-4 space-y-2" :list="element.tasks.data" itemKey="name" group="task" v-bind="dropOptions" @change="handleChange">
-                            <template #item="{ element }">
-                                <div class="border-l-2 border-teal-800 rounded-lg shadow" @click="openUpdateTask(element)">
-                                    <div class="border rounded-lg">
-                                        <div class="p-2 bg-white">
-                                            <div class="mb-2 text-sm select-none">{{ element.name }}</div>
-                                            <div class="flex gap-2">
-                                                <div class="p-[2px] flex border rounded-sm items-center">
-                                                    <Bars3BottomLeftIcon class="w-4 h-4" />
-                                                </div>
-                                                <div class="flex items-center border p-[2px] rounded-sm">
-                                                    <DocumentTextIcon class="w-4 h-4" />
-                                                    <span class="text-xs font-medium ml-[2px]">2</span>
-                                                </div>
-                                                <!-- <ListBulletIcon class="w-4 h-4" /> -->
-                                            </div>
-                                        </div>
-                                        <div class="p-2 mt-2 border-t">
-                                            <div class="flex flex-row-reverse justify-end mx-2">
-                                                <template v-if="element.assignees">
-                                                    <div class="w-6 h-6 bg-teal-600 -ml-2 border flex justify-center items-center border-white rounded-full text-[10px] text-white" v-for="assignee in element.assignees" :key="assignee.id">FA</div>
-                                                </template>
-                                                <template v-else>
-                                                    <div class="w-6 h-6 bg-white -ml-2 border flex justify-center items-center border-teal-600 border-dashed rounded-full text-[10px] text-teal-600 hover:cursor-pointer">
-                                                        <UserPlusIcon class="w-4 h-4" />
+                            <draggable class="p-4 space-y-2" :list="element.tasks.data" itemKey="name" group="task" v-bind="dropOptions" @change="handleChange">
+                                <template #item="{ element }">
+                                    <div class="border-l-2 border-teal-800 rounded-lg shadow" @click="openUpdateTask(element)">
+                                        <div class="border rounded-lg">
+                                            <div class="p-2 bg-white">
+                                                <div class="mb-2 text-sm select-none">{{ element.name }}</div>
+                                                <div class="flex gap-2">
+                                                    <div class="p-[2px] flex border rounded-sm items-center">
+                                                        <Bars3BottomLeftIcon class="w-4 h-4" />
                                                     </div>
-                                                </template>
+                                                    <div class="flex items-center border p-[2px] rounded-sm">
+                                                        <DocumentTextIcon class="w-4 h-4" />
+                                                        <span class="text-xs font-medium ml-[2px]">2</span>
+                                                    </div>
+                                                    <!-- <ListBulletIcon class="w-4 h-4" /> -->
+                                                </div>
+                                            </div>
+                                            <div class="p-2 mt-2 border-t">
+                                                <div class="flex flex-row-reverse justify-end mx-2">
+                                                    <template v-if="element.assignees">
+                                                        <div class="w-6 h-6 bg-teal-600 -ml-2 border flex justify-center items-center border-white rounded-full text-[10px] text-white" v-for="assignee in element.assignees" :key="assignee.id">FA</div>
+                                                    </template>
+                                                    <template v-else>
+                                                        <div class="w-6 h-6 bg-white -ml-2 border flex justify-center items-center border-teal-600 border-dashed rounded-full text-[10px] text-teal-600 hover:cursor-pointer">
+                                                            <UserPlusIcon class="w-4 h-4" />
+                                                        </div>
+                                                    </template>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </template>
-                        </draggable>
-                    </div>
-                </template>
-            </draggable>
+                                </template>
+                            </draggable>
+                        </div>
+                    </template>
+                </draggable>
+            </template>
+            <template v-else>
+                Buat baru
+            </template>
         </div>
     </div>
     <CreateTaskModal :project="project" ref="createTaskModal" :task-statuses="taskStatuses"/>
