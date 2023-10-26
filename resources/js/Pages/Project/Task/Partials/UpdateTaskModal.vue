@@ -57,7 +57,7 @@ const closeModal = () => {
 }
 
 const handleSubmit = () => {
-    form.post(route('project.task.store', props.project.data.id), {
+    form.put(route('project.task.update', [props.project.data.id, form.id]), {
         onSuccess: () => {
             closeModal()
             form.reset()
@@ -85,7 +85,7 @@ defineExpose({
         <form @submit.prevent="handleSubmit">
             <div class="flex items-center justify-between px-4 py-3 bg-gray-100 border-b">
                 <h5 class="text-sm font-medium">
-                    {{ project.data.name }} / Create Task
+                    {{ project.data.name }} / Update Task / {{ form.name }}
                 </h5>
                 <button type="button" @click="closeModal" class="p-[2px] rounded bg-white border">
                     <XMarkIcon class="w-3.5 h-3.5" />

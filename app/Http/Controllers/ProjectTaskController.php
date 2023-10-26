@@ -76,9 +76,12 @@ class ProjectTaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ProjectTask $projectTask)
+    public function update(StoreProjectTaskRequest $request, Project $project, ProjectTask $projectTask)
     {
-        //
+        $validated = $request->validated();
+        $validated['assignees'] = json_encode($validated['assignees']);
+        $projectTask->update($validated);
+        return redirect()->back();
     }
 
     /**

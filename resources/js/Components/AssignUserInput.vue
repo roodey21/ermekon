@@ -33,7 +33,7 @@ const searchUser = () => {
         axios.get(route('api.get-users'), {
             params: {
                 name: inputUserName.value.value,
-                except: selectedUser.value.map(user => user.id)
+                except: selectedUser.value ? selectedUser.value.map(user => user.id) : []
             }
         }).then(response => {
             users.value = response.data
@@ -50,9 +50,11 @@ const getInitial = (fullName) => {
 };
 
 const addUser = (user) => {
-    if (selectedUser.value.find(u => u.id === user.id)) {
-        close()
-        return
+    if (selectedUser.value.length) {
+        if (selectedUser.value.find(u => u.id === user.id)) {
+            close()
+            return
+        }
     }
     selectedUser.value.push(user)
     close()
