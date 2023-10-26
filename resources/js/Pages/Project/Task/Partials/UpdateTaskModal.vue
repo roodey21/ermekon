@@ -23,6 +23,7 @@ const props = defineProps({
 const showModal = ref(false)
 
 const form = useForm({
+    id: null,
     name: '',
     description: '',
     package_id: null,
@@ -57,6 +58,7 @@ const closeModal = () => {
 }
 
 const handleSubmit = () => {
+    form.assignees = userInput.value.selectedUser
     form.put(route('project.task.update', [props.project.data.id, form.id]), {
         onSuccess: () => {
             closeModal()
@@ -92,7 +94,7 @@ defineExpose({
                 </button>
             </div>
             <div class="flex flex-row divide-x">
-                <div class="basis-3/5 ">
+                <div class="basis-3/5">
                     <div class="flex flex-row items-center justify-between p-4 border-b">
                         <AssignUserInput ref="userInput"/>
                         <div>
@@ -117,7 +119,7 @@ defineExpose({
                             </Dropdown>
                         </div>
                     </div>
-                    <div class="px-4 py-6 h-[70vh] overflow-y-scroll scroll-smooth">
+                    <div class="px-4 py-6 h-[70vh] overflow-y-scroll">
                         <div class="mb-3">
                             <input type="text"
                                 class="w-full p-2 text-2xl font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-teal-700 hover:border-opacity-100"
@@ -180,16 +182,25 @@ defineExpose({
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="px-4 py-6 w-72 basis-2/5">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-light">you membuat item pekerjaan ini.</span>
-                        <span class="text-[11px] font-light">Yesterday at 08.00 am</span>
+                    <div class="h-16 p-4 text-right border-t">
+                        <PrimaryButton type="submit" :disabled="form.processing">Simpan</PrimaryButton>
                     </div>
                 </div>
-            </div>
-            <div class="p-4 text-right border-t">
-                <PrimaryButton type="submit" :disabled="form.processing">Simpan</PrimaryButton>
+                <div class="relative flex flex-col w-72 basis-2/5">
+                    <div class="flex flex-row items-center justify-between p-4 border-b">
+                        <div class="h-10"></div>
+                    </div>
+                    <div class="px-4 py-6 space-y-20 overflow-y-scroll max-h-[70vh]">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-light">you membuat item pekerjaan ini.</span>
+                            <span class="text-[11px] font-light">Yesterday at 08.00 am</span>
+                        </div>
+                    </div>
+                    <div class="absolute inset-x-0 bottom-0 p-4 bg-white border-t min-h-16">
+                        <Tiptap />
+                        <!-- <PrimaryButton type="submit" :disabled="form.processing">Simpan</PrimaryButton> -->
+                    </div>
+                </div>
             </div>
         </form>
     </Modal>

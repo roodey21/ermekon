@@ -7,8 +7,10 @@ import draggable from 'vuedraggable';
 import SubMenu from '../Partials/SubMenu.vue';
 import CreateTaskModal from './Partials/CreateTaskModal.vue';
 import UpdateTaskModal from './Partials/UpdateTaskModal.vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
+import { getInitial } from '@/Helpers/getInitial';
+import Tooltip from '@/Components/Tooltip.vue';
 
 const props = defineProps({
     project: {
@@ -46,6 +48,11 @@ const openUpdateTask = (task) => {
 
 const handleChange = (event) => {
     console.log(event)
+    // router.patch(route('project.task.update-status', [props.project.data.id, event.moved.element.id]), {
+    //     data: {
+    //         status_id: event.to.id
+    //     }
+    // })
 }
 </script>
 
@@ -118,7 +125,7 @@ const handleChange = (event) => {
     <div class="w-[calc(100vw-4rem)]">
         <div class="p-4 overflow-x-auto">
             <template v-if="columns.length">
-                <draggable class="flex flex-row gap-6 flex-nowrap " :list="columns" itemKey="id" group="status" v-bind="dropOptions">
+                <draggable class="flex flex-row gap-6 flex-nowrap " :list="columns" item-key="id" group="status" v-bind="dropOptions">
                     <template #item="{ element }">
                         <div class="flex-none bg-white border rounded-lg shadow w-80 h-min">
                             <div class="flex items-center justify-between p-4 border-b">
@@ -131,29 +138,39 @@ const handleChange = (event) => {
                                     </button>
                                 </div>
                             </div>
-                            <draggable class="p-4 space-y-2" :list="element.tasks.data" itemKey="name" group="task" v-bind="dropOptions" @change="handleChange">
+                            <draggable class="p-4 space-y-2" :list="element.tasks.data" item-key="id" group="task" v-bind="dropOptions" @drop="handleChange">
                                 <template #item="{ element }">
                                     <div class="border-l-2 border-teal-800 rounded-lg shadow" @click="openUpdateTask(element)">
                                         <div class="border rounded-lg">
                                             <div class="p-2 bg-white">
                                                 <div class="mb-2 text-sm select-none">{{ element.name }}</div>
                                                 <div class="flex gap-2">
-                                                    <div class="p-[2px] flex border rounded-sm items-center">
-                                                        <Bars3BottomLeftIcon class="w-4 h-4" />
-                                                    </div>
-                                                    <div class="flex items-center border p-[2px] rounded-sm">
-                                                        <DocumentTextIcon class="w-4 h-4" />
-                                                        <span class="text-xs font-medium ml-[2px]">2</span>
-                                                    </div>
+                                                    <template v-if="element.description">
+                                                        <Tooltip text="Catatan">
+                                                            <div class="p-[2px] flex border rounded-sm hover:bg-gray-100 cursor-pointer items-center">
+                                                                <Bars3BottomLeftIcon class="w-4 h-4" />
+                                                            </div>
+                                                        </Tooltip>
+                                                    </template>
+                                                    <template v-if="element.files.length">
+                                                        <Tooltip :text="element.files.length+' Attachment'">
+                                                            <div class="flex items-center border p-[2px] rounded-sm hover:bg-gray-100 cursor-pointer">
+                                                                <DocumentTextIcon class="w-4 h-4" />
+                                                                <span class="text-xs font-medium ml-[2px]">{{ element.files.length }}</span>
+                                                            </div>
+                                                        </Tooltip>
+                                                    </template>
                                                     <!-- <ListBulletIcon class="w-4 h-4" /> -->
                                                 </div>
                                             </div>
                                             <div class="p-2 mt-2 border-t">
                                                 <div class="flex flex-row-reverse justify-end mx-2">
                                                     <template v-if="element.assignees">
-                                                        <div class="w-6 h-6 bg-teal-600 -ml-2 border flex justify-center items-center border-white rounded-full text-[10px] text-white" v-for="assignee in element.assignees" :key="assignee.id">FA</div>
+                                                        <Tooltip :text="assignee.name"  v-for="assignee in element.assignees" :key="assignee.id">
+                                                            <div class="w-6 h-6 bg-teal-600 -ml-2 cursor-pointer border flex justify-center items-center border-white rounded-full text-[10px] text-white">{{ getInitial(assignee.name) }}</div>
+                                                        </Tooltip>
                                                     </template>
-                                                    <template v-else>
+                                                    <template v-if="element.assignees == null || !element.assignees.length">
                                                         <div class="w-6 h-6 bg-white -ml-2 border flex justify-center items-center border-teal-600 border-dashed rounded-full text-[10px] text-teal-600 hover:cursor-pointer">
                                                             <UserPlusIcon class="w-4 h-4" />
                                                         </div>

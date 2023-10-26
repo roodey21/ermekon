@@ -147,10 +147,15 @@ defineExpose({
                                 <label v-for="(file, index) in form.files" :key="index" class="relative flex flex-col items-center justify-center overflow-hidden border-2 border-gray-300 border-dashed rounded-lg cursor-pointer aspect-square bg-gray-50 hover:bg-gray-100">
                                     <template v-if="form.files[index]">
                                         <div class="flex flex-col items-center justify-center w-full gap-2 px-2 pt-5 pb-6">
-                                            <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                                                <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
-                                                <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2Z"/>
-                                            </svg>
+                                            <div class="relative">
+                                                <svg class="w-8 h-8 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                                                    <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
+                                                    <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2Z"/>
+                                                </svg>
+                                                <div class="absolute bottom-0 text-xs font-medium text-gray-300 -translate-x-1/2 left-1/2">
+                                                    {{ file.name.split('.').pop().toUpperCase() }}
+                                                </div>
+                                            </div>
                                             <p class="text-sm text-gray-500 break-all"><span class="font-semibold">{{ file.name }}</span></p>
                                         </div>
                                     </template>

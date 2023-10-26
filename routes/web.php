@@ -70,6 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/project/{project}/tasks', [ProjectTaskController::class, 'index'])->name('project.task.index');
     Route::post('/project/{project}/tasks', [ProjectTaskController::class, 'store'])->name('project.task.store');
     Route::put('/project/{project}/tasks/{projectTask}', [ProjectTaskController::class, 'update'])->name('project.task.update');
+    Route::put('/project/{project}/tasks/{projectTask}/update-status', [ProjectTaskController::class, 'updateStatus'])->name('project.task.update-status');
     Route::delete('/project/{project}/tasks/{projectTask}', [ProjectTaskController::class, 'destroy'])->name('project.task.destroy');
     Route::post('/project/{project}/task', [TaskController::class, 'store'])->name('project.package.task.store');
     Route::get('/project/{project}/task/{task}', [TaskController::class, 'show'])->name('project.package.task.show');

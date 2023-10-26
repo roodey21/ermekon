@@ -8,6 +8,7 @@ use App\Http\Resources\ProjectTaskResource;
 use App\Models\Project;
 use App\Models\ProjectTask;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class ProjectTaskController extends Controller
@@ -17,8 +18,7 @@ class ProjectTaskController extends Controller
      */
     public function index(Project $project)
     {
-        $tasks = ProjectTask::latest()->paginate(24);
-
+        $tasks = ProjectTask::latest()->paginate(150);
         $taskStatuses = $project->taskStatuses;
 
         $formattedData = $taskStatuses->map(function ($status) use ($tasks) {
@@ -51,9 +51,21 @@ class ProjectTaskController extends Controller
     public function store(Project $project, StoreProjectTaskRequest $request)
     {
         $validated = $request->validated();
-        $validated['assignees'] = json_encode($validated['assignees']);
+        if (array_key_exists('assignees', $validated)) {
+            $validated['assignees'] = json_encode($validated['assignees']);
+        }
         $validated['created_by'] = auth()->user()->id;
-        $project->taskItems()->create($validated);
+        // dd($validated['files'][0]);
+
+        DB::beginTransaction();
+        $taskItem = $project->taskItems()->create($validated);
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $index => $file) {
+                $taskItem->addMediaFromRequest('files.'.$index)->toMediaCollection('files');
+            }
+        }
+        DB::commit();
+
         return redirect()->back();
     }
 
@@ -81,6 +93,12 @@ class ProjectTaskController extends Controller
         $validated = $request->validated();
         $validated['assignees'] = json_encode($validated['assignees']);
         $projectTask->update($validated);
+        return redirect()->back();
+    }
+
+    public function updateStatus(Project $project, ProjectTask $projectTask, Request $request)
+    {
+        $projectTask->update(['status_id' => $request->status_id]);
         return redirect()->back();
     }
 
