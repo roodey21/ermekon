@@ -91,14 +91,29 @@ class ProjectTaskController extends Controller
     public function update(StoreProjectTaskRequest $request, Project $project, ProjectTask $projectTask)
     {
         $validated = $request->validated();
-        $validated['assignees'] = json_encode($validated['assignees']);
+        if (array_key_exists('assignees', $validated)) {
+            $validated['assignees'] = json_encode($validated['assignees']);
+        }
+        DB::beginTransaction();
         $projectTask->update($validated);
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $index => $file) {
+                $projectTask->addMediaFromRequest('files.'.$index)->toMediaCollection('files');
+            }
+        }
+        DB::commit();
         return redirect()->back();
     }
 
     public function updateStatus(Project $project, ProjectTask $projectTask, Request $request)
     {
         $projectTask->update(['status_id' => $request->status_id]);
+        return redirect()->back();
+    }
+
+    public function upload(ProjectTask $projectTask)
+    {
+        $projectTask->addMediaFromRequest('file')->toMediaCollection('files');
         return redirect()->back();
     }
 

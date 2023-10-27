@@ -29,6 +29,7 @@ class ProjectTaskResource extends JsonResource
                     'id' => $file->id,
                     'name' => $file->name,
                     'url' => $file->getUrl(),
+                    'uploaded' => true,
                 ];
             })->all(),
             'created_at' => $this->created_at,
