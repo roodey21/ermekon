@@ -50,12 +50,6 @@ const getInitial = (fullName) => {
 };
 
 const addUser = (user) => {
-    if (selectedUser.value.length) {
-        if (selectedUser.value.find(u => u.id === user.id)) {
-            close()
-            return
-        }
-    }
     const newUsers = [...selectedUser.value]
     newUsers.push(user)
     selectedUser.value = newUsers
@@ -89,7 +83,7 @@ defineExpose({
     <div class="flex flex-row-reverse">
         <div class="relative">
             <div class="flex justify-center w-10 h-10 text-white border-2 border-teal-600 border-dashed rounded-full opacity-25 hover:opacity-100 hover:cursor-pointer"
-                :class="{'-ml-4': selectedUser.length }"
+                :class="{'-ml-4': selectedUser }"
                 @click="open">
                 <UserPlusIcon class="self-center w-6 h-6 text-teal-600" />
             </div>

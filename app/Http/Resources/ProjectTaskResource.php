@@ -24,7 +24,13 @@ class ProjectTaskResource extends JsonResource
             'completed_date' => $this->completed_date,
             'assignees' => json_decode($this->assignees),
             'created_by' => new UserResource($this->createdBy),
-            'files' => $this->getMedia('files')->toArray(),
+            'files' => $this->getMedia('files')->map(function ($file) {
+                return [
+                    'id' => $file->id,
+                    'name' => $file->name,
+                    'url' => $file->getUrl(),
+                ];
+            })->all(),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

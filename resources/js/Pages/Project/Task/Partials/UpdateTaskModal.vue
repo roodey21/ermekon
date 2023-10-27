@@ -48,9 +48,18 @@ const openModal = (task) => {
     form.due_date = task.due_date
     form.completed_date = task.completed_date
     form.assignees = task.assignees
+    form.files = task.files
     nextTick(() => {
-        userInput.value.selectedUser = task.assignees
+        if(task.assignees) {
+            userInput.value.selectedUser = task.assignees
+        } else {
+            userInput.value.selectedUser = []
+        }
     })
+}
+
+const handleChanges = () => {
+    console.log('its changed')
 }
 
 const closeModal = () => {
@@ -75,6 +84,18 @@ const handleDelete = () => {
         }
     })
 }
+
+// const addFileInput = () => {
+//     const newFiles = [...form.files]
+//     newFiles.push(null)
+//     form.files = newFiles
+// }
+
+// const removeFileInput = (index) => {
+//     const newFiles = [...form.files]
+//     newFiles.splice(index, 1)
+//     form.files = newFiles
+// }
 
 defineExpose({
     openModal,
@@ -123,7 +144,7 @@ defineExpose({
                         <div class="mb-3">
                             <input type="text"
                                 class="w-full p-2 text-2xl font-light text-gray-900 border border-gray-200 rounded focus:ring-0 focus:border-teal-700 hover:border-opacity-100"
-                                v-model="form.name" placeholder="Nama Pekerjaan">
+                                v-model="form.name" placeholder="Nama Pekerjaan" @change="handleChanges">
                             <InputError class="mt-2" :message="form.errors.name" />
                         </div>
                         <div class="mb-3">
@@ -158,7 +179,7 @@ defineExpose({
                                 <label v-for="(file, index) in form.files" :key="index" class="relative flex flex-col items-center justify-center overflow-hidden border-2 border-gray-300 border-dashed rounded-lg cursor-pointer aspect-square bg-gray-50 hover:bg-gray-100">
                                     <template v-if="form.files[index]">
                                         <div class="flex flex-col items-center justify-center w-full gap-2 px-2 pt-5 pb-6">
-                                            <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                                            <svg class="w-8 h-8 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                                                 <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
                                                 <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2Z"/>
                                             </svg>
