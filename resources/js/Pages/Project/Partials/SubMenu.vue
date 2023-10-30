@@ -6,17 +6,21 @@ defineProps({
     project: {
         type: Object,
         required: true,
+    },
+    className: {
+        type: String,
+        default: ''
     }
 })
 </script>
 
 <template>
 <Head title="Task" />
-<div class="px-4 mt-5">
+<div :class="className">
     <div class="flex flex-row justify-between w-full gap-2 p-4 overflow-x-auto bg-white border rounded-lg shadow">
-        <div class="flex items-center py-1 mr-2">
+        <!-- <div class="flex items-center py-1 mr-2">
             <ChevronLeftIcon class="w-4 h-4" />
-        </div>
+        </div> -->
         <div class="flex gap-2 grow">
             <Link :href="route('project.overview', project.data.id)" class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-gray-600 transition-all border-b-2 border-opacity-0 border-teal-700 hover:cursor-pointer hover:border-opacity-100" :class="{ 'border-opacity-100 ' : route().current('project.overview') }">
                 <TableCellsIcon class="w-4 h-4"/> Overview
@@ -37,9 +41,9 @@ defineProps({
                 <ArrowPathRoundedSquareIcon class="w-4 h-4" /> Activity Log
             </div>
         </div>
-        <div class="flex items-center py-1 mr-2">
+        <!-- <div class="flex items-center py-1 mr-2">
             <ChevronRightIcon class="w-4 h-4" />
-        </div>
+        </div> -->
     </div>
 </div>
 </template>

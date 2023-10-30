@@ -15,6 +15,9 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            content: {
+                'chevron-right': 'url("/images/chevron-right.svg")',
+            }
         },
     },
 

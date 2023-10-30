@@ -1,7 +1,7 @@
 <script setup>
 import Dropdown from '@/Components/Dropdown.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { ArrowUturnLeftIcon, CalendarIcon, CheckCircleIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, DocumentIcon, FolderIcon, LinkIcon, PencilSquareIcon, TableCellsIcon, TrashIcon } from '@heroicons/vue/24/outline';
+import { ArrowUturnLeftIcon, BarsArrowDownIcon, CalendarIcon, CheckCircleIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, DocumentIcon, FolderIcon, FunnelIcon, LinkIcon, MagnifyingGlassIcon, PencilSquareIcon, TableCellsIcon, TrashIcon } from '@heroicons/vue/24/outline';
 import { Head, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import SubMenu from './Partials/SubMenu.vue';
@@ -26,8 +26,8 @@ defineOptions({
 <template>
   <Head :title="`Project ${project.data.name}`"/>
 
-  <div class="overflow-y-auto grow">
-        <div class="flex flex-row justify-between p-4 bg-teal-700 shadow">
+    <div class="p-4">
+        <!-- <div class="flex flex-row justify-between bg-teal-700 shadow">
             <div class="flex items-center gap-3">
                 <Dropdown align="left">
                     <template #trigger>
@@ -77,10 +77,81 @@ defineOptions({
                 </span>
                 <input type="text" class="w-full px-2 py-1 text-sm font-semibold border-0 placeholder:text-sm" placeholder="Cari disini ...">
             </div>
-        </div>
-        <SubMenu :project="project" />
+        </div> -->
+        <div class="flex justify-between mb-4">
+            <div class="flex flex-col">
+                <div class="flex items-center gap-1.5">
+                    <h3 class="text-xl font-semibold capitalize">
+                        {{ project.data.name }}
+                    </h3>
+                    <Dropdown align="left">
+                        <template #trigger>
+                            <div class="hover:cursor-pointer">
+                                <ChevronDownIcon class="w-4 h-4"/>
+                            </div>
+                        </template>
 
-        <div class="grid grid-cols-4 gap-6 px-4 mt-5">
+                        <template #content>
+                            <ul class="p-1.5 text-black">
+                                <li class="px-3 py-1.5 hover:bg-gray-100 hover:cursor-pointer group rounded">
+                                    <Link :href="route('project.index')" class="flex items-center gap-2 text-xs">
+                                        <ArrowUturnLeftIcon class="w-3 h-3"/> <span>Kembali ke List Proyek</span>
+                                    </Link>
+                                </li>
+                                <li class="px-3 py-1.5 hover:bg-gray-100 hover:cursor-pointer group rounded" @click="openEditProjectModal">
+                                    <div class="flex items-center gap-2 text-xs">
+                                        <PencilSquareIcon class="w-3 h-3" />
+                                        <span>Edit proyek</span>
+                                    </div>
+                                </li>
+                                <li class="px-3 py-1.5 hover:bg-gray-100 hover:cursor-pointer group rounded">
+                                    <div class="flex items-center gap-2 text-xs">
+                                        <LinkIcon class="w-3 h-3" />
+                                        <span>Copy link</span>
+                                    </div>
+                                </li>
+                                <hr class="my-1.5">
+                                <li class="px-3 py-1.5 hover:bg-gray-100 hover:cursor-pointer group rounded">
+                                    <div class="flex items-center gap-2 text-xs text-red-700">
+                                        <TrashIcon class="w-3 h-3" />
+                                        <span>Hapus proyek </span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </template>
+                    </Dropdown>
+                </div>
+                <ul class="flex items-center gap-1.5 breadcrumbs">
+                    <li class="text-sm font-medium text-teal-600 hover:text-teal-900 first:before:hidden before:inline-block before:content-chevron-right before:relative before:top-1 last:text-gray-500">
+                        <Link :href="route('dashboard')" >Dashboard</Link>
+                    </li>
+                    <li class="text-sm font-medium text-teal-600 hover:text-teal-900 first:before:hidden before:inline-block before:content-chevron-right before:relative before:top-1 last:text-gray-500">
+                        <Link :href="route('project.index')" >Proyek</Link>
+                    </li>
+                    <li class="text-sm font-medium text-teal-600 hover:text-teal-900 first:before:hidden before:inline-block before:content-chevron-right before:relative before:top-1 last:text-gray-500">
+                        Overview
+                    </li>
+                </ul>
+            </div>
+            <div class="flex flex-row justify-end max-w-md gap-2 grow">
+                <div class="">
+                    <button class="flex items-center px-2 py-1.5 text-sm text-white bg-teal-700 rounded-lg">
+                        <FunnelIcon class="w-3.5 h-3.5 mr-1" />
+                        Filter
+                    </button>
+                </div>
+                <div class="flex items-center w-full max-w-xs overflow-hidden bg-white border rounded-lg h-min border-stone-400">
+                    <span class="px-2 py-1.5">
+                        <MagnifyingGlassIcon class="w-4 h-4" />
+                    </span>
+                    <input type="text" class="w-full px-2 py-1.5 text-sm border-0 placeholder:text-sm" placeholder="Cari disini ...">
+                </div>
+            </div>
+        </div>
+
+        <SubMenu :project="project"/>
+
+        <div class="grid grid-cols-4 gap-6 mt-4">
             <div class="col-span-2">
                 <div class="w-full bg-white border rounded-lg shadow">
                     <div class="px-6 py-4 border-b card-header">
