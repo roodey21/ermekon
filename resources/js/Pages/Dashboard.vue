@@ -15,7 +15,7 @@ defineOptions({
         <div class="py-4">
             <h3 class="text-xl font-semibold capitalize">Dashboard</h3>
         </div>
-        <div class="grid grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
             <div class="flex justify-between p-4 bg-white border rounded-lg shadow-sm">
                 <div class="flex items-center">
                     <div class="flex items-center justify-center p-3 bg-teal-500 rounded-xl">
@@ -83,7 +83,7 @@ defineOptions({
                     </div>
                 </div>
                 <div class="px-4 py-6">
-                    <div class="grid grid-cols-2 p-4 gap-x-6 gap-y-8">
+                    <div class="grid grid-cols-1 p-4 md:grid-cols-2 gap-x-6 gap-y-8">
                         <div>
                             <span class="block text-xs font-light text-gray-600">In Progress</span>
                             <div class="text-xl font-semibold text-sky-500">

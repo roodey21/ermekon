@@ -33,18 +33,26 @@ const submit = () => {
     <GuestLayout>
         <Head title="Log in" />
 
-        <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
+        <div v-if="status" class="mb-4 text-sm font-medium text-teal-600">
             {{ status }}
         </div>
 
-        <form @submit.prevent="submit">
+        <div class="flex mb-16 text-sm font-medium lg:hidden">
+            <div class="text-gray-700">
+                <h2 class="mb-1 text-xl font-medium text-teal-800 md:text-2xl">Welcome Back</h2>
+                <!-- <p class="font-light">Welcome to Simple Workspace Management System</p> -->
+                <p class="font=light">Sign in to your account to continue.</p>
+            </div>
+        </div>
+
+        <form @submit.prevent="submit" class="w-full">
             <div>
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="email" value="Email / Username" />
 
                 <TextInput
                     id="email"
                     type="email"
-                    class="block w-full mt-1"
+                    class="block w-full mt-1 text-sm"
                     v-model="form.email"
                     required
                     autofocus
@@ -60,7 +68,7 @@ const submit = () => {
                 <TextInput
                     id="password"
                     type="password"
-                    class="block w-full mt-1"
+                    class="block w-full mt-1 text-sm"
                     v-model="form.password"
                     required
                     autocomplete="current-password"
@@ -69,24 +77,24 @@ const submit = () => {
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
-            <div class="block mt-4">
+            <!-- <div class="block mt-4">
                 <label class="flex items-center">
                     <Checkbox name="remember" v-model:checked="form.remember" />
                     <span class="ml-2 text-sm text-gray-600">Remember me</span>
                 </label>
-            </div>
+            </div> -->
 
-            <div class="flex items-center justify-end mt-4">
-                <Link
+            <div class="flex items-center justify-center mt-8">
+                <!-- <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
                     class="text-sm text-gray-600 underline rounded-md hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                     Forgot your password?
-                </Link>
+                </Link> -->
 
-                <PrimaryButton type="submit" class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Log in
+                <PrimaryButton type="submit" class="!px-4 !py-3 uppercase shadow rounded-full" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    Sign In
                 </PrimaryButton>
             </div>
         </form>

@@ -20,7 +20,7 @@ const onMenuHovered = (menu) => {
     <div>
         <div class="relative flex min-h-screen bg-white">
             <!-- sidebar -->
-            <nav class="z-40 flex flex-col gap-24 py-5 bg-white border-r border-gray-300 shadow-lg">
+            <nav class="absolute z-40 flex flex-col gap-24 py-5 bg-white border-r border-gray-300 shadow-lg md:relative">
                 <Link :href="route('dashboard')">
                     <ApplicationLogo class="w-10 h-10 mx-auto fill-gray-500"/>
                 </Link>

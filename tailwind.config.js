@@ -11,12 +11,25 @@ export default {
     ],
 
     theme: {
+        container: {
+            padding: {
+              DEFAULT: '1rem',
+              sm: '2rem',
+              lg: '4rem',
+              xl: '5rem',
+              '2xl': '6rem',
+            },
+        },
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
             content: {
                 'chevron-right': 'url("/images/chevron-right.svg")',
+            },
+            backgroundImage: {
+                'login': 'url("/images/bg-login.jpg")',
+                'login-hd': 'url("/images/bg-login-hd.jpg")',
             }
         },
     },

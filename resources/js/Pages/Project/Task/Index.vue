@@ -46,8 +46,10 @@ const openUpdateTask = (task) => {
     updateTaskModal.value.openModal(task)
 }
 
-const handleChange = (event) => {
+const handleChange = (event, targetId) => {
+    console.log(targetId)
     console.log(event)
+    // const newPosition = props.columns.find
     // router.patch(route('project.task.update-status', [props.project.data.id, event.moved.element.id]), {
     //     data: {
     //         status_id: event.to.id
@@ -147,7 +149,7 @@ const handleChange = (event) => {
                                         </button>
                                     </div>
                                 </div>
-                                <draggable class="p-4 space-y-2" :list="element.tasks.data" item-key="id" group="task" v-bind="dropOptions" @drop="handleChange">
+                                <draggable class="p-4 space-y-2" :list="element.tasks.data" item-key="id" group="task" v-bind="dropOptions" @drop="handleChange(element.id)">
                                     <template #item="{ element }">
                                         <div class="border-l-2 border-teal-800 rounded-lg shadow" @click="openUpdateTask(element)">
                                             <div class="border rounded-lg">

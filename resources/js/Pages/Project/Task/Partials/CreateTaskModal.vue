@@ -85,7 +85,14 @@ defineExpose({
             <div class="flex flex-row divide-x">
                 <div class="w-full">
                     <div class="flex flex-row items-center justify-between p-4 border-b">
-                        <AssignUserInput ref="userInput"/>
+                        <div class="flex justify-start gap-4">
+                            <select
+                                class="p-2 text-sm font-light text-gray-900 border border-gray-200 rounded bg-none bg-gray-50 !appearance-none focus:ring-0 focus:border-teal-700 hover:border-opacity-100"
+                                v-model="form.status_id" placeholder="Nama Pekerjaan">
+                                <option :value="status.id" v-for="status in taskStatuses" :key="status.id">{{ status.name }}</option>
+                            </select>
+                            <AssignUserInput ref="userInput"/>
+                        </div>
                         <div>
                             <Dropdown align="right">
                                 <template #trigger>
