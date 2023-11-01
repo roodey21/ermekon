@@ -220,7 +220,7 @@ const openUpdateTaskModal = (params) => {
                 <input type="text" class="w-full px-2 py-1 text-sm border-0 placeholder:text-sm" placeholder="Cari disini ...">
             </div>
         </div> -->
-        <div class="flex justify-between mb-4">
+        <div class="flex flex-col justify-between gap-4 mb-4 md:flex-row">
             <div class="flex flex-col">
                 <div class="flex items-center gap-1.5">
                     <h3 class="text-xl font-semibold capitalize">
@@ -262,6 +262,12 @@ const openUpdateTaskModal = (params) => {
                             </ul>
                         </template>
                     </Dropdown>
+                    <button type="button" @click="openCreatePackageModal" class="flex items-center text-white py-0.5 px-1 gap-1 text-xs font-medium rounded bg-teal-800">
+                        <svg class="w-2.5 h-2.5" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4.99984 8.33341V5.00008M4.99984 5.00008V1.66675M4.99984 5.00008H8.33317M4.99984 5.00008H1.6665" stroke="white" stroke-width="1.16667" stroke-linecap="round"/>
+                        </svg>
+                        Paket Pekerjaan
+                    </button>
                 </div>
                 <ul class="flex items-center gap-1.5 breadcrumbs">
                     <li class="text-sm font-medium text-teal-600 hover:text-teal-900 first:before:hidden before:inline-block before:content-chevron-right before:relative before:top-1 last:text-gray-500">
@@ -293,7 +299,7 @@ const openUpdateTaskModal = (params) => {
 
         <SubMenu :project="project" />
 
-        <div class="flex flex-col mt-4 space-y-5">
+        <div class="flex flex-col mt-4 space-y-5 overflow-x-auto">
             <template v-if="project.data.packages.length">
                 <ListGroup
                     :projectPackage="projectPackage"

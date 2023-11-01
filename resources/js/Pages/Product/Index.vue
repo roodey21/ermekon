@@ -1,10 +1,11 @@
 <script setup>
-import { Head, router, useForm } from '@inertiajs/vue3';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import { ref } from 'vue';
 import { watch } from 'vue';
+import { CloudArrowUpIcon, FunnelIcon, MagnifyingGlassIcon, PlusIcon } from '@heroicons/vue/24/outline';
 
 const { products } = defineProps({
     products: {
@@ -54,77 +55,122 @@ defineOptions({
 <template>
     <Head title="List Product" />
 
-    <div class="z-10 flex gap-4 px-4 py-3 bg-white border-b rounded-lg top-12">
-        <h2 class="text-xl font-semibold leading-tight text-gray-800">Product</h2>
-        <PrimaryButton @click="router.get(route('product.create'))">
-            Baru
-        </PrimaryButton>
-        <PrimaryButton @click="router.get(route('product.import'))">
-            Import data
-        </PrimaryButton>
-        <template v-if="selectedItems.length">
-            <DangerButton @click="deleteSelectedItems">
-                Hapus data yang dipilih
-            </DangerButton>
-        </template>
-    </div>
+    <div class="p-4">
+        <div class="flex flex-col justify-between gap-4 mb-4 md:flex-row">
+            <div class="flex flex-col">
+                <div class="flex items-center justify-between gap-3 md:justify-start">
+                    <h3 class="text-xl font-semibold capitalize">
+                        Master Data Produk
+                    </h3>
+                    <button type="button" @click="router.get(route('product.create'))" class="flex items-center text-white py-0.5 px-1 gap-1 text-xs font-medium rounded bg-teal-800">
+                        <PlusIcon class="w-3 h-3" />
+                        <span class=" md:inline-block">
+                            Produk Baru
+                        </span>
+                    </button>
+                    <button type="button" @click="router.get(route('product.import'))" class="flex items-center text-white py-0.5 px-1 gap-1 text-xs font-medium rounded bg-teal-800">
+                        <CloudArrowUpIcon class="w-3 h-3" />
+                        <span class=" md:inline-block">
+                            Import
+                        </span>
+                    </button>
+                </div>
+                <ul class="flex items-center gap-1.5 breadcrumbs">
+                    <li class="text-sm font-medium text-teal-600 hover:text-teal-900 first:before:hidden before:inline-block before:content-chevron-right before:relative before:top-1 last:text-gray-500">
+                        <Link :href="route('dashboard')" >Dashboard</Link>
+                    </li>
+                    <li class="text-sm font-medium text-teal-600 hover:text-teal-900 first:before:hidden before:inline-block before:content-chevron-right before:relative before:top-1 last:text-gray-500">
+                        Produk
+                    </li>
+                </ul>
+            </div>
+            <div class="flex flex-row justify-end max-w-md gap-2 grow">
+                <div class="">
+                    <button class="flex items-center px-2 py-1.5 text-sm text-white bg-teal-700 rounded-lg">
+                        <FunnelIcon class="w-4 h-4 mr-1" />
+                        Filter
+                    </button>
+                </div>
+                <div class="flex items-center w-full max-w-xs overflow-hidden bg-white border rounded-lg h-min border-stone-400">
+                    <span class="px-2 py-1.5">
+                        <MagnifyingGlassIcon class="w-4 h-4" />
+                    </span>
+                    <input type="text" class="w-full px-2 py-1.5 text-sm border-0 placeholder:text-sm" placeholder="Cari disini ...">
+                </div>
+            </div>
+        </div>
+        <!-- <div class="z-10 flex gap-4 px-4 py-3 bg-white border-b rounded-lg top-12">
+            <h2 class="text-xl font-semibold leading-tight text-gray-800">Product</h2>
+            <PrimaryButton @click="router.get(route('product.create'))">
+                Baru
+            </PrimaryButton>
+            <PrimaryButton @click="router.get(route('product.import'))">
+                Import data
+            </PrimaryButton>
+            <template v-if="selectedItems.length">
+                <DangerButton @click="deleteSelectedItems">
+                    Hapus data yang dipilih
+                </DangerButton>
+            </template>
+        </div> -->
 
-    <div class="mx-auto">
-        <div class="overflow-hidden bg-white rounded-lg shadow-lg">
-            <div class="relative overflow-x-auto shadow-md max-h-[80vh]">
-                <table class="w-full text-sm text-left text-gray-500">
-                    <thead class="sticky top-0 text-xs text-gray-700 uppercase bg-gray-100">
-                        <tr>
-                            <th scope="col" class="px-4 py-3">
-                                <div class="flex items-center">
-                                    <input v-model="isAllSelected" @click="selectAll" id="checkbox-all-search" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
-                                    <label for="checkbox-all-search" class="sr-only">checkbox</label>
-                                </div>
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Nama Barang
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Kode Barang
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Tipe Barang
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Satuan
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <template v-if="products.data.length">
-                            <tr v-for="product in products.data" :key="product.id" class="bg-white border-b hover:bg-gray-50">
-                                <td class="w-4 px-4 py-2">
-                                    <div class="flex items-center">
-                                        <input v-model="selectedItems" :value="product.id" id="checkbox-table-search-1" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
-                                        <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
-                                    </div>
-                                </td>
-                                <th scope="row" class="px-6 py-2 font-medium text-gray-900 whitespace-nowrap hover:cursor-pointer" @click="router.get(route('product.edit',product.id))">
-                                    {{ product.name }}
-                                </th>
-                                <td class="px-6 py-2">
-                                    {{ product.code }}
-                                </td>
-                                <td class="px-6 py-2">
-                                    {{ product.type.name }}
-                                </td>
-                                <td class="px-6 py-2">
-                                    {{ product.main_unit.name }}
-                                </td>
-                            </tr>
-                        </template>
-                        <template v-else>
+        <div class="mx-auto">
+            <div class="overflow-hidden bg-white rounded-lg shadow-lg">
+                <div class="relative overflow-x-auto shadow-md max-h-[80vh]">
+                    <table class="w-full text-sm text-left text-gray-500">
+                        <thead class="sticky top-0 text-xs text-gray-700 uppercase bg-gray-100">
                             <tr>
-                                <td colspan="4" class="px-4 py-2 font-medium capitalize">Belum ada produk yang ditambahkan</td>
+                                <!-- <th scope="col" class="px-4 py-3">
+                                    <div class="flex items-center">
+                                        <input v-model="isAllSelected" @click="selectAll" id="checkbox-all-search" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
+                                        <label for="checkbox-all-search" class="sr-only">checkbox</label>
+                                    </div>
+                                </th> -->
+                                <th scope="col" class="px-6 py-3">
+                                    Nama Barang
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Kode Barang
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Tipe Barang
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Satuan
+                                </th>
                             </tr>
-                        </template>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <template v-if="products.data.length">
+                                <tr v-for="product in products.data" :key="product.id" class="bg-white border-b hover:bg-gray-50">
+                                    <!-- <td class="w-4 px-4 py-2">
+                                        <div class="flex items-center">
+                                            <input v-model="selectedItems" :value="product.id" id="checkbox-table-search-1" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
+                                            <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+                                        </div>
+                                    </td> -->
+                                    <th scope="row" class="px-6 py-2 font-medium text-gray-900 whitespace-nowrap hover:cursor-pointer" @click="router.get(route('product.edit',product.id))">
+                                        {{ product.name }}
+                                    </th>
+                                    <td class="px-6 py-2">
+                                        {{ product.code }}
+                                    </td>
+                                    <td class="px-6 py-2">
+                                        {{ product.type.name }}
+                                    </td>
+                                    <td class="px-6 py-2">
+                                        {{ product.main_unit.name }}
+                                    </td>
+                                </tr>
+                            </template>
+                            <template v-else>
+                                <tr>
+                                    <td colspan="4" class="px-4 py-2 font-medium capitalize">Belum ada produk yang ditambahkan</td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

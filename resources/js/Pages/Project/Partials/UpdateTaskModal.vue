@@ -133,7 +133,7 @@ defineExpose({
                 </button>
             </div>
             <div class="flex flex-row divide-x">
-                <div class="basis-3/5">
+                <div class="basis-full md:basis-3/5">
                     <div class="flex flex-row items-center justify-between p-4 border-b">
                         <div class="flex flex-row-reverse">
                             <div class="flex justify-center w-10 h-10 -ml-4 text-white border-2 border-teal-600 border-dashed rounded-full opacity-25 hover:opacity-100 hover:cursor-pointer">
@@ -210,7 +210,7 @@ defineExpose({
                         </div>
                     </div>
                 </div>
-                <div class="px-4 py-6 w-72 basis-2/5">
+                <div class="hidden w-full px-4 py-6 md:block md:w-72 basis-full md:basis-2/5">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-light">you membuat item pekerjaan ini.</span>
                         <span class="text-[11px] font-light">Yesterday at 08.00 am</span>

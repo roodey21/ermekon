@@ -12,6 +12,7 @@ import {
 } from '@headlessui/vue'
 import { CheckIcon, ChevronUpDownIcon, XMarkIcon } from '@heroicons/vue/20/solid'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
+import Tiptap from '@/Components/Tiptap.vue'
 
 const showModal = ref(false)
 
@@ -208,11 +209,7 @@ defineExpose({
                     </div>
                 </div>
                 <div class="mb-2">
-                    <textarea
-                        rows="8"
-                        class="w-full p-2 -mx-2 text-sm font-light text-gray-900 border border-gray-200 border-opacity-0 rounded placeholder:text-gray-400 focus:ring-0 focus:border-gray-400 hover:border-opacity-100"
-                        placeholder="Deskripsi atau catatan lainnya ditulis disini"
-                        v-model="form.description"></textarea>
+                    <Tiptap v-model="form.description" placeholder="Deskripsi atau catatan lainnya ditulis disini"/>
                 </div>
             </div>
             <div class="p-4 border-t">

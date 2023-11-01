@@ -78,13 +78,13 @@ defineOptions({
                 <input type="text" class="w-full px-2 py-1 text-sm font-semibold border-0 placeholder:text-sm" placeholder="Cari disini ...">
             </div>
         </div> -->
-        <div class="flex justify-between mb-4">
+        <div class="flex flex-col justify-between gap-4 mb-4 md:flex-row">
             <div class="flex flex-col">
                 <div class="flex items-center gap-1.5">
                     <h3 class="text-xl font-semibold capitalize">
                         {{ project.data.name }}
                     </h3>
-                    <Dropdown align="left">
+                    <Dropdown>
                         <template #trigger>
                             <div class="hover:cursor-pointer">
                                 <ChevronDownIcon class="w-4 h-4"/>
@@ -151,8 +151,8 @@ defineOptions({
 
         <SubMenu :project="project"/>
 
-        <div class="grid grid-cols-4 gap-6 mt-4">
-            <div class="col-span-2">
+        <div class="grid grid-cols-2 gap-6 mt-4 md:grid-cols-4">
+            <div class="col-span-2" id="project-progress">
                 <div class="w-full bg-white border rounded-lg shadow">
                     <div class="px-6 py-4 border-b card-header">
                         <div class="mb-1 text-sm text-gray-700">Project Progress 0.00%</div>

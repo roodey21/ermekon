@@ -2,9 +2,9 @@
 import { ref } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import NavDropdown from '@/Components/NavDropdown.vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 import ProjectSidebar from '@/Layouts/Project/ProjectSidebar.vue';
-import { Cog6ToothIcon, BuildingOffice2Icon, ShoppingCartIcon, ClipboardDocumentListIcon, ArchiveBoxIcon, BookmarkSquareIcon } from '@heroicons/vue/24/outline';
+import { Cog6ToothIcon, BuildingOffice2Icon, ChevronDoubleRightIcon, ShoppingCartIcon, ClipboardDocumentListIcon, ArchiveBoxIcon, BookmarkSquareIcon } from '@heroicons/vue/24/outline';
 
 const open = ref(false);
 const showingNavigationDropdown = ref(false);
@@ -14,16 +14,18 @@ const activeMenu = ref(null)
 const onMenuHovered = (menu) => {
     activeMenu.value = menu
 }
+
+const showNav = ref(true)
 </script>
 
 <template>
     <div>
         <div class="relative flex min-h-screen bg-white">
             <!-- sidebar -->
-            <nav class="absolute z-40 flex flex-col gap-24 py-5 bg-white border-r border-gray-300 shadow-lg md:relative">
-                <Link :href="route('dashboard')">
-                    <ApplicationLogo class="w-10 h-10 mx-auto fill-gray-500"/>
-                </Link>
+            <nav :class="{ '-left-14': !showNav, 'left-0':showNav }" class="absolute z-40 flex flex-col h-screen gap-24 py-5 transition-all bg-white border-r border-gray-300 shadow-lg md:relative">
+                <div @click="activeMenu=null; router.get(route('dashboard'))">
+                    <ApplicationLogo class="w-10 h-10 mx-auto fill-gray-500 hover:cursor-pointer"/>
+                </div>
                 <div class="flex flex-col divide-y divide-gray-300 navbar-group">
                     <div ref="setting_menu"
                         @mouseover="onMenuHovered('master')"
@@ -96,6 +98,11 @@ const onMenuHovered = (menu) => {
                     </div>
                 </div>
             </nav>
+            <div class="absolute transition-all top-2 md:hidden" :class="{ 'left-0': !showNav, 'left-14': showNav }">
+                <div class="p-2 bg-white border shadow cursor-pointer rounded-r-md" @click="showNav=!showNav">
+                    <ChevronDoubleRightIcon class="w-5 h-5 text-gray-600 transition-all" :class="{ 'rotate-180':showNav }" />
+                </div>
+            </div>
             <Transition
                 enter-active-class="duration-500 ease-out"
                 enter-from-class="bg-opacity-0"
@@ -117,12 +124,12 @@ const onMenuHovered = (menu) => {
                             <ul class="sidebar-setting" v-if="activeMenu=='master'">
                                 <h3 class="px-6 py-4 text-lg">Master Data</h3>
                                 <li class="text-black">
-                                    <Link :href="route('product.index')" class="block px-6 py-3 text-xs transition-all hover:cursor-pointer hover:bg-gray-200" :class="{ 'text-teal-700' : route().current('product.index') }">
+                                    <Link :href="route('product.index')" class="block px-6 py-3 text-xs transition-all hover:cursor-pointer hover:bg-gray-200" :class="{ 'text-teal-700' : route().current('product*') }">
                                         Data Produk
                                     </Link>
                                 </li>
                                 <li class="text-black">
-                                    <Link :href="route('unit.index')" class="block px-6 py-3 text-xs transition-all hover:cursor-pointer hover:bg-gray-200" :class="{ 'text-teal-700' : route().current('unit.index') }">
+                                    <Link :href="route('unit.index')" class="block px-6 py-3 text-xs transition-all hover:cursor-pointer hover:bg-gray-200" :class="{ 'text-teal-700' : route().current('unit*') }">
                                         Data Satuan
                                     </Link>
                                 </li>

@@ -26,9 +26,9 @@ defineOptions({
     <Head title="Project" />
 
     <div class="p-4">
-        <div class="flex justify-between mb-4">
+        <div class="flex flex-col justify-between gap-4 mb-4 md:flex-row">
             <div class="flex flex-col">
-                <div class="flex items-center gap-3">
+                <div class="flex items-center justify-between gap-3 md:justify-start">
                     <h3 class="text-xl font-semibold capitalize">
                         Manajement Proyek
                     </h3>

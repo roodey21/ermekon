@@ -45,7 +45,7 @@ onClickOutside(input, (event) => showSubPackageForm.value = false)
 
 </script>
 <template>
-    <div class="w-full bg-white border rounded-lg shadow">
+    <div class="w-full min-w-[500px] bg-white border rounded-lg shadow">
         <div class="flex flex-col p-3 header">
             <div class="flex gap-1.5 mb-3">
                 <ChevronDownIcon class="inline-block w-5 h-5 text-gray-500 transition-all -rotate-90 hover:cursor-pointer" :class="{'rotate-0':showList}" @click="showList = !showList"/>
@@ -87,12 +87,12 @@ onClickOutside(input, (event) => showSubPackageForm.value = false)
                     <div class="py-2.5 grow" v-show="showSubPackageForm">
                         <form @submit.prevent="handleSubmitCreateSubPackage" class="flex gap-4 justify-between items-center pl-6 py-2.5 border border-emerald-600">
                             <input ref="input" @input="updateFormName" type="text" class="w-full p-0 text-sm font-light border-0 grow focus:ring-0" @keyup.esc="showSubPackageForm=false">
-                            <div class="flex items-center gap-4 pr-2">
+                            <div class="flex items-center gap-2 pr-2 md:gap-4">
                                 <p class="text-[11px] whitespace-nowrap text-gray-500">Press Enter to save</p>
                                 <button type="button" class="flex items-center text-emerald-800 py-0.5 px-2 border hover:bg-emerald-800 hover:text-white border-emerald-700 gap-1 text-xs font-medium uppercase bg-white">
                                     Save
                                 </button>
-                                <button type="reset" class="py-0.5 px-2 text-xs" @click="showSubPackageForm=false">
+                                <button type="reset" class="py-0.5 px-1 md:px-2 text-xs" @click="showSubPackageForm=false">
                                     <XMarkIcon class="w-4 h-4"/>
                                 </button>
                             </div>

@@ -175,7 +175,7 @@ defineExpose({
                                     Add
                                 </button>
                             </div>
-                            <div class="grid grid-cols-4 gap-4">
+                            <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
                                 <div v-for="(oldFile, index) in oldFiles" :key="oldFile.id" class="relative flex flex-col items-center justify-center overflow-hidden border-2 border-gray-300 border-dashed rounded-lg cursor-pointer aspect-square bg-gray-50 hover:bg-gray-100">
                                     <div class="flex flex-col items-center justify-center w-full gap-2 px-2 pt-5 pb-6">
                                         <div class="relative">

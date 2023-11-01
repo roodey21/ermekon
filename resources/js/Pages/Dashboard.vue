@@ -123,7 +123,7 @@ defineOptions({
                     </div>
                 </div>
             </div>
-            <div class="col-span-2 overflow-hidden bg-white border rounded-lg shadow-sm">
+            <div class="overflow-hidden bg-white border rounded-lg shadow-sm md:col-span-2">
                 <div class="py-4 border-b">
                     <div class="px-4 border-l-2 border-teal-600">
                         <h5 class="text-base font-medium">Proyek Tenggat Waktu Terdekat</h5>

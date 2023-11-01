@@ -60,7 +60,7 @@ const handleChange = (event, targetId) => {
 
 <template>
     <div class="p-4">
-        <div class="flex justify-between mb-4">
+        <div class="flex flex-col justify-between gap-4 mb-4 md:flex-row">
             <div class="flex flex-col">
                 <div class="flex items-center gap-1.5">
                     <h3 class="text-xl font-semibold capitalize">
@@ -133,7 +133,7 @@ const handleChange = (event, targetId) => {
 
         <SubMenu :project="project" />
 
-        <div class="w-[calc(100vw-6rem)] mt-4">
+        <div class="md:w-[calc(100vw-6rem)] mt-4">
             <div class="overflow-x-auto">
                 <template v-if="columns.length">
                     <draggable class="flex flex-row gap-6 flex-nowrap " :list="columns" item-key="id" group="status" v-bind="dropOptions">
