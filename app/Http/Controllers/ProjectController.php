@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Project\StoreProjectRequest;
+use App\Http\Resources\CustomerResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ProjectResource;
 use App\Models\Customer;
@@ -17,8 +18,10 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = Project::latest()->paginate(24);
+        $customers = Customer::latest()->get();
         return inertia('Project/Index', [
             'projects' => ProjectResource::collection($projects),
+            'customers' => CustomerResource::collection($customers)
         ]);
     }
 

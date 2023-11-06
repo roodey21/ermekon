@@ -56,7 +56,7 @@ export default {
             content: this.modelValue,
             editorProps: {
                 attributes: {
-                    class: 'w-full prose prose-sm text-sm sm:prose lg:prose-lg xl:prose-2xl focus:outline-none p-2 border border-gray-200 hover:border-opacity-100 rounded hover:shadow-sm focus:border-opacity-100 focus:shadow-sm'+(this.showBorder ? '' : ' border-opacity-0')+(this.margin ? ' '+this.margin : ''),
+                    class: 'w-full min-h-[200px] max-h-[400px] overflow-y-scroll prose prose-sm text-sm sm:prose lg:prose-lg xl:prose-2xl focus:outline-none p-2 border border-gray-200 hover:border-opacity-100 rounded hover:shadow-sm focus:border-opacity-100 focus:shadow-sm'+(this.showBorder ? '' : ' border-opacity-0')+(this.margin ? ' '+this.margin : ''),
                 },
             },
             onUpdate: () => {

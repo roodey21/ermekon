@@ -2,6 +2,7 @@
 import Modal from '@/Components/Modal.vue'
 import { useForm } from '@inertiajs/vue3'
 import { ref, computed } from 'vue'
+import cloneDeep from 'lodash.clonedeep'
 import {
     Combobox,
     ComboboxInput,
@@ -15,6 +16,10 @@ import PrimaryButton from '@/Components/PrimaryButton.vue'
 import Tiptap from '@/Components/Tiptap.vue'
 
 const showModal = ref(false)
+
+const props = defineProps({
+    customers: Object,
+})
 
 const openModal = () => {
     showModal.value = true
@@ -30,14 +35,21 @@ const form = useForm({
     client_telephone: '',
 })
 
-const people = [
-  { id: 1, name: 'Wade Cooper' },
-  { id: 2, name: 'Arlene Mccoy' },
-  { id: 3, name: 'Devon Webb' },
-  { id: 4, name: 'Tom Cook' },
-  { id: 5, name: 'Tanya Fox' },
-  { id: 6, name: 'Hellen Schmidt' },
-]
+const people = cloneDeep(props.customers.data)
+// const people = [
+//       { id: 1, name: 'Wade Cooper' },
+//       { id: 2, name: 'Arlene Mccoy' },
+//       { id: 3, name: 'Devon Webb' },
+//       { id: 4, name: 'Tom Cook' },
+//       { id: 5, name: 'Tanya Fox' },
+//       { id: 6, name: 'Hellen Schmidt' },
+//       { id: 1, name: 'Wade Cooper' },
+//       { id: 2, name: 'Arlene Mccoy' },
+//       { id: 3, name: 'Devon Webb' },
+//       { id: 4, name: 'Tom Cook' },
+//       { id: 5, name: 'Tanya Fox' },
+//       { id: 6, name: 'Hellen Schmidt' },
+//     ]
 
 let selected = ref(people[0])
 let query = ref('')
@@ -58,7 +70,11 @@ const queryPerson = computed(() => {
   })
 
 const handleSubmit = () => {
-    console.log(form)
+    form.client_name = selected.value.name
+    form.post(route('project.store'), {
+        preserveScroll: true,
+        onSuccess: () => closeModal(),
+    })
 }
 
 const addNewPerson = () => {
@@ -82,7 +98,7 @@ defineExpose({
 </script>
 
 <template>
-    <Modal :show="showModal" @close="closeModal">
+    <Modal :show="showModal" @close="closeModal" ref="createModal">
         <form @submit.prevent="handleSubmit">
             <div class="flex items-center justify-between px-4 py-3 bg-gray-100 border-b">
                 <h5 class="text-sm font-medium">
@@ -108,90 +124,84 @@ defineExpose({
                             </label>
                             <Combobox v-model="selected" ref="combobox" class="w-full -ml-2" nullable>
                                 <div class="relative mt-1">
-                                    <div
-                                    class="relative w-full overflow-hidden text-left bg-white border border-gray-200 border-opacity-0 rounded cursor-default hover:border-opacity-100 focus-within:border-gray-400 focus-within:border-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-black focus-visible:ring-offset-teal-300 focus-visible:ring-offset-2 sm:text-sm"
-                                    >
-                                    <ComboboxInput
-                                        class="w-full py-1.5 rounded pl-2 pr-10 text-sm leading-5 text-gray-900 border-none focus:ring-0"
-                                        :displayValue="(person) => person.name"
-                                        @change="query = $event.target.value"
-                                    />
-                                    <ComboboxButton
-                                        class="absolute inset-y-0 right-0 flex items-center pr-2"
-                                    >
-                                        <ChevronUpDownIcon
-                                        class="w-5 h-5 text-gray-400"
-                                        aria-hidden="true"
+                                    <div class="relative w-full overflow-hidden text-left bg-white border border-gray-200 border-opacity-0 rounded cursor-default hover:border-opacity-100 focus-within:border-gray-400 focus-within:border-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-black focus-visible:ring-offset-teal-300 focus-visible:ring-offset-2 sm:text-sm">
+                                        <ComboboxInput
+                                            class="w-full py-1.5 rounded pl-2 pr-10 text-sm leading-5 text-gray-900 border-none focus:ring-0"
+                                            :displayValue="(person) => person?.name"
+                                            @change="query = $event.target.value"
                                         />
-                                    </ComboboxButton>
+                                        <ComboboxButton class="absolute inset-y-0 right-0 flex items-center pr-2">
+                                            <ChevronUpDownIcon
+                                            class="w-5 h-5 text-gray-400"
+                                            aria-hidden="true"
+                                            />
+                                        </ComboboxButton>
                                     </div>
                                     <TransitionRoot
-                                    leave="transition ease-in duration-100"
-                                    leaveFrom="opacity-100"
-                                    leaveTo="opacity-0"
-                                    @after-leave="query = ''"
+                                        leave="transition ease-in duration-100"
+                                        leaveFrom="opacity-100"
+                                        leaveTo="opacity-0"
+                                        @after-leave="query = ''"
                                     >
-                                    <ComboboxOptions
-                                        class="absolute w-full py-1 mt-1 overflow-auto text-base bg-white rounded shadow-md max-h-60 ring-1 ring-black/5 focus:outline-none sm:text-sm"
-                                    >
-                                        <ComboboxOption
-                                        v-if="queryPerson"
-                                        v-slot="{ selected, active }"
-                                        :value="queryPerson"
-                                        >
-                                            <li
-                                                class="relative py-2 pl-10 pr-4 cursor-default select-none"
-                                                :class="{
-                                                'bg-teal-600 text-white': active,
-                                                'text-gray-900': !active,
-                                                }"
+                                        <ComboboxOptions class="absolute z-40 w-full py-1 mt-1 overflow-auto text-base bg-white rounded shadow-md max-h-60 ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                                            <ComboboxOption
+                                                v-if="queryPerson"
+                                                v-slot="{ selected, active }"
+                                                :value="queryPerson"
                                             >
-                                                <span
-                                                class="block truncate"
-                                                :class="{ 'font-medium': selected, 'font-normal': !selected }"
+                                                <li
+                                                    class="relative py-2 pl-10 pr-4 cursor-default select-none"
+                                                    :class="{
+                                                    'bg-teal-600 text-white': active,
+                                                    'text-gray-900': !active,
+                                                    }"
                                                 >
-                                                Tambahkan {{ query }}
-                                                </span>
-                                                <span
-                                                v-if="selected"
-                                                class="absolute inset-y-0 left-0 flex items-center pl-3"
-                                                :class="{ 'text-white': active, 'text-teal-600': !active }"
-                                                >
-                                                Tambahkan {{ query }}
-                                                </span>
-                                            </li>
-                                        </ComboboxOption>
+                                                    <span
+                                                        class="block truncate"
+                                                        :class="{ 'font-medium': selected, 'font-normal': !selected }"
+                                                    >
+                                                        Tambahkan {{ query }}
+                                                    </span>
+                                                    <span
+                                                        v-if="selected"
+                                                        class="absolute inset-y-0 left-0 flex items-center pl-3"
+                                                        :class="{ 'text-white': active, 'text-teal-600': !active }"
+                                                    >
+                                                        Tambahkan {{ query }}
+                                                    </span>
+                                                </li>
+                                            </ComboboxOption>
 
-                                        <ComboboxOption
-                                        v-for="person in filteredPeople"
-                                        as="template"
-                                        :key="person.id"
-                                        :value="person"
-                                        v-slot="{ selected, active }"
-                                        >
-                                        <li
-                                            class="relative py-2 pl-10 pr-4 cursor-default select-none"
-                                            :class="{
-                                            'bg-teal-600 text-white': active,
-                                            'text-gray-900': !active,
-                                            }"
-                                        >
-                                            <span
-                                            class="block truncate"
-                                            :class="{ 'font-medium': selected, 'font-normal': !selected }"
+                                            <ComboboxOption
+                                                v-for="person in filteredPeople"
+                                                as="template"
+                                                :key="person.id"
+                                                :value="person"
+                                                v-slot="{ selected, active }"
                                             >
-                                            {{ person.name }}
-                                            </span>
-                                            <span
-                                            v-if="selected"
-                                            class="absolute inset-y-0 left-0 flex items-center pl-3"
-                                            :class="{ 'text-white': active, 'text-teal-600': !active }"
-                                            >
-                                            <CheckIcon class="w-5 h-5" aria-hidden="true" />
-                                            </span>
-                                        </li>
-                                        </ComboboxOption>
-                                    </ComboboxOptions>
+                                                <li
+                                                    class="relative py-2 pl-10 pr-4 cursor-default select-none"
+                                                    :class="{
+                                                    'bg-teal-600 text-white': active,
+                                                    'text-gray-900': !active,
+                                                    }"
+                                                >
+                                                    <span
+                                                        class="block truncate"
+                                                        :class="{ 'font-medium': selected, 'font-normal': !selected }"
+                                                    >
+                                                        {{ person.name }}
+                                                    </span>
+                                                    <span
+                                                        v-if="selected"
+                                                        class="absolute inset-y-0 left-0 flex items-center pl-3"
+                                                        :class="{ 'text-white': active, 'text-teal-600': !active }"
+                                                    >
+                                                    <CheckIcon class="w-5 h-5" aria-hidden="true" />
+                                                    </span>
+                                                </li>
+                                            </ComboboxOption>
+                                        </ComboboxOptions>
                                     </TransitionRoot>
                                 </div>
                             </Combobox>

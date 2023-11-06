@@ -14,7 +14,8 @@ const openCreateModal = () => {
 
 defineProps({
     errors: Object,
-    projects: Object
+    projects: Object,
+    customers: Object
 })
 
 defineOptions({
@@ -107,5 +108,5 @@ defineOptions({
         </div>
     </div>
 
-    <CreateProjectModal ref="createProjectModal" />
+    <CreateProjectModal ref="createProjectModal" :customers="customers"/>
 </template>

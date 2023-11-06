@@ -5,6 +5,7 @@ import { ArrowUturnLeftIcon, BarsArrowDownIcon, CalendarIcon, CheckCircleIcon, C
 import { Head, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import SubMenu from './Partials/SubMenu.vue';
+import ProjectMenu from './Partials/ProjectMenu.vue';
 
 defineProps({
     project: {
@@ -81,45 +82,7 @@ defineOptions({
         <div class="flex flex-col justify-between gap-4 mb-4 md:flex-row">
             <div class="flex flex-col">
                 <div class="flex items-center gap-1.5">
-                    <h3 class="text-xl font-semibold capitalize">
-                        {{ project.data.name }}
-                    </h3>
-                    <Dropdown>
-                        <template #trigger>
-                            <div class="hover:cursor-pointer">
-                                <ChevronDownIcon class="w-4 h-4"/>
-                            </div>
-                        </template>
-
-                        <template #content>
-                            <ul class="p-1.5 text-black">
-                                <li class="px-3 py-1.5 hover:bg-gray-100 hover:cursor-pointer group rounded">
-                                    <Link :href="route('project.index')" class="flex items-center gap-2 text-xs">
-                                        <ArrowUturnLeftIcon class="w-3 h-3"/> <span>Kembali ke List Proyek</span>
-                                    </Link>
-                                </li>
-                                <li class="px-3 py-1.5 hover:bg-gray-100 hover:cursor-pointer group rounded" @click="openEditProjectModal">
-                                    <div class="flex items-center gap-2 text-xs">
-                                        <PencilSquareIcon class="w-3 h-3" />
-                                        <span>Edit proyek</span>
-                                    </div>
-                                </li>
-                                <li class="px-3 py-1.5 hover:bg-gray-100 hover:cursor-pointer group rounded">
-                                    <div class="flex items-center gap-2 text-xs">
-                                        <LinkIcon class="w-3 h-3" />
-                                        <span>Copy link</span>
-                                    </div>
-                                </li>
-                                <hr class="my-1.5">
-                                <li class="px-3 py-1.5 hover:bg-gray-100 hover:cursor-pointer group rounded">
-                                    <div class="flex items-center gap-2 text-xs text-red-700">
-                                        <TrashIcon class="w-3 h-3" />
-                                        <span>Hapus proyek </span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </template>
-                    </Dropdown>
+                    <ProjectMenu :project="project" />
                 </div>
                 <ul class="flex items-center gap-1.5 breadcrumbs">
                     <li class="text-sm font-medium text-teal-600 hover:text-teal-900 first:before:hidden before:inline-block before:content-chevron-right before:relative before:top-1 last:text-gray-500">
