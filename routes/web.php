@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectTaskController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UnitController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -81,6 +83,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/project/{project}/task/{task}/document', [TaskController::class, 'upload'])->name('project.package.task.document.store');
     Route::delete('/project/{project}/task/{task}/document/{document}', [TaskController::class, 'destroyDocument'])->name('project.package.task.document.destroy');
     Route::get('/task', [TaskController::class, 'index'])->name('task.index');
+
+    // Route::resource('user', UserController::class);
+    Route::get('/user/{user?}', [UserController::class, 'index'])->name('user.index');
+    Route::post('/user', [UserController::class, 'store'])->name('user.store');
+    Route::put('/user/{user}', [UserController::class, 'update'])->name('user.update');
+    Route::resource('customer', CustomerController::class);
 });
 
 Route::get('/layouting', function () {

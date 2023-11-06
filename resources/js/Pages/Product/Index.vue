@@ -115,7 +115,7 @@ defineOptions({
         </div> -->
 
         <div class="mx-auto">
-            <div class="overflow-hidden bg-white rounded-lg shadow-lg">
+            <div class="overflow-hidden bg-white rounded-lg shadow-md">
                 <div class="relative overflow-x-auto shadow-md max-h-[80vh]">
                     <table class="w-full text-sm text-left text-gray-500">
                         <thead class="sticky top-0 text-xs text-gray-700 uppercase bg-gray-100">

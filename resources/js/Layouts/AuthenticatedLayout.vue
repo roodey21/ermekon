@@ -30,12 +30,12 @@ const showNav = ref(true)
                     <div ref="setting_menu"
                         @mouseover="onMenuHovered('master')"
                         class="relative flex items-center justify-center text-center bg-white hover:cursor-pointer hover:bg-gray-100 group w-14 h-14"
-                        :class="{ '!bg-gray-100':activeMenu == 'master' || route().current('product*') || route().current('unit*') }"
+                        :class="{ '!bg-gray-100':activeMenu == 'master' || route().current('product*') || route().current('unit*') || route().current('user*') || route().current('customer*') }"
                         >
-                        <Cog6ToothIcon class="w-6 h-6 text-gray-600 group-hover:text-teal-700" :class="{'text-teal-700':activeMenu == 'master' || route().current('product*')|| route().current('unit*')}" />
+                        <Cog6ToothIcon class="w-6 h-6 text-gray-600 group-hover:text-teal-700" :class="{'text-teal-700':activeMenu == 'master' || route().current('product*') || route().current('unit*') || route().current('user*') || route().current('customer*')}" />
                         <div
                             class="absolute invisible group-hover:visible bottom-0 border-t-0 border-r-0 border-l-[15px] border-b-[15px] border-r-transparent border-l-transparent border-t-transparent border-b-teal-700 right-0"
-                            :class="{ '!visible':activeMenu == 'master' || route().current('product*') || route().current('unit*') }"
+                            :class="{ '!visible':activeMenu == 'master' || route().current('product*') || route().current('unit*')  || route().current('user*') || route().current('customer*') }"
                             ></div>
                     </div>
                     <div ref="payment_menu"
@@ -124,24 +124,24 @@ const showNav = ref(true)
                             <ul class="sidebar-setting" v-if="activeMenu=='master'">
                                 <h3 class="px-6 py-4 text-lg">Master Data</h3>
                                 <li class="text-black">
-                                    <Link :href="route('product.index')" class="block px-6 py-3 text-xs transition-all hover:cursor-pointer hover:bg-gray-200" :class="{ 'text-teal-700' : route().current('product*') }">
+                                    <Link :href="route('product.index')" class="block px-6 py-3 text-xs transition-all hover:cursor-pointer hover:bg-gray-200" :class="{ 'text-teal-700 bg-gray-50' : route().current('product*') }">
                                         Data Produk
                                     </Link>
                                 </li>
                                 <li class="text-black">
-                                    <Link :href="route('unit.index')" class="block px-6 py-3 text-xs transition-all hover:cursor-pointer hover:bg-gray-200" :class="{ 'text-teal-700' : route().current('unit*') }">
+                                    <Link :href="route('unit.index')" class="block px-6 py-3 text-xs transition-all hover:cursor-pointer hover:bg-gray-200" :class="{ 'text-teal-700 bg-gray-50' : route().current('unit*') }">
                                         Data Satuan
                                     </Link>
                                 </li>
                                 <li class="text-black">
-                                    <div class="px-6 py-3 text-xs hover:cursor-pointer hover:bg-gray-200">
+                                    <Link :href="route('user.index')" class="block px-6 py-3 text-xs transition-all hover:cursor-pointer hover:bg-gray-200" :class="{ 'text-teal-700 bg-gray-50' : route().current('user*') }">
                                         Data User
-                                    </div>
+                                    </Link>
                                 </li>
                                 <li class="text-black">
-                                    <div class="px-6 py-3 text-xs hover:cursor-pointer hover:bg-gray-200">
+                                    <Link :href="route('customer.index')" class="block px-6 py-3 text-xs transition-all hover:cursor-pointer hover:bg-gray-200" :class="{ 'text-teal-700 bg-gray-50' : route().current('customer*') }">
                                         Data Kustomer
-                                    </div>
+                                    </Link>
                                 </li>
                                 <li class="text-black">
                                     <div class="px-6 py-3 text-xs hover:cursor-pointer hover:bg-gray-200">
@@ -183,7 +183,7 @@ const showNav = ref(true)
                             <ul class="sidebar-project" v-if="activeMenu=='project'">
                                 <h3 class="px-6 py-4 text-lg">Proyek</h3>
                                 <li class="text-black">
-                                    <Link :href="route('project.index')" :class="{ 'text-teal-700' : route().current('project.index') }" class="block px-6 py-3 text-xs transition-all hover:cursor-pointer hover:bg-gray-200">
+                                    <Link :href="route('project.index')" :class="{ 'text-teal-700 bg-gray-50' : route().current('project.index') }" class="block px-6 py-3 text-xs transition-all hover:cursor-pointer hover:bg-gray-200">
                                         List Proyek
                                     </Link>
                                 </li>
